@@ -3,7 +3,7 @@
 import csv
 import json
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 
 SETTINGS_PATH = 'assets/settings.json'
 CSV_PATH = 'assets/prayer_times.csv'
@@ -68,21 +68,27 @@ def fetch_prayer_data():
     data_next = fetch_month_data(next_month, next_year)
     
     # Join data
-    data = data_current + data_next
+    data = (data_current or []) + (data_next or [])
     
     return data
 
 def save_data(data):
-    """Saves fetched Adhan prayer data to CSV file, including Jummah time."""
+    """Saves fetched Adhan prayer data to CSV file, including calculated Iqamah times."""
     
     today = datetime.now().date()
     prayer_data = []
     
-    keys = ["Fajr", "Sunrise","Dhuhr", "Asr", "Maghrib", "Isha"]
+    # API prayer keys
+    keys = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"]
     
-    jummah_adhan = settings['DATA']['JUMMAH']['ADHAN']
-    jummah_iqamah = settings['DATA']['JUMMAH']['IQAMAH']
-    
+    # Jummah times (adhan is configured in settings)
+    jummah_adhan_setting = settings['DATA']['JUMMAH']['ADHAN']
+
+    iqamah_offsets = DATA.get('IQAMAH_OFFSETS', {})
+    fetch_buffer = DATA.get('FETCH_DAYS_BUFFER', 35)
+
+    prayers = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"]
+
     for day in data:
         
         # AlAdhan uses 'readable' date format (e.g., 02 Dec 2025)
@@ -100,31 +106,86 @@ def save_data(data):
             continue
         
         # 2. Check if we have reached the end of our buffer (e.g., 35 days)
-        if len(prayer_data) >= DATA['FETCH_DAYS_BUFFER']:
+        if len(prayer_data) >= fetch_buffer:
             break
         
-        # Start the row with the date
-        row = [date_str_readable]
+        # Dicts to store adhan and iqamah strings per prayer
+        adhan_times = {}
+        iqamah_times = {}
         
-        adhan_times = []
+        # Process regular prayers from API
         for prayer_name in keys:
-            # Convert 24-hour time to 12-hour format with AM/PM
-            adhan_str = datetime.strptime(day['timings'][prayer_name].split(" ")[0], "%H:%M").strftime("%I:%M %p")
-            adhan_times.append(adhan_str)
-
-        jummah_adhan_str = datetime.strptime(jummah_adhan, "%I:%M %p")
-        jummah_iqamah_str = datetime.strptime(jummah_iqamah, "%I:%M %p")
-
-        row.extend(adhan_times)
+            raw_timing = day['timings'].get(prayer_name, "")
+            if not raw_timing:
+                adhan_times[prayer_name] = ""
+                iqamah_times[prayer_name] = ""
+                continue
+            
+            # API timing may include timezone info (e.g., "05:00 (EDT)"), so take first token
+            time_token = raw_timing.split(" ")[0]
+            
+            # Sunrise only has adhan (no iqamah)
+            if prayer_name == "Sunrise":
+                try:
+                    adhan_formatted = datetime.strptime(time_token, "%H:%M").strftime("%I:%M %p")
+                except ValueError:
+                    adhan_formatted = ""
+                adhan_times[prayer_name] = adhan_formatted
+                iqamah_times[prayer_name] = ""
+            else:
+                # Combine date with 24-hour time to ensure correct day/time
+                try:
+                    adhan_dt = datetime.strptime(f"{date_str_readable} {time_token}", "%d %b %Y %H:%M")
+                    adhan_times[prayer_name] = adhan_dt.strftime("%I:%M %p")
+                except ValueError:
+                    adhan_times[prayer_name] = ""
+                    iqamah_times[prayer_name] = ""
+                    continue
+                
+                # Compute iqamah using offset minutes from settings (default 0)
+                offset_minutes = int(iqamah_offsets.get(prayer_name.upper(), 0))
+                iqamah_dt = adhan_dt + timedelta(minutes=offset_minutes)
+                iqamah_times[prayer_name] = iqamah_dt.strftime("%I:%M %p")
         
-        row.append(jummah_adhan)
+        # Process Jummah (use configured adhan time and compute iqamah by offset)
+        try:
+            jummah_dt = datetime.strptime(f"{date_str_readable} {jummah_adhan_setting}", "%d %b %Y %I:%M %p")
+            jummah_adhan_formatted = jummah_dt.strftime("%I:%M %p")
+        except ValueError:
+            # Fallback: empty if parsing fails
+            jummah_adhan_formatted = jummah_adhan_setting or ""
+            jummah_dt = None
+        
+        jummah_offset = int(iqamah_offsets.get("JUMMAH", 0))
+        if jummah_dt:
+            jummah_iqamah_formatted = (jummah_dt + timedelta(minutes=jummah_offset)).strftime("%I:%M %p")
+        else:
+            # If jummah_dt couldn't be parsed, fall back to configured IQAMAH if present
+            jummah_iqamah_formatted = settings['DATA']['JUMMAH'].get('IQAMAH', "")
+        
+        # Build CSV row with columns grouped per-prayer (Adhan then Iqamah)
+        row = [date_str_readable]
+        for p in prayers:
+            if p == "Sunrise":
+                row.append(adhan_times.get(p, ""))
+            elif p == "Jummah":
+                row.append(jummah_adhan_formatted)
+                row.append(jummah_iqamah_formatted)
+            else:
+                row.append(adhan_times.get(p, ""))
+                row.append(iqamah_times.get(p, ""))
         
         prayer_data.append(row)
         
-    prayers = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"]
-    
-    header_row = ["Date"] + [p if p == "Sunrise" else f"{p}_Adhan" for p in prayers]
-    
+    # Build header: Date, then for each prayer include Adhan and Iqamah adjacent (Sunrise only adhan)
+    header_row = ["Date"]
+    for p in prayers:
+        if p == "Sunrise":
+            header_row.append("Sunrise")
+        else:
+            header_row.append(f"{p}_Adhan")
+            header_row.append(f"{p}_Iqamah")
+
     try:
         with open(CSV_PATH, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
