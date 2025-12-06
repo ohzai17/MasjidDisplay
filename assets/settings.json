@@ -22,11 +22,10 @@
 
     "DATA": {
         "FETCH_DAYS_BUFFER": 35,
-        "CACHE_DURATION_DAYS": 30,
+        "CACHE_DURATION": 30,
 
         "JUMMAH": {
-            "ADHAN": "12:30 PM",
-            "IQAMAH": "01:00 PM"
+            "ADHAN": "12:30 PM"
         },
 
         "IQAMAH_OFFSETS": {
