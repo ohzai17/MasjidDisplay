@@ -9,7 +9,7 @@ def main():
     
     # Initialize Pygame
     pygame.init()
-    screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN if FULLSCREEN else 0)
+    screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN if FULLSCREEN else False)
     pygame.display.set_caption(NAME)
     clock = pygame.time.Clock()
     
@@ -26,10 +26,13 @@ def main():
         
         # Get the current date and time
         current_datetime = datetime.now()
+        time_str = current_datetime.strftime("%I:%M:%S %p")
+        date_str = current_datetime.strftime("%B %d, %Y")
         
         # Get the Hijri date
         hijri_date = Gregorian(current_datetime.year, current_datetime.month, current_datetime.day).to_hijri()
         hijri_month_name = HIJRI_MONTH_NAMES[hijri_date.month]
+        hijri_str = f"{hijri_month_name} {hijri_date.day}, {hijri_date.year}"
         
         # Render the masjid name at the vertical center
         name_surface = font.render(NAME, True, PRIMARY_COLOR)
@@ -42,19 +45,16 @@ def main():
         screen.blit(address_surface, address_rect)
         
         # Render the current time below the address
-        time_str = current_datetime.strftime("%I:%M:%S %p")
         text_surface = font.render(time_str, True, PRIMARY_COLOR)
         text_rect = text_surface.get_rect(center=(WIDTH // 2, (HEIGHT // 2) + 2 * FONT_SIZE + 20))
         screen.blit(text_surface, text_rect)
         
         # Render the Gregorian date below the time
-        date_str = current_datetime.strftime("%B %d, %Y")
         date_surface = font.render(date_str, True, PRIMARY_COLOR)
         date_rect = date_surface.get_rect(center=(WIDTH // 2, (HEIGHT // 2) + 3 * FONT_SIZE + 30))
         screen.blit(date_surface, date_rect)
         
         # Render the Hijri date below the Gregorian date
-        hijri_str = f"{hijri_month_name} {hijri_date.day}, {hijri_date.year}"
         hijri_surface = font.render(hijri_str, True, PRIMARY_COLOR)
         hijri_rect = hijri_surface.get_rect(center=(WIDTH // 2, (HEIGHT // 2) + 4 * FONT_SIZE + 40))
         screen.blit(hijri_surface, hijri_rect)

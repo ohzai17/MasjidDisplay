@@ -56,9 +56,9 @@
         "ADDRESS": "615 Rutger Street, Utica, NY",
         
         "COLOR_THEME": {
-            "BACKGROUND": [30, 30, 30],
-            "PRIMARY": [255, 255, 255],
-            "SECONDARY": [180, 180, 180]
+            "BACKGROUND": [15, 20, 26],
+            "PRIMARY": [228, 233, 238],
+            "SECONDARY": [58, 143, 212]
         }
     }
 }
