@@ -26,7 +26,7 @@ def fetch_month_data(month: int, year: int):
     if API['CALCULATION']['METHOD'] == 99:
         params['fajr'] = API['ANGLES']['FAJR']
         params['isha'] = API['ANGLES']['ISHA']
-        
+    
     try:
         response = requests.get(url, params=params)
         response.raise_for_status()
@@ -50,7 +50,7 @@ def fetch_prayer_data():
     else:
         next_month = current_month + 1
         next_year = current_year
-        
+    
     # Fetch data for both months
     data_current = fetch_month_data(current_month, current_year)
     data_next = fetch_month_data(next_month, next_year)

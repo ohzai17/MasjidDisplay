@@ -1,0 +1,4 @@
+# These packages are tested and compatible with Python 3.12
+pygame==2.6.1
+requests==2.32.5
+hijridate==2.5.0
