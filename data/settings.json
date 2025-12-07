@@ -6,28 +6,32 @@
             "LATITUDE": 43.100903,
             "LONGITUDE": -75.232664
         },
+        
         "HIJRI_DATE": {
             "ADJUSTMENT": 0
         },
+        
         "CALCULATION": {
             "METHOD": 99,
             "SCHOOL": 1
         },
+        
         "ANGLES": {
             "FAJR": 15,
             "ISHA": 15
         },
+        
         "ENDPOINT": "https://api.aladhan.com/v1/calendar"
     },
 
     "DATA": {
         "FETCH_BUFFER": 35,
         "CACHE_DURATION": 30,
-
+        
         "JUMMAH": {
             "ADHAN": "12:30 PM"
         },
-
+        
         "IQAMAH_OFFSETS": {
             "FAJR": 15,
             "DHUHR": 15,
@@ -37,7 +41,7 @@
             "JUMMAH": 30
         }
     },
-
+    
     "DISPLAY": {
         "WINDOW": {
             "FPS": 30,
@@ -45,12 +49,11 @@
             "HEIGHT": 960,
             "FULLSCREEN": false
         },
-            "NAME": "Masjid Nurul Islam",
-            "ADDRESS": "615 Rutger Street, Utica, NY",
-
-        "FONT": {
-            "SIZE": 35
-        },
+        
+        "FONT_SIZE": 35,
+        
+        "NAME": "Masjid Nurul Islam",
+        "ADDRESS": "615 Rutger Street, Utica, NY",
         
         "COLOR_THEME": {
             "BACKGROUND": [30, 30, 30],

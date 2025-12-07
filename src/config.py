@@ -2,6 +2,7 @@
 
 import json
 
+# File paths
 CSV_PATH = 'data/prayer_times.csv'
 SETTINGS_PATH = 'data/settings.json'
 FONT_PATH = 'assets/Bebas-Regular.ttf' # Obtained from https://www.dafont.com/bebas.font
@@ -20,16 +21,22 @@ DISPLAY = settings['DISPLAY']
 
 # Display settings
 WINDOW = DISPLAY['WINDOW']
+
 FPS = WINDOW['FPS']
 WIDTH = WINDOW['WIDTH']
 HEIGHT = WINDOW['HEIGHT']
 FULLSCREEN = WINDOW['FULLSCREEN']
 
+FONT_SIZE = DISPLAY['FONT_SIZE']
+
+NAME = DISPLAY['NAME']
+ADDRESS = DISPLAY['ADDRESS']
+
+# Color settings
 COLOR_THEME = DISPLAY['COLOR_THEME']
+
 BACKGROUND_COLOR = COLOR_THEME['BACKGROUND']
 PRIMARY_COLOR = COLOR_THEME['PRIMARY']
-
-FONT_SIZE = DISPLAY['FONT']['SIZE']
 
 # Hijri month names
 HIJRI_MONTH_NAMES = {
