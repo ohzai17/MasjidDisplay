@@ -46,7 +46,7 @@
         "WINDOW": {
             "FPS": 30,
             "WIDTH": 1600,
-            "HEIGHT": 960,
+            "HEIGHT": 900,
             "FULLSCREEN": false
         },
         
