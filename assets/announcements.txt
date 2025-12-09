@@ -1,0 +1,7 @@
+"Ramadan begins on Month Day, Year"
+"Taraweeh Salah at HH:MM PM"
+
+"Eid al-Fitr Salah: Month Day, Year at HH:MM AM"
+"Zakat al-Fitr: $XX per person"
+
+"Eid al-Adha Salah: Month Day, Year at HH:MM AM"

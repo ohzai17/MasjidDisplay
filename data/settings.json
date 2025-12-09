@@ -53,6 +53,14 @@
         "NAME": "Masjid Nurul Islam",
         "ADDRESS": "615 Rutger St, Utica, NY 13501",
         
+        "ANNOUNCEMENTS": [
+            "Ramadan begins on Month Day, Year",
+            "Taraweeh Salah at HH:MM PM",
+            "Eid al-Fitr Salah: Month Day, Year at HH:MM AM",
+            "Zakat al-Fitr: $XX per person",
+            "Eid al-Adha Salah: Month Day, Year at HH:MM AM"
+        ],
+        
         "COLORS": {
             "BACKGROUND": [255, 255, 255],
             "BLACK": [0, 0, 0],
