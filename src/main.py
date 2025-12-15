@@ -17,17 +17,26 @@ def main():
     
     clock = pygame.time.Clock()
     
+    mockup = pygame.image.load('assets/mockup.jpg') # Temporary: Load background mockup image
+    
     font_size = 35
     font = pygame.font.Font(FONT_PATH, font_size)
     
     running = True
+    show_background = False # Temporary: Toggle for background display
     
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 running = False
-        
-        screen.fill(WHITE_COLOR)
+                
+        # Temporary: Toggle background with 'b' key            
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_b:
+                show_background = not show_background
+        if show_background:
+            screen.blit(mockup, (0, 0))
+        else:
+            screen.fill(WHITE_COLOR)
         
         # Get the current date and time
         current_datetime = datetime.now()
