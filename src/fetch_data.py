@@ -34,7 +34,7 @@ def fetch_month_data(month: int, year: int):
         data = response.json()
         return data['data']
     except requests.RequestException as e:
-        print(f"\nError fetching data from API: {e}\n")
+        print(f"\nError fetching data from API: {e}")
         return None
 
 def fetch_prayer_data():
@@ -77,8 +77,39 @@ def cache_status():
     # Calculate age of cached data in days
     cached_data_age = (datetime.now() - file_mod_datetime).days
     
-    # Fetch new data if age of cached data exceeds cache duration
+    # Fetch new data if age of cached data exceeds cache duration (e.g., 30 days)
     return cached_data_age >= cache_duration
+
+def get_prayer_time(prayer_name: str, api_time_str: str, date_str: str):
+    """Format and return prayer time, considering manual overrides."""
+    
+    adhan_times_manual = DATA['ADHAN_TIMES_MANUAL']
+    
+    # Check if manual time is present in settings
+    adhan_time_manual = adhan_times_manual.get(prayer_name.upper(), "").strip()
+    
+    if adhan_time_manual:
+        try:
+            adhan_datetime = datetime.strptime(f"{date_str} {adhan_time_manual}", "%d %b %Y %I:%M %p")
+            adhan_time_formatted = adhan_datetime.strftime("%I:%M %p")
+            return adhan_time_formatted, adhan_datetime
+        except ValueError:
+            print(f"\nError parsing manual time for {prayer_name}: {adhan_time_manual}")
+            pass
+    
+    # Use API time (either no manual time or manual time failed to parse)
+    if not api_time_str:
+        return "", None
+    
+    api_time = api_time_str.split(" ")[0] # Strip timezone info
+    
+    try:
+        adhan_datetime = datetime.strptime(f"{date_str} {api_time}", "%d %b %Y %H:%M")
+        adhan_time_formatted = adhan_datetime.strftime("%I:%M %p")
+        return adhan_time_formatted, adhan_datetime
+    except ValueError:
+        print(f"\nError parsing {prayer_name} time from API: {api_time}")
+        return "", None
 
 def save_data(data):
     """Saves fetched Adhan prayer data to CSV file, including calculated Iqamah times."""
@@ -91,8 +122,7 @@ def save_data(data):
     
     prayers = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"]
     
-    jummah_adhan = DATA['JUMMAH']['ADHAN']
-    
+    adhan_times_manual = DATA['ADHAN_TIMES_MANUAL']
     iqamah_offsets = DATA['IQAMAH_OFFSETS']
     
     fetch_buffer = DATA['FETCH_BUFFER']
@@ -106,7 +136,7 @@ def save_data(data):
         try:
             day_date_obj = datetime.strptime(date_str, "%d %b %Y").date()
         except ValueError:
-            print(f"\nError parsing date: {date_str}\n")
+            print(f"\nError parsing date: {date_str}")
             continue
         
         # Filter and buffer logic:
@@ -124,49 +154,55 @@ def save_data(data):
         # Parse and format prayer times from API response
         for prayer_name in keys:
             timing_str = day['timings'].get(prayer_name, "")
-            if not timing_str:
-                adhan_times[prayer_name] = ""
-                iqamah_times[prayer_name] = ""
-                continue
             
-            # Strip timezone info
-            time_24h = timing_str.split(" ")[0]
-            
-            # Process Sunrise and regular prayers
+            # Handle Sunrise
             if prayer_name == "Sunrise":
-                try:
-                    sunrise_time = datetime.strptime(time_24h, "%H:%M").strftime("%I:%M %p")
-                except ValueError:
-                    print(f"\nError parsing Sunrise time: {time_24h}\n")
-                    sunrise_time = ""
-                adhan_times[prayer_name] = sunrise_time
-                iqamah_times[prayer_name] = ""
-            else:
-                # Parse date with 24-hour time
-                try:
-                    adhan_datetime = datetime.strptime(f"{date_str} {time_24h}", "%d %b %Y %H:%M")
-                    adhan_times[prayer_name] = adhan_datetime.strftime("%I:%M %p")
-                except ValueError:
-                    print(f"\nError parsing {prayer_name} time: {time_24h}\n")
+                if not timing_str:
                     adhan_times[prayer_name] = ""
                     iqamah_times[prayer_name] = ""
                     continue
                 
-                # Calculate Iqamah times by adding offset
-                offset_minutes = int(iqamah_offsets[prayer_name.upper()])
-                iqamah_datetime = adhan_datetime + timedelta(minutes=offset_minutes)
-                iqamah_times[prayer_name] = iqamah_datetime.strftime("%I:%M %p")
+                api_time = timing_str.split(" ")[0] # Strip timezone info
+                
+                try:
+                    sunrise_time = datetime.strptime(api_time, "%H:%M").strftime("%I:%M %p")
+                except ValueError:
+                    print(f"\nError parsing Sunrise time: {api_time}")
+                    sunrise_time = ""
+                adhan_times[prayer_name] = sunrise_time
+                iqamah_times[prayer_name] = "" # Set Iqamah to empty string
+            
+            # Handle regular prayers
+            else:
+                adhan_time_formatted, adhan_datetime = get_prayer_time(prayer_name, timing_str, date_str)
+                
+                # Store formatted adhan times in dict
+                adhan_times[prayer_name] = adhan_time_formatted
+                
+                # Calculate Iqamah time by adding offset
+                if adhan_datetime:
+                    offset_minutes = int(iqamah_offsets[prayer_name.upper()])
+                    iqamah_datetime = adhan_datetime + timedelta(minutes=offset_minutes)
+                    iqamah_times[prayer_name] = iqamah_datetime.strftime("%I:%M %p")
+                else:
+                    iqamah_times[prayer_name] = ""
         
-        # Process Jummah prayer
-        try:
-            jummah_datetime = datetime.strptime(f"{date_str} {jummah_adhan}", "%d %b %Y %I:%M %p")
-            jummah_adhan_time = jummah_datetime.strftime("%I:%M %p")
-        except ValueError:
-            print(f"\nError parsing Jummah adhan time: {jummah_adhan}\n")
+        # Handle Jummah
+        manual_jummah_adhan_time = adhan_times_manual.get("JUMMAH", "").strip()
+        
+        if manual_jummah_adhan_time:
+            try:
+                jummah_datetime = datetime.strptime(f"{date_str} {manual_jummah_adhan_time}", "%d %b %Y %I:%M %p")
+                jummah_adhan_time = jummah_datetime.strftime("%I:%M %p")
+            except ValueError:
+                print(f"\nError parsing manual time for Jummah: {manual_jummah_adhan_time}")
+                jummah_adhan_time = ""
+                jummah_datetime = None
+        else:
             jummah_adhan_time = ""
             jummah_datetime = None
         
-        # Calculate Jummah Iqamah time
+        # Calculate Iqamah time by adding offset
         jummah_offset_minutes = int(iqamah_offsets["JUMMAH"])
         if jummah_datetime:
             jummah_iqamah_datetime = jummah_datetime + timedelta(minutes=jummah_offset_minutes)
@@ -174,7 +210,7 @@ def save_data(data):
         else:
             jummah_iqamah_time = ""
         
-        # Build CSV row: Date, then Adhan/Iqamah for each prayer (Sunrise only Adhan)
+        # CSV row: Date, then Adhan and Iqamah for each prayer
         row = [date_str]
         for prayer_name in prayers:
             if prayer_name == "Sunrise":
@@ -187,7 +223,7 @@ def save_data(data):
                 row.append(iqamah_times.get(prayer_name, ""))
         prayer_data.append(row)
     
-    # Build CSV header: Date, then Adhan/Iqamah columns (Sunrise only Adhan)
+    # Build CSV header: Date, then Adhan and Iqamah columns
     header_row = ["Date"]
     for prayer_name in prayers:
         if prayer_name == "Sunrise":
@@ -211,12 +247,12 @@ def main():
     """Main function to check cache status and fetch data if needed."""    
     
     if cache_status():
-        print(f"\nCache data is outdated/missing. Fetching data...\n")
+        print(f"\nCache data is outdated or missing. Fetching data...\n")
         data = fetch_prayer_data()
         if data:
             save_data(data)
         else:
-            print("\nError: No data fetched from API.\n")
+            print("\nError: No data fetched from API.")
     else:
         print(f"\nCache data is valid. Skipping fetch.\n")
 
