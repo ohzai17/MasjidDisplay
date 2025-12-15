@@ -27,9 +27,14 @@
     "DATA": {
         "FETCH_BUFFER": 35,
         "CACHE_DURATION": 30,
-        
-        "JUMMAH": {
-            "ADHAN": "12:30 PM"
+
+        "ADHAN_TIMES": {
+            "FAJR": "05:00 AM",
+            "DHUHR": "12:30 PM",
+            "ASR": "04:00 PM",
+            "MAGHRIB": "07:45 PM",
+            "ISHA": "09:15 PM",
+            "JUMMAH": "12:30 PM"
         },
         
         "IQAMAH_OFFSETS": {
@@ -54,18 +59,18 @@
         "ADDRESS": "615 Rutger St, Utica, NY 13501",
         
         "ANNOUNCEMENTS": [
-            "Ramadan begins on Month Day, Year",
-            "Taraweeh Salah at HH:MM PM",
-            "Eid al-Fitr Salah: Month Day, Year at HH:MM AM",
-            "Zakat al-Fitr: $XX per person",
-            "Eid al-Adha Salah: Month Day, Year at HH:MM AM"
+            "Ramadan Begins: Month DD, YYYY",
+            "Taraweeh Salah: HH:MM PM",
+            "Eid Al-Fitr Salah: Month DD, YYYY @ HH:MM AM",
+            "Zakat Al-Fitr: $XX Per Person",
+            "Eid Al-Adha Salah: Month DD, YYYY @ HH:MM AM"
         ],
         
         "COLORS": {
-            "BACKGROUND": [255, 255, 255],
             "BLACK": [0, 0, 0],
             "WHITE": [255, 255, 255],
-            "HIGHLIGHT": [57, 118, 29]
+            "RED": [255, 0, 0],
+            "FOREST_GREEN": [40, 78, 19]
         }
     }
 }

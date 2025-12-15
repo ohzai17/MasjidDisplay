@@ -3,7 +3,7 @@
 import pygame
 from datetime import datetime
 from hijridate import Gregorian
-from config import FPS, WIDTH, HEIGHT, FULLSCREEN, FONT_PATH, NAME, ADDRESS, BACKGROUND_COLOR, BLACK_COLOR, HIJRI_MONTH_NAMES
+from config import FPS, WIDTH, HEIGHT, FULLSCREEN, FONT_PATH, NAME, ADDRESS, BLACK_COLOR, WHITE_COLOR, FOREST_GREEN_COLOR, HIJRI_MONTH_NAMES
 
 def main():
     
@@ -27,7 +27,7 @@ def main():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 running = False
         
-        screen.fill(BACKGROUND_COLOR)
+        screen.fill(WHITE_COLOR)
         
         # Get the current date and time
         current_datetime = datetime.now()
