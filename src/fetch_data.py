@@ -1,5 +1,6 @@
 # fetch_data.py
 
+import os
 import csv
 import requests
 from datetime import datetime, timedelta
@@ -60,6 +61,25 @@ def fetch_prayer_data():
     
     return data
 
+def cache_status():
+    """Check if the cached data has exceeded the cache duration."""
+    
+    cache_duration = DATA['CACHE_DURATION']
+    
+    # If CSV file does not exist, fetch new data
+    if not os.path.exists(CSV_PATH):
+        return True
+    
+    # Get the CSV file's last modification time
+    file_mod_time = os.path.getmtime(CSV_PATH)
+    file_mod_datetime = datetime.fromtimestamp(file_mod_time)
+    
+    # Calculate age of cached data in days
+    cached_data_age = (datetime.now() - file_mod_datetime).days
+    
+    # Fetch new data if age of cached data exceeds cache duration
+    return cached_data_age >= cache_duration
+
 def save_data(data):
     """Saves fetched Adhan prayer data to CSV file, including calculated Iqamah times."""
     
@@ -72,12 +92,11 @@ def save_data(data):
     prayers = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"]
     
     jummah_adhan = DATA['JUMMAH']['ADHAN']
-
+    
     iqamah_offsets = DATA['IQAMAH_OFFSETS']
     
     fetch_buffer = DATA['FETCH_BUFFER']
-    cache_duration = DATA['CACHE_DURATION'] # Not used yet, noted for future caching implementation.
-
+    
     for day in data:
         
         # AlAdhan uses 'readable' date format (e.g., 01 Dec 2025)
@@ -89,14 +108,14 @@ def save_data(data):
         except ValueError:
             print(f"\nError parsing date: {date_str}\n")
             continue
-
+        
         # Filter and buffer logic:
         
         # 1. Skip past dates, only start processing from today
         if day_date_obj < today:
             continue
         # 2. Check if we have reached the end of our buffer (e.g., 35 days)
-        if len(prayer_data) >= fetch_buffer: # How does this know how long its been?
+        if len(prayer_data) >= fetch_buffer:
             break
         
         adhan_times = {}
@@ -167,7 +186,7 @@ def save_data(data):
                 row.append(adhan_times.get(prayer_name, ""))
                 row.append(iqamah_times.get(prayer_name, ""))
         prayer_data.append(row)
-        
+    
     # Build CSV header: Date, then Adhan/Iqamah columns (Sunrise only Adhan)
     header_row = ["Date"]
     for prayer_name in prayers:
@@ -176,7 +195,7 @@ def save_data(data):
         else:
             header_row.append(f"{prayer_name}_Adhan")
             header_row.append(f"{prayer_name}_Iqamah")
-
+    
     try:
         with open(CSV_PATH, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
@@ -188,13 +207,18 @@ def save_data(data):
         print(f"\nError saving data to CSV: {e}\n")
         return False
 
-
 def main():
-    data = fetch_prayer_data()
-    if data:
-        save_data(data)
+    """Main function to check cache status and fetch data if needed."""    
+    
+    if cache_status():
+        print(f"\nCache data is outdated/missing. Fetching data...\n")
+        data = fetch_prayer_data()
+        if data:
+            save_data(data)
+        else:
+            print("\nError: No data fetched from API.\n")
     else:
-        print("\nNo data fetched.\n")
+        print(f"\nCache data is valid. Skipping fetch.\n")
 
 if __name__ == "__main__":
     main()
