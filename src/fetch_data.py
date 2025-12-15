@@ -94,7 +94,7 @@ def get_prayer_time(prayer_name: str, api_time_str: str, date_str: str):
             adhan_time_formatted = adhan_datetime.strftime("%I:%M %p")
             return adhan_time_formatted, adhan_datetime
         except ValueError:
-            print(f"\nError parsing manual time for {prayer_name}: {adhan_time_manual}")
+            print(f"\nError parsing {prayer_name} time: {adhan_time_manual}")
             pass
     
     # Use API time (either no manual time or manual time failed to parse)
@@ -167,7 +167,7 @@ def save_data(data):
                 try:
                     sunrise_time = datetime.strptime(api_time, "%H:%M").strftime("%I:%M %p")
                 except ValueError:
-                    print(f"\nError parsing Sunrise time: {api_time}")
+                    print(f"\nError parsing Sunrise time from API: {api_time}")
                     sunrise_time = ""
                 adhan_times[prayer_name] = sunrise_time
                 iqamah_times[prayer_name] = "" # Set Iqamah to empty string
@@ -195,7 +195,7 @@ def save_data(data):
                 jummah_datetime = datetime.strptime(f"{date_str} {manual_jummah_adhan_time}", "%d %b %Y %I:%M %p")
                 jummah_adhan_time = jummah_datetime.strftime("%I:%M %p")
             except ValueError:
-                print(f"\nError parsing manual time for Jummah: {manual_jummah_adhan_time}")
+                print(f"\nError parsing Jummah time: {manual_jummah_adhan_time}")
                 jummah_adhan_time = ""
                 jummah_datetime = None
         else:
@@ -223,7 +223,7 @@ def save_data(data):
                 row.append(iqamah_times.get(prayer_name, ""))
         prayer_data.append(row)
     
-    # Build CSV header: Date, then Adhan and Iqamah columns
+    # CSV header: Date, then Adhan and Iqamah columns
     header_row = ["Date"]
     for prayer_name in prayers:
         if prayer_name == "Sunrise":
