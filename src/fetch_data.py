@@ -247,7 +247,7 @@ def main():
     """Main function to check cache status and fetch data if needed."""    
     
     if cache_status():
-        print(f"\nCache data is outdated or missing. Fetching data...\n")
+        print(f"\nCache data is outdated or missing. Fetching data...")
         data = fetch_prayer_data()
         if data:
             save_data(data)
