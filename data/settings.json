@@ -27,7 +27,7 @@
     "DATA": {
         "FETCH_BUFFER": 35,
         "CACHE_DURATION": 30,
-
+        
         "ADHAN_TIMES": {
             "FAJR": "05:00 AM",
             "DHUHR": "12:30 PM",
@@ -44,6 +44,21 @@
             "MAGHRIB": 0,
             "ISHA": 15,
             "JUMMAH": 30
+        },
+        
+        "HIJRI_MONTH_NAMES": {
+            "1": "Muharram",
+            "2": "Safar",
+            "3": "Rabi al-Awwal",
+            "4": "Rabi al-Thani",
+            "5": "Jamada al-Awwal",
+            "6": "Jamada al-Thani",
+            "7": "Rajab",
+            "8": "Sha'ban",
+            "9": "Ramadan",
+            "10": "Shawwal",
+            "11": "Dhul-Qadah",
+            "12": "Dhul-Hijjah"
         }
     },
     

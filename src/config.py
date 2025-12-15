@@ -19,6 +19,8 @@ API = settings['API']
 DATA = settings['DATA']
 DISPLAY = settings['DISPLAY']
 
+HIJRI_MONTH_NAMES = {int(k): v for k, v in DATA['HIJRI_MONTH_NAMES'].items()}
+
 # Display settings
 WINDOW = DISPLAY['WINDOW']
 
@@ -37,12 +39,5 @@ COLORS = DISPLAY['COLORS']
 
 BLACK_COLOR = COLORS['BLACK']
 WHITE_COLOR = COLORS['WHITE']
-FOREST_GREEN_COLOR = COLORS['FOREST_GREEN']
 RED_COLOR = COLORS['RED']
-
-# Hijri month names
-HIJRI_MONTH_NAMES = {
-    1: "Muharram", 2: "Safar", 3: "Rabi al-Awwal", 4: "Rabi al-Thani",
-    5: "Jamada al-Awwal", 6: "Jamada al-Thani", 7: "Rajab", 8: "Sha'ban",
-    9: "Ramadan", 10: "Shawwal", 11: "Dhul-Qadah", 12: "Dhul-Hijjah"
-}
+FOREST_GREEN_COLOR = COLORS['FOREST_GREEN']
