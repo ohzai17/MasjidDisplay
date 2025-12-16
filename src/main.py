@@ -8,6 +8,7 @@ from config import (
     NAME, ADDRESS, BLACK_COLOR, WHITE_COLOR, RED_COLOR,
     FOREST_GREEN_COLOR, HIJRI_MONTH_NAMES
 )
+from table import get_prayer_times, format_prayer_times, render_prayer_table
 
 def main():
     
@@ -36,8 +37,10 @@ def main():
     # Load fonts
     time_font = pygame.font.Font(FONT_PATH, int(130 * scale_y)) # Current time and countdown
     title_font = pygame.font.Font(FONT_PATH, int(85 * scale_y)) # Name label, announcement label, countdown label
-    table_font = pygame.font.Font(FONT_PATH, int(24 * scale_y)) # Prayer times labels and prayer times values
     detail_font = pygame.font.Font(FONT_PATH, int(40 * scale_y)) # Date, Hijri date, address, and announcement details
+    
+    prayer_times_data = get_prayer_times()
+    prayer_table = format_prayer_times(prayer_times_data)
     
     running = True
     show_background = False # Temporary: Toggle for background display
@@ -81,6 +84,8 @@ def main():
         screen.blit(address_surface, address_rect)
         screen.blit(time_surface, time_rect)
         screen.blit(date_surface, date_rect)
+        
+        render_prayer_table(screen, prayer_table, scale_x, scale_y)
         
         pygame.display.flip()
         clock.tick(FPS)
