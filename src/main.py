@@ -3,14 +3,22 @@
 import pygame
 from datetime import datetime
 from hijridate import Gregorian
-from config import FPS, WIDTH, HEIGHT, FULLSCREEN, FONT_PATH, NAME, ADDRESS, BLACK_COLOR, WHITE_COLOR, RED_COLOR, FOREST_GREEN_COLOR, HIJRI_MONTH_NAMES
+from config import (
+    FPS, WIDTH, HEIGHT, FULLSCREEN, FONT_PATH,
+    NAME, ADDRESS, BLACK_COLOR, WHITE_COLOR, RED_COLOR,
+    FOREST_GREEN_COLOR, HIJRI_MONTH_NAMES
+)
 
 def main():
     
     # Initialize Pygame
     pygame.init()
-    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) if FULLSCREEN else pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption(NAME)
+    
+    if FULLSCREEN:
+        screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+    else:
+        screen = pygame.display.set_mode((WIDTH, HEIGHT))
     
     width = screen.get_width()
     height = screen.get_height()
