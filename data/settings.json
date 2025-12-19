@@ -25,18 +25,15 @@
     },
     
     "DATA": {
-        "FETCH_BUFFER": 35,
-        "CACHE_DURATION": 30,
+        "FETCH_WINDOW": 35,
+        "REFRESH_INTERVAL": 30,
         
-        "ADHAN_TIMES_MANUAL": {
-            "NOTE:": "Leave empty string to use API times.",
-            
-            "FAJR": "05:00 AM",
-            "DHUHR": "12:30 PM",
+        "ADHAN_TIMES": {
+            "FAJR": "",
+            "DHUHR": "",
             "ASR": "04:00 PM",
             "MAGHRIB": "",
-            "ISHA": "09:15 PM",
-            "JUMMAH": "12:30 PM"
+            "ISHA": "09:00 PM"
         },
         
         "IQAMAH_OFFSETS": {
@@ -44,8 +41,12 @@
             "DHUHR": 15,
             "ASR": 15,
             "MAGHRIB": 0,
-            "ISHA": 15,
-            "JUMMAH": 30
+            "ISHA": 15
+        },
+        
+        "JUMMAH": {
+            "ADHAN": "12:30 PM",
+            "IQAMAH": 30
         },
         
         "HIJRI_MONTH_NAMES": {
