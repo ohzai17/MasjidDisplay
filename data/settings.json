@@ -45,8 +45,8 @@
         },
         
         "JUMMAH": {
-            "ADHAN": "12:30 PM",
-            "IQAMAH": 30
+            "ADHAN_TIME": "12:30 PM",
+            "IQAMAH_OFFSET": 30
         },
         
         "HIJRI_MONTH_NAMES": {
