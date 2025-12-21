@@ -30,8 +30,8 @@
         
         "ADHAN_TIMES": {
             "FAJR": "",
-            "DHUHR": "",
-            "ASR": "04:00 PM",
+            "DHUHR": "12:15 PM",
+            "ASR": "",
             "MAGHRIB": "",
             "ISHA": "09:00 PM"
         },
