@@ -8,8 +8,8 @@ from config import (
     NAME, ADDRESS, BLACK_COLOR, WHITE_COLOR, RED_COLOR,
     FOREST_GREEN_COLOR, HIJRI_MONTH_NAMES
 )
-from utils import get_prayer_times, format_prayer_table
-from table import render_prayer_table
+from utils import get_prayer_times
+from table import format_prayer_table, render_prayer_table
 from countdown import render_countdown
 
 def main():
