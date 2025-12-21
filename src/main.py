@@ -9,6 +9,7 @@ from config import (
     FOREST_GREEN_COLOR, HIJRI_MONTH_NAMES
 )
 from table import get_prayer_times, format_prayer_table, render_prayer_table
+from countdown import render_countdown
 
 def main():
     
@@ -86,6 +87,7 @@ def main():
         screen.blit(date_surface, date_rect)
         
         render_prayer_table(screen, prayer_table, scale_x, scale_y)
+        render_countdown(screen, scale_x, scale_y, title_font, time_font)
         
         pygame.display.flip()
         clock.tick(FPS)

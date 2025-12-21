@@ -113,6 +113,10 @@ def render_prayer_table(screen, prayer_table, scale_x, scale_y):
     vertical_spacing = int(font_size * 1.2)
     col_widths = [int(170 * scale_x), int(275 * scale_x), int(186 * scale_x)]
     
+    from countdown import get_next_prayer
+    
+    next_prayer,_= get_next_prayer(datetime.now())
+    
     # Calculate starting x-positions for each column
     col_positions = [table_start_x,
             table_start_x + col_widths[0],
@@ -132,6 +136,12 @@ def render_prayer_table(screen, prayer_table, scale_x, scale_y):
     # Render prayer rows
     for i, (prayer_name, adhan, iqamah) in enumerate(prayer_table):
         y = table_start_y + ((i + 1) * vertical_spacing)
+        
+        if prayer_name == next_prayer:
+            color = BLACK_COLOR
+        else:
+            color = RED_COLOR
+        
         screen.blit(table_font.render(prayer_name, True, RED_COLOR), (col_positions[0], y))  # Left-justified
-        render_centered(adhan, RED_COLOR, 1, y)
-        render_centered(iqamah, RED_COLOR, 2, y)
+        render_centered(adhan, color, 1, y)
+        render_centered(iqamah, color, 2, y)
