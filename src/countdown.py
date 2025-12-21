@@ -2,51 +2,7 @@
 
 from datetime import datetime, timedelta
 from config import BLACK_COLOR, RED_COLOR, FOREST_GREEN_COLOR
-
-def get_next_prayer(now):
-    """Find the next prayer after current time."""
-    
-    def parse_time(time_str):
-        """Convert time string to datetime object."""
-        try:
-            return datetime.strptime(time_str.strip(), "%I:%M %p").time()
-        except ValueError:
-            return None
-    
-    from table import get_prayer_times
-    
-    prayer_times = get_prayer_times()
-    
-    if not prayer_times:
-        return None, None
-    
-    prayers = [
-        ("Fajr", "Fajr"),
-        ("Dhuhr", "Dhuhr"),
-        ("Asr", "Asr"),
-        ("Maghrib", "Maghrib"),
-        ("Isha", "Isha"),
-    ]
-    
-    for prayer_name, adhan_key in prayers:
-        adhan_time_str = prayer_times.get(adhan_key, "")
-        adhan_time = parse_time(adhan_time_str)
-        
-        if adhan_time:
-            adhan_datetime = datetime.combine(now.date(), adhan_time)
-            
-            # Check if this prayer is still today (in the future)
-            if adhan_datetime > now:
-                return prayer_name, adhan_datetime
-    
-    # If all prayers for today have passed, return Fajr of next day
-    adhan_time_str = prayer_times.get("Fajr", "")
-    adhan_time = parse_time(adhan_time_str)
-    if adhan_time:
-        next_prayer_time = datetime.combine(now.date(), adhan_time) + timedelta(days=1)
-        return "Fajr", next_prayer_time
-    
-    return None, None
+from utils import get_next_prayer
 
 def render_countdown(screen, scale_x, scale_y, title_font, time_font):
     """Render the countdown to next prayer."""
