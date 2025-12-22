@@ -13,15 +13,12 @@ def render_announcements(screen, scale_x, scale_y, title_font, detail_font):
     announcement_header_rect = announcement_header_surface.get_rect(center=(int(1090 * scale_x), int(294 * scale_y)))
     screen.blit(announcement_header_surface, announcement_header_rect)
     
-    for i, announcement_text in enumerate(ANNOUNCEMENTS):
+    for i, text in enumerate(ANNOUNCEMENTS):
         
         y = int((343 + i * 48) * scale_y)
         
-        # Render dashes and announcements
-        dash_surface = detail_font.render("-", True, RED_COLOR)
-        dash_rect = dash_surface.get_rect(topleft=(int(904 * scale_x), y))
-        screen.blit(dash_surface, dash_rect)
-        
-        announcement_surface = detail_font.render(announcement_text[:45], True, RED_COLOR)
-        announcement_rect = announcement_surface.get_rect(topleft=(int(956 * scale_x), y))
+        # Render announcements
+        announcement = f"-      {text[:45]}"
+        announcement_surface = detail_font.render(announcement, True, RED_COLOR)
+        announcement_rect = announcement_surface.get_rect(topleft=(int(907 * scale_x), y))
         screen.blit(announcement_surface, announcement_rect)
