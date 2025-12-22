@@ -69,7 +69,7 @@ def main():
         # Get the Hijri date
         hijri_date = Gregorian(current_datetime.year, current_datetime.month, current_datetime.day).to_hijri()
         hijri_month_name = HIJRI_MONTH_NAMES[hijri_date.month]
-        hijri_str = f"{hijri_date.day} {hijri_month_name} {hijri_date.year}"
+        hijri_str = f"{hijri_date.day:02d} {hijri_month_name} {hijri_date.year}"
         
         dates = date_str + " · " + hijri_str # Combine Gregorian and Hijri dates
         
@@ -78,10 +78,10 @@ def main():
         time_surface = time_font.render(time_str, True, RED_COLOR)
         date_surface = detail_font.render(dates, True, RED_COLOR)
         
-        name_rect = name_surface.get_rect(center=(int(1217 * scale_x), int(96 * scale_y)))
-        address_rect = address_surface.get_rect(center=(int(1217 * scale_x), int(170 * scale_y)))
+        name_rect = name_surface.get_rect(center=(int(1217 * scale_x), int(98 * scale_y)))
+        address_rect = address_surface.get_rect(center=(int(1217 * scale_x), int(169 * scale_y)))
         time_rect = time_surface.get_rect(center=(int(363 * scale_x), int(174 * scale_y)))
-        date_rect = date_surface.get_rect(center=(int(369 * scale_x), int(68 * scale_y)))
+        date_rect = date_surface.get_rect(center=(int(363 * scale_x), int(68 * scale_y)))
         
         screen.blit(name_surface, name_rect)
         screen.blit(address_surface, address_rect)
