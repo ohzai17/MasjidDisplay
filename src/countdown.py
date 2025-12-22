@@ -56,8 +56,8 @@ def render_countdown(screen, scale_x, scale_y, title_font, time_font):
         seconds = total_seconds % 60
         
         # Render header and countdown
-        countdown_header_surface = title_font.render(f"Time Until {next_prayer}:", True, RED_COLOR)
-        countdown_surface = time_font.render(f"{hours:02d}:{minutes:02d}:{seconds:02d}", True, BLACK_COLOR)
+        countdown_header_surface = title_font.render(f"Time Until {next_prayer}:", True, FOREST_GREEN_COLOR)
+        countdown_surface = time_font.render(f"{hours:02d}:{minutes:02d}:{seconds:02d}", True, RED_COLOR)
         
         countdown_header_rect = countdown_header_surface.get_rect(center=(int(1215 * scale_x), int(670 * scale_y)))
         countdown_rect = countdown_surface.get_rect(center=(int(1217 * scale_x), int(801 * scale_y)))

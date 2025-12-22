@@ -76,10 +76,10 @@ def main():
         
         dates = date_str + " · " + hijri_str # Combine Gregorian and Hijri dates
         
-        name_surface = title_font.render(NAME, True, RED_COLOR)
-        address_surface = detail_font.render(ADDRESS, True, RED_COLOR)
-        time_surface = time_font.render(time_str, True, RED_COLOR)
-        date_surface = detail_font.render(dates, True, RED_COLOR)
+        name_surface = title_font.render(NAME, True, FOREST_GREEN_COLOR)
+        address_surface = detail_font.render(ADDRESS, True, BLACK_COLOR)
+        time_surface = time_font.render(time_str, True, BLACK_COLOR)
+        date_surface = detail_font.render(dates, True, FOREST_GREEN_COLOR)
         
         name_rect = name_surface.get_rect(center=(int(1217 * scale_x), int(98 * scale_y)))
         address_rect = address_surface.get_rect(center=(int(1217 * scale_x), int(169 * scale_y)))

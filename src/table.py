@@ -90,17 +90,17 @@ def render_prayer_table(screen, prayer_table, scale_x, scale_y):
     
     # Render header
     for col_idx, header_text in enumerate(["", "Adhan", "Iqamah"]):
-        render_centered(screen, header_text, RED_COLOR, col_positions, col_widths, table_font, col_idx, table_start_y)
+        render_centered(screen, header_text, FOREST_GREEN_COLOR, col_positions, col_widths, table_font, col_idx, table_start_y)
     
     # Render prayer rows
     for i, (prayer_name, adhan, iqamah) in enumerate(prayer_table):
         y = table_start_y + ((i + 1) * vertical_spacing)
         
         if prayer_name == next_prayer:
-            color = BLACK_COLOR
-        else:
             color = RED_COLOR
+        else:
+            color = BLACK_COLOR
         
-        screen.blit(table_font.render(prayer_name, True, RED_COLOR), (col_positions[0], y))  # Left-justified
+        screen.blit(table_font.render(prayer_name, True, FOREST_GREEN_COLOR), (col_positions[0], y))  # Left-justified
         render_centered(screen, adhan, color, col_positions, col_widths, table_font, 1, y)
         render_centered(screen, iqamah, color, col_positions, col_widths, table_font, 2, y)
