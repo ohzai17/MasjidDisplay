@@ -4,8 +4,8 @@ import pygame
 from datetime import datetime
 from hijridate import Gregorian
 from config import (
-    FPS, WIDTH, HEIGHT, FULLSCREEN, FONT_PATH,
-    NAME, ADDRESS, BLACK_COLOR, WHITE_COLOR, RED_COLOR,
+    FPS, WIDTH, HEIGHT, FULLSCREEN, FONT_PATH, DESIGN_WIDTH, 
+    DESIGN_HEIGHT, NAME, ADDRESS, BLACK_COLOR, WHITE_COLOR, RED_COLOR,
     FOREST_GREEN_COLOR, HIJRI_MONTH_NAMES
 )
 from utils import get_prayer_times
@@ -19,10 +19,7 @@ def main():
     pygame.init()
     pygame.display.set_caption(NAME)
     
-    if FULLSCREEN:
-        screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-    else:
-        screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN if FULLSCREEN else 0)
     
     width = screen.get_width()
     height = screen.get_height()
@@ -34,8 +31,8 @@ def main():
     mockup = pygame.transform.scale(mockup, (width, height))
     
     # Calculate scale factors
-    scale_x = width / WIDTH
-    scale_y = height / HEIGHT
+    scale_x = width / DESIGN_WIDTH
+    scale_y = height / DESIGN_HEIGHT
     
     # Load fonts
     time_font = pygame.font.Font(FONT_PATH, int(130 * scale_y)) # Current time and countdown

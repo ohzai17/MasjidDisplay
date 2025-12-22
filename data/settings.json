@@ -68,9 +68,7 @@
     "DISPLAY": {
         "WINDOW": {
             "FPS": 30,
-            "WIDTH": 1600,
-            "HEIGHT": 900,
-            "FULLSCREEN": false
+            "PRESET": 1
         },
         
         "NAME": "Masjid Nurul Islam",
