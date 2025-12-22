@@ -2,7 +2,7 @@
 
 import pygame
 from datetime import datetime, timedelta
-from config import DATA, FONT_PATH, BLACK_COLOR, RED_COLOR, FOREST_GREEN_COLOR
+from config import FONT_PATH, DATA, BLACK_COLOR, RED_COLOR, FOREST_GREEN_COLOR
 from utils import apply_manual_override, format_time, render_centered
 from countdown import get_next_prayer
 

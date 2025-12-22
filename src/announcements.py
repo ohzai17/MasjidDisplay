@@ -1,6 +1,6 @@
 # announcements.py
 
-from config import ANNOUNCEMENTS, BLACK_COLOR, RED_COLOR, FOREST_GREEN_COLOR
+from config import ANNOUNCEMENTS, BLACK_COLOR, FOREST_GREEN_COLOR
 
 def render_announcements(screen, scale_x, scale_y, title_font, detail_font):
     """Render announcements."""
@@ -9,7 +9,7 @@ def render_announcements(screen, scale_x, scale_y, title_font, detail_font):
         return
     
     # Render header
-    announcement_header_surface = title_font.render("Announcement:", True, RED_COLOR)
+    announcement_header_surface = title_font.render("Announcement:", True, FOREST_GREEN_COLOR)
     announcement_header_rect = announcement_header_surface.get_rect(center=(int(1090 * scale_x), int(294 * scale_y)))
     screen.blit(announcement_header_surface, announcement_header_rect)
     

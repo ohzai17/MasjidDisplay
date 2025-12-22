@@ -4,9 +4,9 @@ import pygame
 from datetime import datetime
 from hijridate import Gregorian
 from config import (
-    FPS, WIDTH, HEIGHT, FULLSCREEN, FONT_PATH, DESIGN_WIDTH, 
-    DESIGN_HEIGHT, NAME, ADDRESS, BLACK_COLOR, WHITE_COLOR, RED_COLOR,
-    FOREST_GREEN_COLOR, HIJRI_MONTH_NAMES
+    FONT_PATH, HIJRI_MONTH_NAMES, FPS, WIDTH, HEIGHT, FULLSCREEN, DESIGN_WIDTH, 
+    DESIGN_HEIGHT, NAME, ADDRESS, BLACK_COLOR, WHITE_COLOR,
+    FOREST_GREEN_COLOR
 )
 from test import set_datetime, advance_time # Temporary: Testing functions
 from utils import get_prayer_times
@@ -31,10 +31,6 @@ def main():
     
     clock = pygame.time.Clock()
     
-    # Temporary: Load background mockup image and scale
-    mockup = pygame.image.load('assets/mockup.jpg')
-    mockup = pygame.transform.scale(mockup, (width, height))
-    
     # Calculate scale factors
     scale_x = width / DESIGN_WIDTH
     scale_y = height / DESIGN_HEIGHT
@@ -45,20 +41,16 @@ def main():
     detail_font = pygame.font.Font(FONT_PATH, int(40 * scale_y)) # Date, Hijri date, address, and announcement details
     
     running = True
-    show_background = False # Temporary: Toggle for background display
+    show_announcements = False
     
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 running = False
-                
-        # Temporary: Toggle background with spacebar key            
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                show_background = not show_background
-        if show_background:
-            screen.blit(mockup, (0, 0))
-        else:
-            screen.fill(WHITE_COLOR)
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_a:
+                show_announcements = not show_announcements
+        
+        screen.fill(WHITE_COLOR)
         
         # Temporary: Moved for test datetime
         prayer_times = get_prayer_times()
@@ -93,7 +85,9 @@ def main():
         
         render_prayer_table(screen, prayer_table, scale_x, scale_y)
         render_countdown(screen, scale_x, scale_y, title_font, time_font)
-        render_announcements(screen, scale_x, scale_y, title_font, detail_font)
+        
+        if show_announcements:
+            render_announcements(screen, scale_x, scale_y, title_font, detail_font)
         
         pygame.display.flip()
         clock.tick(FPS)

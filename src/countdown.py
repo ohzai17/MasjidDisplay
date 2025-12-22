@@ -1,7 +1,7 @@
 # countdown.py
 
 from datetime import datetime, timedelta
-from config import BLACK_COLOR, RED_COLOR, FOREST_GREEN_COLOR
+from config import RED_COLOR, FOREST_GREEN_COLOR
 from utils import get_prayer_times, parse_time
 
 from test import set_datetime # Temporary: Testing function
