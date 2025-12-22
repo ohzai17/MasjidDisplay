@@ -46,7 +46,7 @@ def format_prayer_table(prayer_times):
     jummah = DATA['JUMMAH']
     jummah_adhan = jummah.get('ADHAN_TIME', '').strip()
     
-    if jummah_adhan:
+    if prayer_times and jummah_adhan:
         jummah_iqamah_time = calculate_iqamah(jummah_adhan, "Jummah")
         if not jummah_iqamah_time:
             jummah_iqamah_time = PLACEHOLDER
