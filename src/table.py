@@ -3,7 +3,7 @@
 import pygame
 from datetime import datetime, timedelta
 from config import FONT_PATH, DATA, BLACK_COLOR, RED_COLOR, FOREST_GREEN_COLOR
-from utils import apply_manual_override, format_time, render_centered
+from utils import apply_manual_override, format_time, calculate_iqamah, render_centered
 from countdown import get_next_prayer
 
 from test import set_datetime # Temporary: Testing function
@@ -28,9 +28,6 @@ def format_prayer_table(prayer_times):
     
     PLACEHOLDER = "––––––––––"
     
-    date_str = prayer_times.get('Date', '')
-    iqamah_offsets = DATA['IQAMAH_OFFSETS']
-    
     for prayer_name, csv_key in prayers:
         
         api_time = prayer_data.get(csv_key, '')
@@ -39,33 +36,22 @@ def format_prayer_table(prayer_times):
         
         # Calculate Iqamah time
         if adhan_time != PLACEHOLDER:
-            try:
-                adhan_datetime = datetime.strptime(f"{date_str} {adhan_time}", "%d %b %Y %I:%M %p")
-                offset_minutes = int(iqamah_offsets[prayer_name.upper()])
-                iqamah_datetime = adhan_datetime + timedelta(minutes=offset_minutes)
-                iqamah_time = iqamah_datetime.strftime("%I:%M %p")
-            except (ValueError, KeyError):
-                pass
-        else:
-            iqamah_time = PLACEHOLDER
+            iqamah_time = calculate_iqamah(adhan_time, prayer_name)
+            if not iqamah_time:
+                iqamah_time = PLACEHOLDER
         
         formatted_prayer_times.append((prayer_name, adhan_time, iqamah_time))
     
     # Handle Jummah
     jummah = DATA['JUMMAH']
     jummah_adhan = jummah.get('ADHAN_TIME', '').strip()
-    jummah_iqamah_offset = jummah.get('IQAMAH_OFFSET')
     
     if jummah_adhan:
-        try:
-            jummah_datetime = datetime.strptime(f"{date_str} {jummah_adhan}", "%d %b %Y %I:%M %p")
-            jummah_adhan_time = jummah_datetime.strftime("%I:%M %p")
-            jummah_iqamah_datetime = jummah_datetime + timedelta(minutes=jummah_iqamah_offset)
-            jummah_iqamah_time = jummah_iqamah_datetime.strftime("%I:%M %p")
-            
-            formatted_prayer_times.append(("Jummah", jummah_adhan_time, jummah_iqamah_time))
-        except (ValueError, KeyError):
-            formatted_prayer_times.append(("Jummah", PLACEHOLDER, PLACEHOLDER))
+        jummah_iqamah_time = calculate_iqamah(jummah_adhan, "Jummah")
+        if not jummah_iqamah_time:
+            jummah_iqamah_time = PLACEHOLDER
+        
+        formatted_prayer_times.append(("Jummah", jummah_adhan, jummah_iqamah_time))
     else:
         formatted_prayer_times.append(("Jummah", PLACEHOLDER, PLACEHOLDER))
     
@@ -81,7 +67,7 @@ def render_prayer_table(screen, prayer_table, scale_x, scale_y):
     vertical_spacing = int(font_size * 1.2)
     col_widths = [int(170 * scale_x), int(275 * scale_x), int(186 * scale_x)]
     
-    next_prayer,_= get_next_prayer(set_datetime()) # Temporary: Use test mode datetime
+    next_prayer, _, _ = get_next_prayer(set_datetime()) # Temporary: Use test mode datetime
     
     # Calculate starting x-positions for each column
     col_positions = [table_start_x,
