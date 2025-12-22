@@ -66,12 +66,12 @@ def cache_status():
     
     # If CSV file does not exist, fetch new data
     if not os.path.exists(CSV_PATH):
-        return True
+        return True, 0
     
     file_age = (datetime.now() - datetime.fromtimestamp(os.path.getmtime(CSV_PATH))).days
     
     # Fetch new data if age of cached data exceeds refresh interval (e.g., 30 days)
-    return file_age >= DATA['REFRESH_INTERVAL']
+    return file_age >= DATA['REFRESH_INTERVAL'], file_age
 
 def save_to_csv(prayer_times):
     """Save prayer data to CSV file."""
@@ -120,8 +120,11 @@ def save_to_csv(prayer_times):
 def main():
     """Fetch and save prayer times if needed."""
     
-    if not cache_status():
-        print(f"\nCache data is up-to-date. Skipping fetch.\n")
+    needs_fetch, file_age = cache_status()
+    
+    if not needs_fetch:
+        days_left = DATA['REFRESH_INTERVAL'] - file_age
+        print(f"\nCache data is up-to-date. There are {days_left} days left. Skipping fetch.\n")
         return
     
     print(f"\nFetching prayer times...")
