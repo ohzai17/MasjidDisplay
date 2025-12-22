@@ -4,9 +4,8 @@ import pygame
 from datetime import datetime
 from hijridate import Gregorian
 from config import (
-    FONT_PATH, HIJRI_MONTH_NAMES, FPS, WIDTH, HEIGHT, FULLSCREEN, DESIGN_WIDTH, 
-    DESIGN_HEIGHT, NAME, ADDRESS, BLACK_COLOR, WHITE_COLOR,
-    FOREST_GREEN_COLOR
+    FONT_PATH, HIJRI_MONTH_NAMES, FPS, WIDTH, HEIGHT, FULLSCREEN, DESIGN_WIDTH,
+    DESIGN_HEIGHT, NAME, ADDRESS, BLACK_COLOR, WHITE_COLOR, FOREST_GREEN_COLOR
 )
 from test import set_datetime, advance_time # Temporary: Testing functions
 from utils import get_prayer_times
@@ -36,9 +35,9 @@ def main():
     scale_y = height / DESIGN_HEIGHT
     
     # Load fonts
-    time_font = pygame.font.Font(FONT_PATH, int(130 * scale_y)) # Current time and countdown
-    title_font = pygame.font.Font(FONT_PATH, int(85 * scale_y)) # Name label, announcement label, countdown label
-    detail_font = pygame.font.Font(FONT_PATH, int(40 * scale_y)) # Date, Hijri date, address, and announcement details
+    time_font = pygame.font.Font(FONT_PATH, int(130 * scale_y))
+    title_font = pygame.font.Font(FONT_PATH, int(85 * scale_y))
+    detail_font = pygame.font.Font(FONT_PATH, int(40 * scale_y))
     
     running = True
     show_announcements = False
