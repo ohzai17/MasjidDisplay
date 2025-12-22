@@ -1,8 +1,8 @@
 # countdown.py
 
 from datetime import datetime, timedelta
-from config import RED_COLOR, FOREST_GREEN_COLOR
-from utils import get_prayer_times, apply_manual_override, format_time, parse_time, calculate_iqamah
+from config import DATA, RED_COLOR, FOREST_GREEN_COLOR
+from utils import get_prayer_times, apply_manual_override, format_time, parse_time, get_countdown_time
 
 from test import set_datetime # Temporary: Testing function
 
@@ -26,33 +26,29 @@ def get_next_prayer(now):
     for prayer_name, adhan_key in prayers:
         api_time = prayer_times.get(adhan_key, "")
         adhan_time_str = format_time(apply_manual_override(prayer_name, api_time))
-        adhan_time = parse_time(adhan_time_str)
         
-        if adhan_time:
-            adhan_datetime = datetime.combine(now.date(), adhan_time)
-            
-            # No Iqamah countdown for Sunrise
-            if prayer_name == "Sunrise":
+        # No Iqamah countdown for Sunrise
+        if prayer_name == "Sunrise":
+            adhan_time = parse_time(adhan_time_str)
+            if adhan_time:
+                adhan_datetime = datetime.combine(now.date(), adhan_time)
                 if adhan_datetime > now:
                     return prayer_name, adhan_datetime, False
-                continue
-            
-            # Check if Adhan is upcoming or passed
-            if adhan_datetime > now:
-                # Adhan is next, count down to Adhan
-                return prayer_name, adhan_datetime, False
-            else:
-                # Adhan has passed, check if Iqamah hasn't passed yet
-                iqamah_time_str = calculate_iqamah(adhan_time_str, prayer_name)
-                if iqamah_time_str:
-                    iqamah_time = parse_time(iqamah_time_str)
-                    if iqamah_time:
-                        iqamah_datetime = datetime.combine(now.date(), iqamah_time)
-                        # If Iqamah hasn't happened yet, count down to it
-                        if iqamah_datetime > now:
-                            return prayer_name, iqamah_datetime, True
-                        
-                        # If Iqamah has passed, the loop continues to the next prayer
+            continue
+        
+        # On Friday, replace Dhuhr with Jummah
+        if prayer_name == "Dhuhr" and now.weekday() == 4:
+            jummah_adhan_str = DATA['JUMMAH'].get('ADHAN_TIME', '').strip()
+            if jummah_adhan_str:
+                countdown_time, is_iqamah = get_countdown_time("Jummah", jummah_adhan_str, now)
+                if countdown_time:
+                    return "Jummah", countdown_time, is_iqamah
+            continue
+        
+        # Regular prayers
+        countdown_time, is_iqamah = get_countdown_time(prayer_name, adhan_time_str, now)
+        if countdown_time:
+            return prayer_name, countdown_time, is_iqamah
     
     # Countdown to next day's Fajr adhan if all today's prayers have passed
     api_time = prayer_times.get("Fajr", "")
@@ -79,11 +75,11 @@ def render_countdown(screen, scale_x, scale_y, title_font, time_font):
         
         # Format header text
         if next_prayer == "Sunrise":
-            header_text = f"Time Until Sunrise"
-        elif is_iqamah:
-            header_text = f"Time Until Iqamah"
+            header_text = "Time Until Sunrise"
+        elif next_prayer == "Jummah":
+            header_text = "Time Until Khutbah" if is_iqamah else "Time Until Jummah"
         else:
-            header_text = f"Time Until {next_prayer}"
+            header_text = "Time Until Iqamah" if is_iqamah else f"Time Until {next_prayer}"
         
         # Render header and countdown
         countdown_header_surface = title_font.render(header_text, True, FOREST_GREEN_COLOR)

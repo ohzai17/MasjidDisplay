@@ -72,6 +72,31 @@ def calculate_iqamah(adhan_time_str, prayer_name):
     except (ValueError, KeyError):
         return ""
 
+def get_countdown_time(prayer_name, adhan_time_str, now):
+    """Get the countdown (Adhan or Iqamah) for a given prayer."""
+    
+    adhan_time = parse_time(adhan_time_str)
+    if not adhan_time:
+        return None, None
+    
+    adhan_datetime = datetime.combine(now.date(), adhan_time)
+    
+    # Count down to Adhan if upcoming
+    if adhan_datetime > now:
+        return adhan_datetime, False
+    
+    # Adhan has passed, check if Iqamah is upcoming
+    iqamah_time_str = calculate_iqamah(adhan_time_str, prayer_name)
+    if iqamah_time_str:
+        iqamah_time = parse_time(iqamah_time_str)
+        if iqamah_time:
+            iqamah_datetime = datetime.combine(now.date(), iqamah_time)
+            if iqamah_datetime > now:
+                return iqamah_datetime, True
+    
+    # Both have passed
+    return None, None
+
 def render_centered(screen, text, color, col_positions, col_widths, table_font, col, y_pos):
     """Render text centered in the specified column."""
     
