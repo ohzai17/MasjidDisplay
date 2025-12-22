@@ -6,6 +6,8 @@ from config import DATA, FONT_PATH, BLACK_COLOR, RED_COLOR, FOREST_GREEN_COLOR
 from utils import apply_manual_override, format_time, render_centered
 from countdown import get_next_prayer
 
+from test import set_datetime # Temporary: Testing function
+
 def format_prayer_table(prayer_times):
     """Format prayer times into a table."""
     
@@ -79,7 +81,7 @@ def render_prayer_table(screen, prayer_table, scale_x, scale_y):
     vertical_spacing = int(font_size * 1.2)
     col_widths = [int(170 * scale_x), int(275 * scale_x), int(186 * scale_x)]
     
-    next_prayer,_= get_next_prayer(datetime.now())
+    next_prayer,_= get_next_prayer(set_datetime()) # Temporary: Use test mode datetime
     
     # Calculate starting x-positions for each column
     col_positions = [table_start_x,

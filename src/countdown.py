@@ -4,6 +4,8 @@ from datetime import datetime, timedelta
 from config import BLACK_COLOR, RED_COLOR, FOREST_GREEN_COLOR
 from utils import get_prayer_times, parse_time
 
+from test import set_datetime # Temporary: Testing function
+
 def get_next_prayer(now):
     """Find the next prayer after current time."""
     
@@ -43,11 +45,11 @@ def get_next_prayer(now):
 def render_countdown(screen, scale_x, scale_y, title_font, time_font):
     """Render the countdown to next prayer."""
     
-    next_prayer, next_prayer_time = get_next_prayer(datetime.now())
+    next_prayer, next_prayer_time = get_next_prayer(set_datetime()) # Temporary: Use test mode datetime
     
     if next_prayer and next_prayer_time:
         # Calculate time difference
-        time_diff = next_prayer_time - datetime.now() + timedelta(seconds=1)
+        time_diff = next_prayer_time - set_datetime() + timedelta(seconds=1) # Temporary: Use test mode datetime
         total_seconds = int(time_diff.total_seconds())
         hours = total_seconds // 3600
         minutes = (total_seconds % 3600) // 60

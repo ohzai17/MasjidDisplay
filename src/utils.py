@@ -4,10 +4,12 @@ import csv
 from datetime import datetime
 from config import CSV_PATH, DATA
 
+from test import set_datetime  # Temporary: Testing function
+
 def get_prayer_times():
     """Load prayer times from CSV file."""
     
-    date = datetime.now()
+    date = set_datetime() # Temporary: Use test mode datetime
     date_str = date.strftime("%d %b %Y")  # Format: "16 Dec 2025"
     
     try:
