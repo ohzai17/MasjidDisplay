@@ -97,6 +97,35 @@ def get_countdown_time(prayer_name, adhan_time_str, now):
     # Both have passed
     return None, None
 
+def get_prayer_in_progress(prayer_name, adhan_time_str, now):
+    """Check if the Iqamah has passed and the prayer duration has not ended."""
+    
+    # Calculate Iqamah time first
+    iqamah_time_str = calculate_iqamah(adhan_time_str, prayer_name)
+    if not iqamah_time_str:
+        return False, None
+    
+    iqamah_time = parse_time(iqamah_time_str)
+    if not iqamah_time:
+        return False, None
+    
+    iqamah_datetime = datetime.combine(now.date(), iqamah_time)
+    
+    # Check if Iqamah has occurred
+    if iqamah_datetime > now:
+        return False, None
+    
+    prayer_duration_config = DATA.get('PRAYER_DURATION', {})
+    duration_minutes = prayer_duration_config.get(prayer_name.upper(), 15)
+    
+    prayer_end_time = iqamah_datetime + timedelta(minutes=duration_minutes)
+    
+    # Check if prayer is still in progress
+    if now < prayer_end_time:
+        return True, prayer_end_time
+    
+    return False, None
+
 def render_centered(screen, text, color, col_positions, col_widths, table_font, col, y_pos):
     """Render text centered in the specified column."""
     

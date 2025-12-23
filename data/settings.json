@@ -49,6 +49,15 @@
             "IQAMAH_OFFSET": 30
         },
         
+        "PRAYER_DURATION": {
+            "FAJR": 15,
+            "DHUHR": 15,
+            "ASR": 15,
+            "MAGHRIB": 10,
+            "ISHA": 15,
+            "JUMMAH": 30
+        },
+
         "HIJRI_MONTH_NAMES": {
             "1": "Muharram",
             "2": "Safar",
@@ -68,18 +77,18 @@
     "DISPLAY": {
         "WINDOW": {
             "FPS": 30,
-            "PRESET": 1
+            "PRESET": 2
         },
         
         "NAME": "Masjid Nurul Islam",
         "ADDRESS": "615 Rutger St, Utica, NY 13501",
         
         "ANNOUNCEMENTS": [
-            "Ramadan Begins: Month DD, YYYY",
-            "Taraweeh Salah: HH:MM PM",
-            "Eid Al-Fitr Salah: Month DD, YYYY @ HH:MM AM",
-            "Zakat Al-Fitr: $XX Per Person",
-            "Eid Al-Adha Salah: Month DD, YYYY @ HH:MM AM"
+            "Ramadan Begins: February 13, 2025",
+            "Taraweeh Salah: 09:15 PM",
+            "Eid Al-Fitr Salah: June 06, 2025 @ 08:30 AM",
+            "Zakat Al-Fitr: $15 Per Person",
+            "Eid Al-Adha Salah: June 16, 2025 @ 08:30 AM"
         ],
         
         "COLORS": {
