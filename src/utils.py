@@ -34,12 +34,12 @@ def apply_manual_override(prayer_name: str, api_time: str):
     
     return manual_time if manual_time else api_time
 
-def format_time(value):
+def format_time(time_str):
     """Validate and format time string."""
     
-    if not value or not value.strip():
+    if not time_str or not time_str.strip():
         return "––––––––––"
-    return value.strip()
+    return time_str.strip()
 
 def parse_time(time_str):
     """Convert time string to datetime object."""
@@ -48,6 +48,16 @@ def parse_time(time_str):
         return datetime.strptime(time_str.strip(), "%I:%M %p").time()
     except ValueError:
         return None
+    
+def get_seconds(prayer_times):
+    """Get prayer times in seconds since midnight."""
+    
+    if not prayer_times:
+        return None
+    def to_sec(t_str):
+        t = datetime.strptime(t_str.strip(), "%I:%M %p")
+        return t.hour * 3600 + t.minute * 60
+    return {k: to_sec(v) for k, v in prayer_times.items() if k != 'Date'}
 
 def calculate_iqamah(adhan_time_str, prayer_name):
     """Calculate Iqamah time from Adhan time and offset."""
