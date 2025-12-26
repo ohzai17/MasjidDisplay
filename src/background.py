@@ -34,8 +34,8 @@ def get_gradient_colors(now, prayer_times_seconds):
             
     return midnight_color, midnight_color
 
-def render_gradient(surface, top_color, bottom_color):
-    """Render a vertical gradient."""
+def render_background(surface, top_color, bottom_color):
+    """Render a gradient background."""
     
     # Create a small 2x2 surface for the gradient
     gradient_surface = pygame.Surface((2, 2))
