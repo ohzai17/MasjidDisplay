@@ -1,9 +1,7 @@
 # table.py
 
-import pygame
-from datetime import datetime, timedelta
-from config import FONT_PATH, DATA, BLACK_COLOR, RED_COLOR, FOREST_GREEN_COLOR
-from utils import apply_manual_override, format_time, calculate_iqamah, render_centered
+from config import DATA, BLACK_COLOR, RED_COLOR, FOREST_GREEN_COLOR
+from utils import apply_manual_override, format_time, calculate_iqamah, render_text
 from countdown import get_next_prayer
 
 from test import set_datetime # Temporary: Testing function
@@ -57,14 +55,11 @@ def format_prayer_table(prayer_times):
     
     return formatted_prayer_times
 
-def render_prayer_table(screen, prayer_table, scale_x, scale_y):
+def render_prayer_table(screen, prayer_table, scale_x, scale_y, table_font):
     """Render the prayer times table."""
     
-    font_size = int(63 * scale_y)
-    table_font = pygame.font.Font(FONT_PATH, font_size)
-    
-    table_start_x, table_start_y = int(46 * scale_x), int(252 * scale_y)
-    vertical_spacing = int(font_size * 1.2)
+    table_start_x, table_start_y = int(47 * scale_x), int(298 * scale_y)
+    vertical_spacing = int(table_font.get_height() * 1.0)
     col_widths = [int(170 * scale_x), int(275 * scale_x), int(186 * scale_x)]
     
     next_prayer, _, _, _ = get_next_prayer(set_datetime()) # Temporary: Use test mode datetime
@@ -76,7 +71,13 @@ def render_prayer_table(screen, prayer_table, scale_x, scale_y):
     
     # Render header
     for col_idx, header_text in enumerate(["", "Adhan", "Iqamah"]):
-        render_centered(screen, header_text, FOREST_GREEN_COLOR, col_positions, col_widths, table_font, col_idx, table_start_y)
+        x = col_positions[col_idx] + col_widths[col_idx] // 2
+        y = table_start_y
+        
+        render_text(
+            screen, header_text, table_font, FOREST_GREEN_COLOR,
+            (x, y), align="center"
+        )
     
     # Render prayer rows
     for i, (prayer_name, adhan, iqamah) in enumerate(prayer_table):
@@ -87,6 +88,22 @@ def render_prayer_table(screen, prayer_table, scale_x, scale_y):
         else:
             color = BLACK_COLOR
         
-        screen.blit(table_font.render(prayer_name, True, FOREST_GREEN_COLOR), (col_positions[0], y))  # Left-justified
-        render_centered(screen, adhan, color, col_positions, col_widths, table_font, 1, y)
-        render_centered(screen, iqamah, color, col_positions, col_widths, table_font, 2, y)
+        # Render prayer name
+        render_text(
+            screen, prayer_name, table_font, FOREST_GREEN_COLOR,
+            (col_positions[0], y), align="left"
+        )
+        
+        # Render Adhan
+        x_adhan = col_positions[1] + col_widths[1] // 2
+        render_text(
+            screen, adhan, table_font, color,
+            (x_adhan, y), align="center"
+        )
+        
+        # Render Iqamah
+        x_iqamah = col_positions[2] + col_widths[2] // 2
+        render_text(
+            screen, iqamah, table_font, color,
+            (x_iqamah, y), align="center"
+        )

@@ -2,8 +2,11 @@
 
 from datetime import datetime, timedelta
 from config import DATA, RED_COLOR, FOREST_GREEN_COLOR
-from utils import get_prayer_times, apply_manual_override, format_time, parse_time, get_countdown_time, get_prayer_in_progress
-
+from utils import (
+    get_prayer_times, apply_manual_override, format_time,
+    parse_time, get_countdown_time, get_prayer_in_progress,
+    render_text
+)
 from test import set_datetime # Temporary: Testing function
 
 def get_next_prayer(now):
@@ -71,7 +74,7 @@ def get_next_prayer(now):
     return None, None, None, False
 
 def render_countdown(screen, scale_x, scale_y, title_font, time_font):
-    """Render the countdown to next prayer."""
+    """Render the countdown."""
     
     next_prayer, next_prayer_time, is_iqamah, in_progress = get_next_prayer(set_datetime())
     
@@ -90,18 +93,20 @@ def render_countdown(screen, scale_x, scale_y, title_font, time_font):
             countdown_text = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
             
             if next_prayer == "Sunrise":
-                header_text = "Time Until Sunrise"
+                header_text = "Time Until Sunrise:"
             elif next_prayer == "Jummah":
-                header_text = "Time Until Khutbah" if is_iqamah else "Time Until Jummah"
+                header_text = "Time Until Khutbah:" if is_iqamah else "Time Until Jummah:"
             else:
-                header_text = "Time Until Iqamah" if is_iqamah else f"Time Until {next_prayer}"
+                header_text = "Time Until Iqamah:" if is_iqamah else f"Time Until {next_prayer}:"
         
-        # Render header and countdown
-        countdown_header_surface = title_font.render(header_text, True, FOREST_GREEN_COLOR)
-        countdown_surface = time_font.render(countdown_text, True, RED_COLOR)
+        render_text(
+            screen, header_text, title_font, FOREST_GREEN_COLOR,
+            (int(1215 * scale_x), int(670 * scale_y)),
+            align="center"
+        )
         
-        countdown_header_rect = countdown_header_surface.get_rect(center=(int(1215 * scale_x), int(670 * scale_y)))
-        countdown_rect = countdown_surface.get_rect(center=(int(1217 * scale_x), int(801 * scale_y)))
-        
-        screen.blit(countdown_header_surface, countdown_header_rect)
-        screen.blit(countdown_surface, countdown_rect)
+        render_text(
+            screen, countdown_text, time_font, RED_COLOR,
+            (int(1217 * scale_x), int(801 * scale_y)),
+            align="center"
+        )
