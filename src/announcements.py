@@ -1,17 +1,19 @@
 # announcements.py
 
-from config import ANNOUNCEMENTS, BLACK_COLOR, FOREST_GREEN_COLOR
-from utils import render_text
+from config import ANNOUNCEMENTS
+from utils import render_text, get_text_colors
 
-def render_announcements(screen, scale_x, scale_y, title_font, detail_font):
+def render_announcements(screen, scale_x, scale_y, title_font, detail_font, current_seconds, prayer_times_seconds):
     """Render announcements."""
     
     if not ANNOUNCEMENTS:
         return
     
+    primary_color, secondary_color, _ = get_text_colors(current_seconds, prayer_times_seconds)
+    
     # Render header
     render_text(
-        screen, "Announcement:", title_font, FOREST_GREEN_COLOR,
+        screen, "Announcement:", title_font, primary_color,
         (int(1217 * scale_x), int(289 * scale_y)),
         align="center"
     )
@@ -26,17 +28,17 @@ def render_announcements(screen, scale_x, scale_y, title_font, detail_font):
         # Render dash
         dash = render_text(
             screen, "-", detail_font, 
-            BLACK_COLOR, (x, y), align="left"
+            secondary_color, (x, y), align="left"
         )
         
         # Render before colon
         before = render_text(
             screen, f"      {before.strip()}", detail_font,
-            FOREST_GREEN_COLOR, (dash.right, y), align="left"
+            primary_color, (dash.right, y), align="left"
         )
         
         # Render after colon
         render_text(
             screen, f": {after.strip()[:26]}", detail_font,
-            BLACK_COLOR, (before.right, y), align="left"
+            secondary_color, (before.right, y), align="left"
         )

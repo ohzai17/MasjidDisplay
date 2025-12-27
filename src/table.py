@@ -1,9 +1,11 @@
 # table.py
 
-from config import DATA, BLACK_COLOR, RED_COLOR, FOREST_GREEN_COLOR
-from utils import apply_manual_override, format_time, calculate_iqamah, render_text
+from config import DATA
 from countdown import get_next_prayer
-
+from utils import (
+    apply_manual_override, format_time, calculate_iqamah, render_text,
+    get_text_colors
+)
 from test import set_datetime # Temporary: Testing function
 
 def format_prayer_table(prayer_times):
@@ -55,7 +57,7 @@ def format_prayer_table(prayer_times):
     
     return formatted_prayer_times
 
-def render_prayer_table(screen, prayer_table, scale_x, scale_y, table_font):
+def render_prayer_table(screen, prayer_table, scale_x, scale_y, table_font, current_seconds, prayer_times_seconds):
     """Render the prayer times table."""
     
     table_start_x, table_start_y = int(47 * scale_x), int(298 * scale_y)
@@ -69,13 +71,15 @@ def render_prayer_table(screen, prayer_table, scale_x, scale_y, table_font):
             table_start_x + col_widths[0],
             table_start_x + col_widths[0] + col_widths[1]]
     
+    primary_color, secondary_color, tertiary_color = get_text_colors(current_seconds, prayer_times_seconds)
+    
     # Render header
     for col_idx, header_text in enumerate(["", "Adhan", "Iqamah"]):
         x = col_positions[col_idx] + col_widths[col_idx] // 2
         y = table_start_y
         
         render_text(
-            screen, header_text, table_font, FOREST_GREEN_COLOR,
+            screen, header_text, table_font, primary_color,
             (x, y), align="center"
         )
     
@@ -84,13 +88,15 @@ def render_prayer_table(screen, prayer_table, scale_x, scale_y, table_font):
         y = table_start_y + ((i + 1) * vertical_spacing)
         
         if prayer_name == next_prayer:
-            color = RED_COLOR
+            color = tertiary_color
+            outline_color = secondary_color
         else:
-            color = BLACK_COLOR
+            color = secondary_color
+            outline_color = None
         
         # Render prayer name
         render_text(
-            screen, prayer_name, table_font, FOREST_GREEN_COLOR,
+            screen, prayer_name, table_font, primary_color,
             (col_positions[0], y), align="left"
         )
         
@@ -98,12 +104,14 @@ def render_prayer_table(screen, prayer_table, scale_x, scale_y, table_font):
         x_adhan = col_positions[1] + col_widths[1] // 2
         render_text(
             screen, adhan, table_font, color,
-            (x_adhan, y), align="center"
+            (x_adhan, y), align="center",
+            outline_color=outline_color
         )
         
         # Render Iqamah
         x_iqamah = col_positions[2] + col_widths[2] // 2
         render_text(
             screen, iqamah, table_font, color,
-            (x_iqamah, y), align="center"
+            (x_iqamah, y), align="center",
+            outline_color=outline_color
         )

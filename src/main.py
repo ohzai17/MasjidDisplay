@@ -16,7 +16,7 @@ from display import render_main
 
 # Temporary: Enable test mode and set test time
 TEST_MODE = True
-test_time = datetime(2025, 12, 25, 6, 0, 57) # (year, month, day, hour, minute, second)
+test_time = datetime(2025, 12, 26, 6, 0, 57) # (year, month, day, hour, minute, second)
 
 def main():
     
@@ -69,12 +69,12 @@ def main():
         
         # Render announcements
         if show_announcements:
-            render_announcements(screen, scale_x, scale_y, title_font, detail_font)
+            render_announcements(screen, scale_x, scale_y, title_font, detail_font, current_seconds, prayer_times_seconds)
         
         # Render prayer table, countdown, and main display
-        render_prayer_table(screen, prayer_table, scale_x, scale_y, table_font)
-        render_countdown(screen, scale_x, scale_y, title_font, time_font)
-        render_main(screen, current_datetime, scale_x, scale_y, time_font, title_font, detail_font)
+        render_prayer_table(screen, prayer_table, scale_x, scale_y, table_font, current_seconds, prayer_times_seconds)
+        render_countdown(screen, scale_x, scale_y, title_font, time_font, current_seconds, prayer_times_seconds)
+        render_main(screen, current_datetime, scale_x, scale_y, time_font, title_font, detail_font, current_seconds, prayer_times_seconds)
         
         pygame.display.flip()
         clock.tick(FPS)

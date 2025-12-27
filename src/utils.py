@@ -3,7 +3,9 @@
 import csv
 import pygame
 from datetime import datetime, timedelta
-from config import CSV_PATH, DATA
+from config import (
+    CSV_PATH, DATA, BLACK_COLOR, WHITE_COLOR, BLUE_COLOR, GOLD_COLOR
+)
 
 from test import set_datetime  # Temporary: Testing function
 
@@ -138,18 +140,11 @@ def get_prayer_in_progress(prayer_name, adhan_time_str, now):
     return False, None
 
 def render_text(
-    surface,
-    text,
-    font,
-    color,
-    pos,
+    surface, text, font, color, pos,
     align="center",
-    scale_x=1.0,
-    scale_y=1.0,
-    outline_color=None,
-    outline_width=0,
-    shadow_color=None,
-    shadow_offset=(2, 2)
+    scale_x = 1.0, scale_y = 1.0,
+    outline_color = None, outline_width = 2,
+    shadow_color = None, shadow_offset = (2, 2)
 ):
     """Render text."""
     
@@ -200,3 +195,32 @@ def render_text(
     surface.blit(text_surface, rect)
     
     return rect
+
+def get_text_colors(current_seconds, prayer_times_seconds):
+    """Adjust text colors."""
+    
+    maghrib_sec = prayer_times_seconds["Maghrib"]
+    fajr_sec = prayer_times_seconds["Fajr"]
+
+    # 30 minutes before Fajr (dawn window start)
+    dawn_start = (fajr_sec - 1800) % 86400
+    
+    # 30 minutes before Maghrib (sunset window start)
+    sunset_start = (maghrib_sec - 1800) % 86400
+
+    # Daytime: from 30 min before Fajr to 30 min before Maghrib
+    # Nighttime: from 30 min before Maghrib to 30 min before Fajr (overnight)
+    
+    if dawn_start < sunset_start:
+        # Typical case: both windows on the same day
+        is_day = dawn_start <= current_seconds < sunset_start
+    else:
+        # Handles rare case where Fajr is after Maghrib (e.g., polar regions)
+        is_day = current_seconds >= dawn_start or current_seconds < sunset_start
+
+    if is_day:
+        # Daytime colors
+        return BLUE_COLOR, BLACK_COLOR, WHITE_COLOR
+    else:
+        # Nighttime colors
+        return GOLD_COLOR, WHITE_COLOR, BLACK_COLOR

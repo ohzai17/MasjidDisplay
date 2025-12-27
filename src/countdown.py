@@ -1,11 +1,11 @@
 # countdown.py
 
 from datetime import datetime, timedelta
-from config import DATA, RED_COLOR, FOREST_GREEN_COLOR
+from config import DATA
 from utils import (
     get_prayer_times, apply_manual_override, format_time,
     parse_time, get_countdown_time, get_prayer_in_progress,
-    render_text
+    render_text, get_text_colors
 )
 from test import set_datetime # Temporary: Testing function
 
@@ -73,10 +73,12 @@ def get_next_prayer(now):
     
     return None, None, None, False
 
-def render_countdown(screen, scale_x, scale_y, title_font, time_font):
+def render_countdown(screen, scale_x, scale_y, title_font, time_font, current_seconds, prayer_times_seconds):
     """Render the countdown."""
     
     next_prayer, next_prayer_time, is_iqamah, in_progress = get_next_prayer(set_datetime())
+    
+    primary_color, secondary_color, tertiary_color = get_text_colors(current_seconds, prayer_times_seconds)
     
     if next_prayer and next_prayer_time:
         # Format header text
@@ -100,13 +102,13 @@ def render_countdown(screen, scale_x, scale_y, title_font, time_font):
                 header_text = "Time Until Iqamah:" if is_iqamah else f"Time Until {next_prayer}:"
         
         render_text(
-            screen, header_text, title_font, FOREST_GREEN_COLOR,
+            screen, header_text, title_font, primary_color,
             (int(1215 * scale_x), int(670 * scale_y)),
             align="center"
         )
         
         render_text(
-            screen, countdown_text, time_font, RED_COLOR,
+            screen, countdown_text, time_font, tertiary_color,
             (int(1217 * scale_x), int(801 * scale_y)),
-            align="center"
+            align="center", outline_color=secondary_color
         )

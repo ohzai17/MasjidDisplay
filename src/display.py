@@ -1,10 +1,10 @@
 # display.py
 
 from hijridate import Gregorian
-from config import HIJRI_MONTH_NAMES, NAME, ADDRESS, BLACK_COLOR, FOREST_GREEN_COLOR
-from utils import render_text
+from config import HIJRI_MONTH_NAMES, NAME, ADDRESS
+from utils import render_text, get_text_colors
 
-def render_main(screen, current_datetime, scale_x, scale_y, time_font, title_font, detail_font):
+def render_main(screen, current_datetime, scale_x, scale_y, time_font, title_font, detail_font, current_seconds, prayer_times_seconds):
     """Render main display."""
     
     # Time and date formatting
@@ -18,30 +18,32 @@ def render_main(screen, current_datetime, scale_x, scale_y, time_font, title_fon
     
     dates = date_str + " · " + hijri_str # Combine Gregorian and Hijri dates
     
+    primary_color, secondary_color, _ = get_text_colors(current_seconds, prayer_times_seconds)
+    
     # Render name
     render_text(
-        screen, NAME, title_font, FOREST_GREEN_COLOR,
+        screen, NAME, title_font, primary_color,
         (int(1218 * scale_x), int(86 * scale_y)), 
         align="center"
     )
     
     # Render address
     render_text(
-        screen, ADDRESS, detail_font, BLACK_COLOR,
+        screen, ADDRESS, detail_font, secondary_color,
         (int(1218 * scale_x), int(159 * scale_y)),
         align="center"
     )
     
     # Render time
     render_text(
-        screen, time_str, time_font, BLACK_COLOR,
+        screen, time_str, time_font, secondary_color,
         (int(363 * scale_x), int(174 * scale_y)), 
         align="center"
     )
     
     # Render dates
     render_text(
-        screen, dates, detail_font, FOREST_GREEN_COLOR,
+        screen, dates, detail_font, primary_color,
         (int(363 * scale_x), int(68 * scale_y)),
         align="center"
     )
