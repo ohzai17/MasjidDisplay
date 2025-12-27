@@ -201,26 +201,19 @@ def get_text_colors(current_seconds, prayer_times_seconds):
     
     maghrib_sec = prayer_times_seconds["Maghrib"]
     fajr_sec = prayer_times_seconds["Fajr"]
-
-    # 30 minutes before Fajr (dawn window start)
-    dawn_start = (fajr_sec - 1800) % 86400
     
-    # 30 minutes before Maghrib (sunset window start)
-    sunset_start = (maghrib_sec - 1800) % 86400
-
-    # Daytime: from 30 min before Fajr to 30 min before Maghrib
-    # Nighttime: from 30 min before Maghrib to 30 min before Fajr (overnight)
+    # Calculate window boundaries (in seconds since midnight)
+    day_start = (fajr_sec - 1800) % 86400   # 30 min before Fajr
+    day_end = (maghrib_sec - 1800) % 86400  # 30 min before Maghrib
     
-    if dawn_start < sunset_start:
-        # Typical case: both windows on the same day
-        is_day = dawn_start <= current_seconds < sunset_start
+    # Determine if current time is in the daytime window
+    if day_start < day_end:
+        is_daytime = day_start <= current_seconds < day_end
     else:
-        # Handles rare case where Fajr is after Maghrib (e.g., polar regions)
-        is_day = current_seconds >= dawn_start or current_seconds < sunset_start
-
-    if is_day:
-        # Daytime colors
-        return BLUE_COLOR, BLACK_COLOR, WHITE_COLOR
+        # Rare case where window crosses midnight
+        is_daytime = current_seconds >= day_start or current_seconds < day_end
+    
+    if is_daytime:
+        return BLUE_COLOR, BLACK_COLOR, WHITE_COLOR  # Day colors
     else:
-        # Nighttime colors
-        return GOLD_COLOR, WHITE_COLOR, BLACK_COLOR
+        return GOLD_COLOR, WHITE_COLOR, BLACK_COLOR  # Night colors

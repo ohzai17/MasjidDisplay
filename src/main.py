@@ -16,7 +16,7 @@ from display import render_main
 
 # Temporary: Enable test mode and set test time
 TEST_MODE = True
-test_time = datetime(2025, 12, 26, 6, 0, 57) # (year, month, day, hour, minute, second)
+test_time = datetime(2025, 12, 27, 16, 0, 57)
 
 def main():
     
@@ -44,12 +44,26 @@ def main():
     running = True
     show_announcements = False
     
+    # Temporary: Variables for time control in test mode
+    rewind = False
+    fast_forward = False
+    
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 running = False
             if event.type == pygame.KEYDOWN and event.key == pygame.K_a:
                 show_announcements = not show_announcements
+            
+            # Temporary: Time control for test mode
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
+                rewind = True
+            if event.type == pygame.KEYUP and event.key == pygame.K_LEFT:
+                rewind = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
+                fast_forward = True
+            if event.type == pygame.KEYUP and event.key == pygame.K_RIGHT:
+                fast_forward = False
         
         # Temporary: Moved for test datetime
         prayer_times = get_prayer_times()
@@ -81,7 +95,12 @@ def main():
         
         # Temporary: Advance test time
         if TEST_MODE:
-            advance_time(seconds=1/FPS)
+            if fast_forward:
+                advance_time(seconds=50)  # Fast forward by 50 seconds per frame
+            elif rewind:
+                advance_time(seconds=-10) # Rewind by 10 seconds per frame
+            else:
+                advance_time(seconds=1/FPS)
     
     pygame.quit()
 
