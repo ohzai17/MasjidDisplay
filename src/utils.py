@@ -4,7 +4,7 @@ import csv
 import pygame
 from datetime import datetime, timedelta
 from config import (
-    CSV_PATH, DATA, BLACK_COLOR, WHITE_COLOR, BLUE_COLOR, GOLD_COLOR
+    CSV_PATH, DATA, BLACK_COLOR, WHITE_COLOR, NAVY_BLUE_COLOR, PEACH_COLOR
 )
 
 from test import set_datetime  # Temporary: Testing function
@@ -199,12 +199,9 @@ def render_text(
 def get_text_colors(current_seconds, prayer_times_seconds):
     """Adjust text colors."""
     
-    maghrib_sec = prayer_times_seconds["Maghrib"]
-    fajr_sec = prayer_times_seconds["Fajr"]
-    
     # Calculate window boundaries (in seconds since midnight)
-    day_start = (fajr_sec - 1800) % 86400   # 30 min before Fajr
-    day_end = (maghrib_sec - 1800) % 86400  # 30 min before Maghrib
+    day_start = (prayer_times_seconds["Sunrise"] - 2700) % 86400   # 45 min before Sunrise
+    day_end = (prayer_times_seconds["Maghrib"] - 2700) % 86400  # 45 min before Maghrib
     
     # Determine if current time is in the daytime window
     if day_start < day_end:
@@ -214,6 +211,6 @@ def get_text_colors(current_seconds, prayer_times_seconds):
         is_daytime = current_seconds >= day_start or current_seconds < day_end
     
     if is_daytime:
-        return BLUE_COLOR, BLACK_COLOR, WHITE_COLOR  # Day colors
+        return NAVY_BLUE_COLOR, BLACK_COLOR, WHITE_COLOR  # Day colors
     else:
-        return GOLD_COLOR, WHITE_COLOR, BLACK_COLOR  # Night colors
+        return PEACH_COLOR, WHITE_COLOR, BLACK_COLOR  # Night colors
