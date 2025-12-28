@@ -199,6 +199,9 @@ def render_text(
 def get_text_colors(current_seconds, prayer_times_seconds):
     """Adjust text colors."""
     
+    if not prayer_times_seconds:
+        return BLACK_COLOR, BLACK_COLOR, BLACK_COLOR
+    
     # Calculate window boundaries (in seconds since midnight)
     day_start = (prayer_times_seconds["Sunrise"] - 2700) % 86400   # 45 min before Sunrise
     day_end = (prayer_times_seconds["Maghrib"] - 2700) % 86400  # 45 min before Maghrib

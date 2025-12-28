@@ -1,7 +1,7 @@
 # background.py
 
 import pygame
-from config import BACKGROUND_COLORS
+from config import BACKGROUND_COLORS, WHITE_COLOR
 
 def lerp(color_start, color_end, factor):
     """Linerarly interpolate between two rgb colors."""
@@ -10,6 +10,9 @@ def lerp(color_start, color_end, factor):
 
 def get_gradient_colors(now, prayer_times_seconds):
     """Determine the gradient colors based on current time and prayer times."""
+    
+    if not prayer_times_seconds:
+        return WHITE_COLOR, WHITE_COLOR
     
     keys = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"]
     

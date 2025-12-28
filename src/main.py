@@ -4,7 +4,7 @@ import pygame
 from datetime import datetime
 from config import (
     FONT_PATH, FPS, WIDTH, HEIGHT, FULLSCREEN, DESIGN_WIDTH,
-    DESIGN_HEIGHT, NAME, WHITE_COLOR
+    DESIGN_HEIGHT, NAME
 )
 from test import set_datetime, advance_time # Temporary: Testing functions
 from utils import get_prayer_times, get_seconds
@@ -75,11 +75,8 @@ def main():
         current_seconds = current_datetime.hour * 3600 + current_datetime.minute * 60 + current_datetime.second # Seconds since midnight
         
         # Render background
-        if prayer_times_seconds:
-            top_color, bottom_color = get_gradient_colors(current_seconds, prayer_times_seconds)
-            render_background(screen, top_color, bottom_color)
-        else:
-            screen.fill(WHITE_COLOR)
+        top_color, bottom_color = get_gradient_colors(current_seconds, prayer_times_seconds)
+        render_background(screen, top_color, bottom_color)
         
         # Render announcements
         if show_announcements:
