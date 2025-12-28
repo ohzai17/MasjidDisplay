@@ -144,8 +144,11 @@ def get_prayer_in_progress(prayer_name, adhan_time_str, now):
     if iqamah_datetime > now:
         return False, None
     
-    prayer_duration_config = DATA.get('PRAYER_DURATION', {})
-    duration_minutes = prayer_duration_config.get(prayer_name.upper(), 15)
+    if prayer_name.upper() == "JUMMAH":
+        duration_minutes = DATA['JUMMAH'].get('DURATION', 30)
+    else:
+        prayer_duration_config = DATA.get('PRAYER_DURATION', {})
+        duration_minutes = prayer_duration_config.get(prayer_name.upper(), 15)
     
     prayer_end_time = iqamah_datetime + timedelta(minutes=duration_minutes)
     

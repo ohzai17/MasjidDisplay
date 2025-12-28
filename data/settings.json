@@ -52,18 +52,18 @@
             "ISHA": 15
         },
         
-        "JUMMAH": {
-            "ADHAN_TIME": "12:30 PM",
-            "IQAMAH_OFFSET": 30
-        },
-        
         "PRAYER_DURATION": {
             "FAJR": 15,
             "DHUHR": 15,
             "ASR": 15,
             "MAGHRIB": 10,
-            "ISHA": 15,
-            "JUMMAH": 30
+            "ISHA": 15
+        },
+
+        "JUMMAH": {
+            "ADHAN_TIME": "12:30 PM",
+            "IQAMAH_OFFSET": 30,
+            "DURATION": 30
         },
 
         "HIJRI_MONTH_NAMES": {
