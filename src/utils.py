@@ -37,6 +37,22 @@ def apply_manual_override(prayer_name: str, api_time: str):
     
     return manual_time if manual_time else api_time
 
+def apply_adhan_adjustment(prayer_name: str, time_str: str):
+    """Return adhan time with adjustment (in minutes) if set in settings."""
+    
+    if not time_str or not time_str.strip():
+        return ""
+    
+    adjustments = DATA.get('ADHAN_ADJUSTMENTS', {})
+    adjustment = adjustments.get(prayer_name.upper(), 0)
+    
+    try:
+        adhan_datetime = datetime.strptime(time_str.strip(), "%I:%M %p")
+        adhan_datetime += timedelta(minutes=adjustment)
+        return adhan_datetime.strftime("%I:%M %p")
+    except ValueError:
+        return time_str
+
 def format_time(time_str):
     """Validate and format time string."""
     

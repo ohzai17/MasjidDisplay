@@ -3,8 +3,8 @@
 from datetime import datetime, timedelta
 from config import DATA
 from utils import (
-    get_prayer_times, apply_manual_override, format_time,
-    parse_time, get_countdown_time, get_prayer_in_progress,
+    get_prayer_times, apply_manual_override, apply_adhan_adjustment,
+    format_time, parse_time, get_countdown_time, get_prayer_in_progress,
     render_text, get_text_colors
 )
 from test import set_datetime # Temporary: Testing function
@@ -29,6 +29,7 @@ def get_next_prayer(now):
     for prayer_name, adhan_key in prayers:
         api_time = prayer_times.get(adhan_key, "")
         adhan_time_str = format_time(apply_manual_override(prayer_name, api_time))
+        adhan_time_str = apply_adhan_adjustment(prayer_name, adhan_time_str)
         
         # No Iqamah countdown for Sunrise
         if prayer_name == "Sunrise":
@@ -66,6 +67,7 @@ def get_next_prayer(now):
     # Countdown to next day's Fajr adhan if all today's prayers have passed
     api_time = prayer_times.get("Fajr", "")
     adhan_time_str = format_time(apply_manual_override("Fajr", api_time))
+    adhan_time_str = apply_adhan_adjustment("Fajr", adhan_time_str)
     adhan_time = parse_time(adhan_time_str)
     if adhan_time:
         next_prayer_adhan = datetime.combine(now.date(), adhan_time) + timedelta(days=1)

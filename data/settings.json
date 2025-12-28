@@ -36,6 +36,14 @@
             "ISHA": ""
         },
         
+        "ADHAN_ADJUSTMENTS": {
+            "FAJR": 0,
+            "DHUHR": 0,
+            "ASR": 0,
+            "MAGHRIB": 0,
+            "ISHA": 0
+        },
+        
         "IQAMAH_OFFSETS": {
             "FAJR": 15,
             "DHUHR": 15,

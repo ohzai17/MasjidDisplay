@@ -3,7 +3,8 @@
 from config import DATA
 from countdown import get_next_prayer
 from utils import (
-    apply_manual_override, format_time, calculate_iqamah, render_text,
+    apply_manual_override, apply_adhan_adjustment,
+    format_time, calculate_iqamah, render_text,
     get_text_colors
 )
 from test import set_datetime # Temporary: Testing function
@@ -32,6 +33,7 @@ def format_prayer_table(prayer_times):
         
         api_time = prayer_data.get(csv_key, '')
         adhan_time = format_time(apply_manual_override(prayer_name, api_time))
+        adhan_time = apply_adhan_adjustment(prayer_name, adhan_time)
         iqamah_time = PLACEHOLDER
         
         # Calculate Iqamah time
