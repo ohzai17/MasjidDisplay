@@ -13,9 +13,14 @@ def render_main(screen, current_datetime, scale_x, scale_y, time_font, title_fon
     date_str = current_datetime.strftime("%d %B %Y")
     
     # Get the Hijri date
-    hijri_date_adjustment = DATA.get('HIJRI_DATE_ADJUSTMENT', 0)
-    adjusted_gregorian = current_datetime + timedelta(days=hijri_date_adjustment)
-    hijri_date = Gregorian(adjusted_gregorian.year, adjusted_gregorian.month, adjusted_gregorian.day).to_hijri()
+    hijri_date_adjustment = DATA['HIJRI'].get('DATE_ADJUSTMENT', 0)
+    maghrib_seconds = prayer_times_seconds.get('Maghrib')
+    # Hijri date rolls over at Maghrib
+    if maghrib_seconds is not None and current_seconds >= maghrib_seconds:
+        hijri_reference_date = current_datetime + timedelta(days=1 + hijri_date_adjustment)
+    else:
+        hijri_reference_date = current_datetime + timedelta(days=hijri_date_adjustment)
+    hijri_date = Gregorian(hijri_reference_date.year, hijri_reference_date.month, hijri_reference_date.day).to_hijri()
     hijri_month_name = HIJRI_MONTH_NAMES[hijri_date.month]
     hijri_str = f"{hijri_date.day:02d} {hijri_month_name} {hijri_date.year}"
     
