@@ -22,7 +22,6 @@ def fetch_data():
             'country': API['LOCATION']['COUNTRY'],
             'latitude': API['LOCATION']['LATITUDE'],
             'longitude': API['LOCATION']['LONGITUDE'],
-            'adjustment': API['HIJRI_DATE']['ADJUSTMENT'],
             'method': API['CALCULATION']['METHOD'],
             'school': API['CALCULATION']['SCHOOL'],
             'month': month,

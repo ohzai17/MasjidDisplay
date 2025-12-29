@@ -32,7 +32,7 @@ def apply_manual_override(prayer_name: str, api_time: str):
     if not api_time or not api_time.strip():
         return ""
     
-    adhan_times = DATA['ADHAN_TIMES']
+    adhan_times = DATA['ADHAN']['TIMES']
     manual_time = adhan_times.get(prayer_name.upper(), "").strip()
     
     return manual_time if manual_time else api_time

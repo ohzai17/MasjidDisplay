@@ -19,7 +19,7 @@ API = settings['API']
 DATA = settings['DATA']
 DISPLAY = settings['DISPLAY']
 
-HIJRI_MONTH_NAMES = {int(k): v for k, v in DATA['HIJRI_MONTH_NAMES'].items()}
+HIJRI_MONTH_NAMES = {int(k): v for k, v in DATA['HIJRI']['MONTH_NAMES'].items()}
 
 # Display settings
 WINDOW = DISPLAY['WINDOW']

@@ -7,10 +7,6 @@
             "LONGITUDE": -75.232664
         },
         
-        "HIJRI_DATE": {
-            "ADJUSTMENT": 0
-        },
-        
         "CALCULATION": {
             "METHOD": 99,
             "SCHOOL": 1
@@ -28,20 +24,22 @@
         "FETCH_WINDOW": 35,
         "REFRESH_INTERVAL": 30,
         
-        "ADHAN_TIMES": {
-            "FAJR": "",
-            "DHUHR": "",
-            "ASR": "",
-            "MAGHRIB": "",
-            "ISHA": ""
-        },
-        
-        "ADHAN_ADJUSTMENTS": {
-            "FAJR": 0,
-            "DHUHR": 0,
-            "ASR": 0,
-            "MAGHRIB": 0,
-            "ISHA": 0
+        "ADHAN": {
+            "TIMES": {
+                "FAJR": "",
+                "DHUHR": "",
+                "ASR": "",
+                "MAGHRIB": "",
+                "ISHA": ""
+            },
+            
+            "ADJUSTMENTS": {
+                "FAJR": 0,
+                "DHUHR": 0,
+                "ASR": 0,
+                "MAGHRIB": 0,
+                "ISHA": 0
+            }
         },
         
         "IQAMAH_OFFSETS": {
@@ -65,20 +63,24 @@
             "IQAMAH_OFFSET": 30,
             "DURATION": 30
         },
+        
+        "HIJRI": {
+            "DATE_ADJUSTMENT": 0,
 
-        "HIJRI_MONTH_NAMES": {
-            "1": "Muharram",
-            "2": "Safar",
-            "3": "Rabi al-Awwal",
-            "4": "Rabi al-Thani",
-            "5": "Jamada al-Awwal",
-            "6": "Jamada al-Thani",
-            "7": "Rajab",
-            "8": "Sha'ban",
-            "9": "Ramadan",
-            "10": "Shawwal",
-            "11": "Dhul-Qadah",
-            "12": "Dhul-Hijjah"
+            "MONTH_NAMES": {
+                "1": "Muharram",
+                "2": "Safar",
+                "3": "Rabi al-Awwal",
+                "4": "Rabi al-Thani",
+                "5": "Jamada al-Awwal",
+                "6": "Jamada al-Thani",
+                "7": "Rajab",
+                "8": "Sha'ban",
+                "9": "Ramadan",
+                "10": "Shawwal",
+                "11": "Dhul-Qadah",
+                "12": "Dhul-Hijjah"
+            }
         }
     },
     
