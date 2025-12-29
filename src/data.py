@@ -20,6 +20,7 @@ def fetch_data():
         params = {
             'city': API['LOCATION']['CITY'],
             'country': API['LOCATION']['COUNTRY'],
+            'timezone': API['LOCATION'].get('TIMEZONE', ''),
             'latitude': API['LOCATION']['LATITUDE'],
             'longitude': API['LOCATION']['LONGITUDE'],
             'method': API['CALCULATION']['METHOD'],

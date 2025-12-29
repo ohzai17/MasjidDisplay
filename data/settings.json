@@ -3,12 +3,13 @@
         "LOCATION": {
             "CITY": "Utica",
             "COUNTRY": "US",
+            "TIMEZONE": "America/New_York",
             "LATITUDE": 43.100903,
             "LONGITUDE": -75.232664
         },
         
         "CALCULATION": {
-            "METHOD": 99,
+            "METHOD": 2,
             "SCHOOL": 1
         },
         
