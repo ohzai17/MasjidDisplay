@@ -1,3 +1,5 @@
+import os
+import csv
 from praytimes import PrayTimes
 from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta, time
@@ -9,8 +11,21 @@ TIMEZONE = 'America/New_York'
 UTC_OFFSET = -5  # Eastern Time (UTC-5)
 ASR_METHOD = 'Hanafi'
 FETCH_WINDOW_DAYS = 95
+REFRESH_INTERVAL = 90
+CSV = 'data/data.csv'
 
-pt = PrayTimes(CALCULATION_METHOD)
+ANGLES = {
+    'FAJR': 15,
+    'ISHA': 15,
+}
+
+if CALCULATION_METHOD == 'CUSTOM':
+    pt = PrayTimes(CALCULATION_METHOD)
+    pt.adjust({'fajr': ANGLES['FAJR']})
+    pt.adjust({'isha': ANGLES['ISHA']})
+else:
+    pt = PrayTimes(CALCULATION_METHOD)
+
 pt.adjust({'asr': ASR_METHOD})
 pt.adjust({'maghrib': '0 min'})
 
