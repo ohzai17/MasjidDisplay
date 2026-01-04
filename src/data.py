@@ -2,138 +2,102 @@
 
 import os
 import csv
-import requests
-from datetime import datetime, timedelta
-from config import CSV_PATH, API, DATA
+from praytimes import PrayTimes
+from zoneinfo import ZoneInfo
+from datetime import datetime, timedelta, time, date
+from config import (
+    CSV, REFRESH_INTERVAL, FETCH_WINDOW, 
+    LATITUDE, LONGITUDE, TIMEZONE, UTC_OFFSET, 
+    CALCULATION_METHOD, ASR_METHOD, ANGLES
+)
 
-def fetch_data():
-    """Fetch prayer data from the API."""
+def format_time(t):
+    """Convert time from 24-hour to 12-hour format with AM/PM."""
     
-    prayer_times = []
-    current_date = datetime.now()
-    end_date = current_date + timedelta(days=DATA['FETCH_WINDOW'])
-    
-    month, year = current_date.month, current_date.year
-    
-    while datetime(year, month, 1) <= end_date:
-        
-        params = {
-            'city': API['LOCATION']['CITY'],
-            'country': API['LOCATION']['COUNTRY'],
-            'timezone': API['LOCATION'].get('TIMEZONE', ''),
-            'latitude': API['LOCATION']['LATITUDE'],
-            'longitude': API['LOCATION']['LONGITUDE'],
-            'method': API['CALCULATION']['METHOD'],
-            'school': API['CALCULATION']['SCHOOL'],
-            'month': month,
-            'year': year,
-        }
-        
-        # Custom angles for Fajr and Isha if method is 99 (Custom)
-        if API['CALCULATION']['METHOD'] == 99:
-            params['fajr'] = API['ANGLES']['FAJR']
-            params['isha'] = API['ANGLES']['ISHA']
-        
-        try:
-            response = requests.get(API['ENDPOINT'], params=params)
-            response.raise_for_status()
-            prayer_times.extend(response.json()['data'])
-        except requests.RequestException as e:
-            print(f"\nError fetching data from API: {e}")
-        
-        month += 1
-        if month > 12:
-            month = 1
-            year += 1
-    
-    return prayer_times
-
-def format_time(api_time_str: str) -> str:
-    """Convert 24-hour format to 12-hour AM/PM format."""
-    
-    if not api_time_str:
-        return ""
-    
-    # API returns time with timezone info, e.g., "05:30 (GMT)"
     try:
-        api_time = api_time_str.split(" ")[0]
-        return datetime.strptime(api_time, "%H:%M").strftime("%I:%M %p")
-    except ValueError:
-        return ""
+        return datetime.strptime(t, "%H:%M").strftime("%I:%M %p")
+    except Exception:
+        return t
 
-def cache_status():
-    """Check if cached data needs to be refreshed."""
+def refresh_data(csv_path=CSV, refresh_interval=REFRESH_INTERVAL):
+    """Check if data needs to be refreshed based on last modified time."""
     
-    # If CSV file does not exist, fetch new data
-    if not os.path.exists(CSV_PATH):
-        return True, 0
-    
-    file_age = (datetime.now() - datetime.fromtimestamp(os.path.getmtime(CSV_PATH))).days
-    
-    # Fetch new data if age of cached data exceeds refresh interval (e.g., 30 days)
-    return file_age >= DATA['REFRESH_INTERVAL'], file_age
+    try:
+        mod_time = os.path.getmtime(csv_path)
+        last_modified = datetime.fromtimestamp(mod_time).date()
+        days_since = (date.today() - last_modified).days
+        return days_since >= refresh_interval
+    except FileNotFoundError:
+        return True  # File missing, needs refresh
+    except Exception as e:
+        print(f"Error checking file modification time: {e}")
+        return True  # Error occurred, assume refresh needed
 
-def save_to_csv(prayer_times):
-    """Save prayer data to CSV file."""
+def fetch_data(start_date=date.today(), days=FETCH_WINDOW):
+    """Fetch data from PrayTimes library."""
     
-    today = datetime.now().date()
+    if CALCULATION_METHOD == 'Custom':
+        pt = PrayTimes(CALCULATION_METHOD)
+        pt.adjust({'fajr': ANGLES['FAJR']})
+        pt.adjust({'isha': ANGLES['ISHA']})
+    else:
+        pt = PrayTimes(CALCULATION_METHOD)
+    
+    pt.adjust({'asr': ASR_METHOD})
+    pt.adjust({'maghrib': '0 min'})
+    
     rows = []
+    header = ["Date", "Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"]
+    rows.append(header)
     
-    prayer_keys = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"]
-    
-    fetch_window = DATA['FETCH_WINDOW']
-    
-    for day in prayer_times:
-        
-        # AlAdhan uses 'readable' date format (e.g., 01 Dec 2025)
-        date_str = day['date']['readable']
-        
-        # Parse date to filter by today and fetch window
+    for i in range(days):
+        date_iter = start_date + timedelta(days=i)
+        dt_with_time = datetime.combine(date_iter, time(12, 0))
         try:
-            date_obj = datetime.strptime(date_str, "%d %b %Y").date()
-        except ValueError:
+            offset = dt_with_time.astimezone(ZoneInfo(TIMEZONE)).utcoffset()
+            tz_offset = int(offset.total_seconds() // 3600) if offset is not None else UTC_OFFSET
+            times = pt.getTimes(
+                [date_iter.year, date_iter.month, date_iter.day],
+                [LATITUDE, LONGITUDE],
+                tz_offset
+            )
+            row = [
+                date_iter.strftime('%d %b %Y'),
+                format_time(times['fajr']),
+                format_time(times['sunrise']),
+                format_time(times['dhuhr']),
+                format_time(times['asr']),
+                format_time(times['maghrib']),
+                format_time(times['isha'])
+            ]
+            rows.append(row)
+        except Exception as e:
+            print(f"Error fetching data for {date_iter}: {e}.")
             continue
-        
-        # Skip dates before today and limit to fetch window (e.g., 35 days)
-        if date_obj < today:
-            continue
-        if len(rows) >= fetch_window:
-            break
-        
-        row = [date_str]
-        for prayer in prayer_keys:
-            row.append(format_time(day['timings'].get(prayer, "")))
-        rows.append(row)
+    return rows
+
+def save_data(rows, csv_path=CSV):
+    """Save fetched data to CSV file."""
     
-    # CSV Header: Date, Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha
     try:
-        with open(CSV_PATH, 'w', newline='') as f:
+        os.makedirs(os.path.dirname(csv_path), exist_ok=True)
+        with open(csv_path, 'w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow(["Date", "Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"])
             writer.writerows(rows)
-        print(f"\nPrayer data saved to {CSV_PATH}.\n")
+        print(f"Data saved to {csv_path}")
         return True
-    except IOError as e:
-        print(f"\nError saving data to CSV: {e}\n")
+    except Exception as e:
+        print(f"Error saving data: {e}")
         return False
 
 def main():
     """Fetch and save prayer times if needed."""
     
-    needs_fetch, file_age = cache_status()
-    
-    if not needs_fetch:
-        days_left = DATA['REFRESH_INTERVAL'] - file_age
-        print(f"\nCache data is up-to-date. There are {days_left} days left. Skipping fetch.\n")
-        return
-    
-    print(f"\nFetching prayer times...")
-    prayer_times = fetch_data()
-    
-    if prayer_times:
-        save_to_csv(prayer_times)
+    if refresh_data():
+        rows = fetch_data()
+        save_data(rows)
     else:
-        print("\nError: No data fetched from API.")
+        print("Data is up to date. No refresh needed.")
 
 if __name__ == "__main__":
     main()

@@ -1,57 +1,50 @@
 # display.py
 
 from hijridate import Gregorian
-from datetime import timedelta
-from config import DATA, HIJRI_MONTH_NAMES, NAME, ADDRESS
-from utils import render_text, get_text_colors
+from config import NAME, ADDRESS, HIJRI_MONTH_NAMES, BLACK
+from utils import render_text
 
-def render_main(screen, current_datetime, scale_x, scale_y, time_font, title_font, detail_font, current_seconds, prayer_times_seconds):
+def render_main(screen, scale_x, scale_y, time_font, title_font, detail_font):
     """Render main display."""
+    
+    from test import set_datetime # Temporary: Use test mode datetime
+    current_datetime = set_datetime()
     
     # Time and date formatting
     time_str = current_datetime.strftime("%I:%M:%S %p")
     date_str = current_datetime.strftime("%d %B %Y")
     
-    # Get the Hijri date
-    hijri_date_adjustment = DATA['HIJRI'].get('DATE_ADJUSTMENT', 0)
-    maghrib_seconds = prayer_times_seconds.get('Maghrib')
-    # Hijri date rolls over at Maghrib
-    if maghrib_seconds is not None and current_seconds >= maghrib_seconds:
-        hijri_reference_date = current_datetime + timedelta(days=1 + hijri_date_adjustment)
-    else:
-        hijri_reference_date = current_datetime + timedelta(days=hijri_date_adjustment)
-    hijri_date = Gregorian(hijri_reference_date.year, hijri_reference_date.month, hijri_reference_date.day).to_hijri()
+    # Hijri date formatting
+    hijri_date = Gregorian(current_datetime.year, current_datetime.month, current_datetime.day).to_hijri()
     hijri_month_name = HIJRI_MONTH_NAMES[hijri_date.month]
     hijri_str = f"{hijri_date.day:02d} {hijri_month_name} {hijri_date.year}"
     
     dates = date_str + " · " + hijri_str # Combine Gregorian and Hijri dates
     
-    primary_color, secondary_color, _ = get_text_colors(current_seconds, prayer_times_seconds)
-    
     # Render name
     render_text(
-        screen, NAME, title_font, primary_color,
+        screen, NAME, title_font, BLACK,
         (int(1218 * scale_x), int(86 * scale_y)), 
         align="center"
     )
     
     # Render address
     render_text(
-        screen, ADDRESS, detail_font, secondary_color,
+        screen, ADDRESS, detail_font, BLACK,
         (int(1218 * scale_x), int(159 * scale_y)),
         align="center"
     )
     
     # Render time
     render_text(
-        screen, time_str, time_font, secondary_color,
+        screen, time_str, time_font, BLACK,
         (int(363 * scale_x), int(174 * scale_y)), 
         align="center"
     )
     
     # Render dates
     render_text(
-        screen, dates, detail_font, primary_color,
+        screen, dates, detail_font, BLACK,
         (int(363 * scale_x), int(68 * scale_y)),
         align="center"
     )
