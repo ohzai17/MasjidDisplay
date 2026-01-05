@@ -1,79 +1,92 @@
 # table.py
 
-from config import DATA
-from countdown import get_next_prayer
-from utils import (
-    apply_manual_override, apply_adhan_adjustment,
-    format_time, calculate_iqamah, render_text,
-    get_text_colors
-)
-from test import set_datetime # Temporary: Testing function
+import csv
+from datetime import datetime, timedelta
+from config import CSV, DATA, BLACK
+from utils import render_text
 
-def format_prayer_table(prayer_times):
+def load_prayer_times():
+    
+    from test import set_datetime # Temporary: Use test mode datetime
+    today_str = set_datetime().strftime('%d %b %Y')
+    
+    with open(CSV, 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            if row['Date'].strip() == today_str:
+                return {k: v for k, v in row.items() if k != 'Date'}
+    return {}
+
+def format_table(prayer_times):
     """Format prayer times into a table."""
     
-    if not prayer_times:
-        prayer_times = {}
-    
     prayers = [
-        ("Fajr", "Fajr"),
-        ("Sunrise", "Sunrise"),
-        ("Dhuhr", "Dhuhr"),
-        ("Asr", "Asr"),
-        ("Maghrib", "Maghrib"),
-        ("Isha", "Isha"),
+        "Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"
     ]
     
-    prayer_data = prayer_times
+    PLACEHOLDER = "––––––––––"
     formatted_prayer_times = []
     
-    PLACEHOLDER = "––––––––––"
+    # If no CSV data for today, show placeholders for all prayers
+    if not prayer_times:
+        for prayer_name in prayers:
+            formatted_prayer_times.append((prayer_name, PLACEHOLDER, PLACEHOLDER))
+        return formatted_prayer_times
     
-    for prayer_name, csv_key in prayers:
+    for prayer_name in prayers:
+        # Get the base time from CSV
+        base_time = prayer_times.get(prayer_name, "")
         
-        api_time = prayer_data.get(csv_key, '')
-        adhan_time = format_time(apply_manual_override(prayer_name, api_time))
-        adhan_time = apply_adhan_adjustment(prayer_name, adhan_time)
-        iqamah_time = PLACEHOLDER
+        # Manual override from config
+        manual_time = DATA["PRAYERS"].get(prayer_name.upper(), {}).get("ADHAN_TIME", "").strip()
+        
+        # No CSV column for Jummah
+        if prayer_name == "Jummah":
+            adhan_time = manual_time
+        else:
+            adhan_time = manual_time if manual_time else base_time
+        
+        # Format adhan time
+        adhan_time = adhan_time.strip() if adhan_time and adhan_time.strip() else PLACEHOLDER
+        
+        # Apply adjustment
+        adjustment = DATA["PRAYERS"].get(prayer_name.upper(), {}).get("ADJUSTMENT", 0)
+        if adhan_time != PLACEHOLDER:
+            try:
+                adhan_dt = datetime.strptime(adhan_time, "%I:%M %p")
+                adhan_dt += timedelta(minutes=adjustment)
+                adhan_time = adhan_dt.strftime("%I:%M %p")
+            except Exception:
+                pass
         
         # Calculate Iqamah time
+        iqamah_time = PLACEHOLDER
         if adhan_time != PLACEHOLDER:
-            iqamah_time = calculate_iqamah(adhan_time, prayer_name)
-            if not iqamah_time:
-                iqamah_time = PLACEHOLDER
+            iqamah_offset = DATA["PRAYERS"].get(prayer_name.upper(), {}).get("IQAMAH_OFFSET")
+            try:
+                adhan_dt = datetime.strptime(adhan_time, "%I:%M %p")
+                iqamah_dt = adhan_dt + timedelta(minutes=iqamah_offset)
+                iqamah_time = iqamah_dt.strftime("%I:%M %p")
+            except Exception:
+                pass
         
         formatted_prayer_times.append((prayer_name, adhan_time, iqamah_time))
     
-    # Handle Jummah
-    jummah = DATA['JUMMAH']
-    jummah_adhan = jummah.get('ADHAN_TIME', '').strip()
-    
-    if prayer_times and jummah_adhan:
-        jummah_iqamah_time = calculate_iqamah(jummah_adhan, "Jummah")
-        if not jummah_iqamah_time:
-            jummah_iqamah_time = PLACEHOLDER
-        
-        formatted_prayer_times.append(("Jummah", jummah_adhan, jummah_iqamah_time))
-    else:
-        formatted_prayer_times.append(("Jummah", PLACEHOLDER, PLACEHOLDER))
-    
     return formatted_prayer_times
 
-def render_prayer_table(screen, prayer_table, scale_x, scale_y, table_font, current_seconds, prayer_times_seconds):
+def render_table(screen, scale_x, scale_y, table_font):
     """Render the prayer times table."""
+    
+    prayer_times = load_prayer_times()
     
     table_start_x, table_start_y = int(47 * scale_x), int(298 * scale_y)
     vertical_spacing = int(table_font.get_height() * 1.0)
     col_widths = [int(170 * scale_x), int(275 * scale_x), int(186 * scale_x)]
     
-    next_prayer, _, _, _ = get_next_prayer(set_datetime()) # Temporary: Use test mode datetime
-    
     # Calculate starting x-positions for each column
     col_positions = [table_start_x,
             table_start_x + col_widths[0],
             table_start_x + col_widths[0] + col_widths[1]]
-    
-    primary_color, secondary_color, tertiary_color = get_text_colors(current_seconds, prayer_times_seconds)
     
     # Render header
     for col_idx, header_text in enumerate(["", "Adhan", "Iqamah"]):
@@ -81,39 +94,30 @@ def render_prayer_table(screen, prayer_table, scale_x, scale_y, table_font, curr
         y = table_start_y
         
         render_text(
-            screen, header_text, table_font, primary_color,
+            screen, header_text, table_font, BLACK,
             (x, y), align="center"
         )
     
     # Render prayer rows
-    for i, (prayer_name, adhan, iqamah) in enumerate(prayer_table):
+    for i, (prayer_name, adhan, iqamah) in enumerate(format_table(prayer_times)):
         y = table_start_y + ((i + 1) * vertical_spacing)
-        
-        if prayer_name == next_prayer:
-            color = tertiary_color
-            outline_color = secondary_color
-        else:
-            color = secondary_color
-            outline_color = None
         
         # Render prayer name
         render_text(
-            screen, prayer_name, table_font, primary_color,
+            screen, prayer_name, table_font, BLACK,
             (col_positions[0], y), align="left"
         )
         
         # Render Adhan
         x_adhan = col_positions[1] + col_widths[1] // 2
         render_text(
-            screen, adhan, table_font, color,
-            (x_adhan, y), align="center",
-            outline_color=outline_color
+            screen, adhan, table_font, BLACK,
+            (x_adhan, y), align="center"
         )
         
         # Render Iqamah
         x_iqamah = col_positions[2] + col_widths[2] // 2
         render_text(
-            screen, iqamah, table_font, color,
-            (x_iqamah, y), align="center",
-            outline_color=outline_color
+            screen, iqamah, table_font, BLACK,
+            (x_iqamah, y), align="center"
         )
