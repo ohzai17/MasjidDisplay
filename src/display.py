@@ -8,14 +8,15 @@ def render_main(screen, scale_x, scale_y, time_font, title_font, detail_font):
     """Render main display."""
     
     from test import set_datetime # Temporary: Use test mode datetime
-    current_datetime = set_datetime()
+    now = set_datetime()
+    now_seconds = now.hour * 3600 + now.minute * 60 + now.second
     
     # Time and date formatting
-    time_str = current_datetime.strftime("%I:%M:%S %p")
-    date_str = current_datetime.strftime("%d %B %Y")
+    time_str = now.strftime("%I:%M:%S %p")
+    date_str = now.strftime("%d %B %Y")
     
     # Hijri date formatting
-    hijri_date = Gregorian(current_datetime.year, current_datetime.month, current_datetime.day).to_hijri()
+    hijri_date = Gregorian(now.year, now.month, now.day).to_hijri()
     hijri_month_name = HIJRI_MONTH_NAMES[hijri_date.month]
     hijri_str = f"{hijri_date.day:02d} {hijri_month_name} {hijri_date.year}"
     

@@ -67,8 +67,6 @@ def rgb(r, g, b):
 
 BLACK = rgb(0, 0, 0)
 WHITE = rgb(255, 255, 255)
-RED = rgb(255, 0, 0)
-BLUE = rgb(0, 0, 128)
 NAVY_BLUE = rgb(0, 51, 102)
 PEACH = rgb(255, 218, 185)
 
