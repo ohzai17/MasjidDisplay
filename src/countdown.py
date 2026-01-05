@@ -1,116 +1,116 @@
-# countdown.py
-
+import math
 from datetime import datetime, timedelta
-from config import DATA
-from utils import (
-    get_prayer_times, apply_manual_override, apply_adhan_adjustment,
-    format_time, parse_time, get_countdown_time, get_prayer_in_progress,
-    render_text, get_text_colors
-)
-from test import set_datetime # Temporary: Testing function
+from config import DATA, BLACK
+from utils import render_text
+from table import load_prayer_times, format_table
 
-def get_next_prayer(now):
-    """Find the next prayer after current time."""
+def get_next_event(now, formatted_prayer_times):
+    """Return the next prayer event and its time."""
     
-    prayer_times = get_prayer_times()
+    # List of prayers for the day; replace Dhuhr with Jummah on Fridays
+    prayers = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"]
+    if now.weekday() == 4:
+        prayers = ["Fajr", "Sunrise", "Jummah", "Asr", "Maghrib", "Isha"]
     
-    if not prayer_times:
-        return None, None, None, False
+    PLACEHOLDER = "––––––––––"
     
-    prayers = [
-        ("Fajr", "Fajr"),
-        ("Sunrise", "Sunrise"),
-        ("Dhuhr", "Dhuhr"),
-        ("Asr", "Asr"),
-        ("Maghrib", "Maghrib"),
-        ("Isha", "Isha"),
-    ]
+    # Map prayer names to their formatted times for quick lookup
+    prayer_map = {name: (name, adhan, iqamah) for name, adhan, iqamah in formatted_prayer_times}
     
-    for prayer_name, adhan_key in prayers:
-        api_time = prayer_times.get(adhan_key, "")
-        adhan_time_str = format_time(apply_manual_override(prayer_name, api_time))
-        adhan_time_str = apply_adhan_adjustment(prayer_name, adhan_time_str)
-        
-        # No Iqamah countdown for Sunrise
-        if prayer_name == "Sunrise":
-            adhan_time = parse_time(adhan_time_str)
-            if adhan_time:
-                adhan_datetime = datetime.combine(now.date(), adhan_time)
-                if adhan_datetime > now:
-                    return prayer_name, adhan_datetime, False, False
+    for prayer in prayers:
+        if prayer not in prayer_map:
+            continue
+        _, adhan, iqamah = prayer_map[prayer]
+        if adhan == PLACEHOLDER:
             continue
         
-        # On Friday, replace Dhuhr with Jummah
-        if prayer_name == "Dhuhr" and now.weekday() == 4:
-            jummah_adhan_str = DATA['JUMMAH'].get('ADHAN_TIME', '').strip()
-            if jummah_adhan_str:
-                # Check if Jummah is in progress
-                jummah_in_progress, jummah_end_time = get_prayer_in_progress("Jummah", jummah_adhan_str, now)
-                if jummah_in_progress:
-                    return "Jummah", jummah_end_time, True, True
-                
-                # Check countdown to Jummah
-                countdown_time, is_iqamah = get_countdown_time("Jummah", jummah_adhan_str, now)
-                if countdown_time:
-                    return "Jummah", countdown_time, is_iqamah, False
+        # Get the duration for 'In Progress' status from settings
+        duration = DATA["PRAYERS"].get(prayer.upper(), {}).get("DURATION", 0)
+        try:
+            adhan_dt = datetime.strptime(adhan, "%I:%M %p").replace(
+                year=now.year, month=now.month, day=now.day
+            )
+        except Exception:
             continue
         
-        # Regular prayers
-        in_progress, prayer_end_time = get_prayer_in_progress(prayer_name, adhan_time_str, now)
-        if in_progress:
-            return prayer_name, prayer_end_time, True, True
+        # If current time is before Adhan, return countdown to Adhan
+        if now < adhan_dt:
+            return ("Adhan", prayer, adhan_dt, duration)
         
-        countdown_time, is_iqamah = get_countdown_time(prayer_name, adhan_time_str, now)
-        if countdown_time:
-            return prayer_name, countdown_time, is_iqamah, False
+        # If Iqamah time exists and is valid, check for Iqamah event or 'In Progress'
+        if iqamah != PLACEHOLDER:
+            try:
+                iqamah_dt = datetime.strptime(iqamah, "%I:%M %p").replace(
+                    year=now.year, month=now.month, day=now.day
+                )
+            except Exception:
+                continue
+            if now < iqamah_dt:
+                return ("Iqamah", prayer, iqamah_dt, duration)
+            # If within duration after Iqamah, prayer is 'In Progress'
+            elif 0 < duration and iqamah_dt <= now < iqamah_dt + timedelta(minutes=duration):
+                return ("In Progress", prayer, iqamah_dt + timedelta(minutes=duration), duration)
+        
+        # If within duration after Adhan, prayer is 'In Progress'
+        if 0 < duration and adhan_dt <= now < adhan_dt + timedelta(minutes=duration):
+            return ("In Progress", prayer, adhan_dt + timedelta(minutes=duration), duration)
     
-    # Countdown to next day's Fajr adhan if all today's prayers have passed
-    api_time = prayer_times.get("Fajr", "")
-    adhan_time_str = format_time(apply_manual_override("Fajr", api_time))
-    adhan_time_str = apply_adhan_adjustment("Fajr", adhan_time_str)
-    adhan_time = parse_time(adhan_time_str)
-    if adhan_time:
-        next_prayer_adhan = datetime.combine(now.date(), adhan_time) + timedelta(days=1)
-        return "Fajr", next_prayer_adhan, False, False
-    
-    return None, None, None, False
+    # If all today's prayers have passed, show next day's Fajr
+    tomorrow = now + timedelta(days=1)
+    prayer_times = load_prayer_times()
+    formatted_prayer_times = format_table(prayer_times)
+    prayer_map = {name: (name, adhan, iqamah) for name, adhan, iqamah in formatted_prayer_times}
+    if "Fajr" in prayer_map:
+        _, adhan, _ = prayer_map["Fajr"]
+        if adhan != PLACEHOLDER:
+            try:
+                adhan_dt = datetime.strptime(adhan, "%I:%M %p").replace(
+                    year=tomorrow.year, month=tomorrow.month, day=tomorrow.day
+                )
+            except Exception:
+                return (None, None, None, None)
+            duration = DATA["PRAYERS"].get("FAJR", {}).get("DURATION", 0)
+            return ("Adhan", "Fajr", adhan_dt, duration)
+    return (None, None, None, None)
 
-def render_countdown(screen, scale_x, scale_y, title_font, time_font, current_seconds, prayer_times_seconds):
-    """Render the countdown."""
+def render_countdown(screen, scale_x, scale_y, title_font, time_font):
+    """Render countdown to next prayer event."""
     
-    next_prayer, next_prayer_time, is_iqamah, in_progress = get_next_prayer(set_datetime())
+    from test import set_datetime  # Temporary: Use test mode datetime
+    now = set_datetime()
     
-    primary_color, secondary_color, tertiary_color = get_text_colors(current_seconds, prayer_times_seconds)
+    # Get formatted prayer times for today
+    prayer_times = load_prayer_times()
+    formatted_prayer_times = format_table(prayer_times)
+    event, prayer, event_time, _ = get_next_event(now, formatted_prayer_times)
     
-    if next_prayer and next_prayer_time:
-        # Format header text
-        if in_progress:
-            header_text = f"{next_prayer}"
-            countdown_text = "In Progress"
+    if event and prayer and event_time:
+        # If prayer is in progress, show status
+        if event == "In Progress":
+            header = f"{prayer}"
+            countdown = "In Progress"
         else:
-            # Calculate time difference
-            time_diff = next_prayer_time - set_datetime()
-            total_seconds = int(time_diff.total_seconds()) + 1
-            hours = total_seconds // 3600
-            minutes = (total_seconds % 3600) // 60
-            seconds = total_seconds % 60
-            countdown_text = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+            # Calculate countdown to next event
+            delta = event_time - now
+            hours, remainder = divmod(max(0, math.ceil(delta.total_seconds())), 3600)
+            minutes, seconds = divmod(remainder, 60)
+            countdown = f"{hours:02}:{minutes:02}:{seconds:02}"
             
-            if next_prayer == "Sunrise":
-                header_text = "Time Until Sunrise:"
-            elif next_prayer == "Jummah":
-                header_text = "Time Until Khutbah:" if is_iqamah else "Time Until Jummah:"
+            # Set header text based on event and prayer type
+            if prayer == "Sunrise":
+                header = "Time Until Sunrise"
+            elif prayer == "Jummah":
+                header = "Time Until Jummah" if event == "Adhan" else "Time Until Khutbah"
             else:
-                header_text = "Time Until Iqamah:" if is_iqamah else f"Time Until {next_prayer}:"
+                header = f"Time Until {prayer}" if event == "Adhan" else "Time Until Iqamah"
         
         render_text(
-            screen, header_text, title_font, primary_color,
+            screen, header, title_font, BLACK,
             (int(1215 * scale_x), int(670 * scale_y)),
             align="center"
         )
-        
         render_text(
-            screen, countdown_text, time_font, tertiary_color,
+            screen, countdown, time_font, BLACK,
             (int(1217 * scale_x), int(801 * scale_y)),
-            align="center", outline_color=secondary_color
+            align="center"
         )

@@ -37,7 +37,7 @@
         
         "PRAYERS": {
             "FAJR": {
-                "ADHAN_TIME": "06:30 AM",
+                "ADHAN_TIME": "",
                 "ADJUSTMENT": 0,
                 "IQAMAH_OFFSET": 15,
                 "DURATION": 15

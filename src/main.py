@@ -6,6 +6,7 @@ from utils import resize_window
 from display import render_main
 from table import render_table
 from announcements import render_announcements
+from countdown import render_countdown
 
 # Temporary: Enable test mode and set test time
 TEST_MODE = True
@@ -47,6 +48,7 @@ def main():
         
         render_main(screen, scale_x, scale_y, time_font, title_font, detail_font)
         render_table(screen, scale_x, scale_y, table_font)
+        render_countdown(screen, scale_x, scale_y, title_font, time_font)
         
         if show_announcements:
             render_announcements(screen, scale_x, scale_y, title_font, detail_font)
