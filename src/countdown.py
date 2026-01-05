@@ -1,7 +1,7 @@
 import math
 from datetime import datetime, timedelta
 from config import DATA, BLACK
-from utils import render_text
+from utils import render_text, get_text_colors
 from table import load_prayer_times, format_table
 
 def get_next_event(now, formatted_prayer_times):
@@ -76,6 +76,8 @@ def get_next_event(now, formatted_prayer_times):
 def render_countdown(screen, scale_x, scale_y, title_font, time_font):
     """Render countdown to next prayer event."""
     
+    primary, secondary, tertiary = get_text_colors()
+    
     from test import set_datetime  # Temporary: Use test mode datetime
     now = set_datetime()
     
@@ -105,12 +107,12 @@ def render_countdown(screen, scale_x, scale_y, title_font, time_font):
                 header = f"Time Until {prayer}" if event == "Adhan" else "Time Until Iqamah"
         
         render_text(
-            screen, header, title_font, BLACK,
+            screen, header, title_font, primary,
             (int(1215 * scale_x), int(670 * scale_y)),
             align="center"
         )
         render_text(
-            screen, countdown, time_font, BLACK,
+            screen, countdown, time_font, tertiary,
             (int(1217 * scale_x), int(801 * scale_y)),
-            align="center"
+            align="center", outline_color=secondary
         )

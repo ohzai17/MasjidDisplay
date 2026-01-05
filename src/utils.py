@@ -1,7 +1,6 @@
 # utils.py
 
 import pygame
-from datetime import datetime
 from config import PRESET_MAP, FONT, BLACK, NAVY_BLUE, PEACH, WHITE
 
 def resize_window(window_preset):
@@ -25,8 +24,16 @@ def resize_window(window_preset):
     
     return screen, scale_x, scale_y, time_font, title_font, detail_font, table_font
 
-def get_text_color(now_seconds, formatted_prayer_times):
-    """Determine text color based on time of day."""
+def get_text_colors():
+    """Determine text colors based on time of day."""
+    
+    from test import set_datetime
+    now = set_datetime()
+    now_seconds = now.hour * 3600 + now.minute * 60 + now.second
+    
+    from table import load_prayer_times, format_table
+    prayer_times = load_prayer_times()
+    formatted_prayer_times = format_table(prayer_times)
     
     sunrise = None
     maghrib = None
@@ -35,7 +42,7 @@ def get_text_color(now_seconds, formatted_prayer_times):
         if adhan == "––––––––––":
             continue
         try:
-            adhan_dt = datetime.strptime(adhan, "%I:%M %p")
+            adhan_dt = set_datetime().strptime(adhan, "%I:%M %p")
             seconds = adhan_dt.hour * 3600 + adhan_dt.minute * 60
             if name == "Sunrise":
                 sunrise = seconds
@@ -47,8 +54,8 @@ def get_text_color(now_seconds, formatted_prayer_times):
     if sunrise is None or maghrib is None:
         return BLACK, BLACK, BLACK
     
-    # Color change between 15 minutes before sunrise and 15 minutes before maghrib
-    if (sunrise - 900) <= now_seconds < (maghrib - 900):
+    # Color change between 45 minutes before sunrise and 45 minutes before maghrib
+    if (sunrise - 2700) <= now_seconds < (maghrib - 2700):
         return NAVY_BLUE, BLACK, WHITE
     else:
         return PEACH, WHITE, BLACK
