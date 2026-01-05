@@ -2,7 +2,7 @@
 
 import csv
 from datetime import datetime, timedelta
-from config import CSV, DATA, BLACK
+from config import CSV, DATA
 from utils import render_text, get_text_colors
 
 def load_prayer_times():
@@ -78,12 +78,21 @@ def format_table(prayer_times):
     
     return formatted_prayer_times
 
+from countdown import get_next_event
+
 def render_table(screen, scale_x, scale_y, table_font):
     """Render the prayer times table."""
     
     primary, secondary, tertiary = get_text_colors()
     
+    from test import set_datetime # Temporary: Use test mode datetime
+    now = set_datetime()
+    
     prayer_times = load_prayer_times()
+    formatted_prayer_times = format_table(prayer_times)
+    
+    # Determine the next event/prayer
+    _, next_prayer, _, _ = get_next_event(now, formatted_prayer_times)
     
     table_start_x, table_start_y = int(47 * scale_x), int(298 * scale_y)
     vertical_spacing = int(table_font.get_height() * 1.0)
@@ -105,8 +114,15 @@ def render_table(screen, scale_x, scale_y, table_font):
         )
     
     # Render prayer rows
-    for i, (prayer_name, adhan, iqamah) in enumerate(format_table(prayer_times)):
+    for i, (prayer_name, adhan, iqamah) in enumerate(formatted_prayer_times):
         y = table_start_y + ((i + 1) * vertical_spacing)
+        
+        if prayer_name == next_prayer:
+            font_color = tertiary
+            outline = secondary
+        else:
+            font_color = secondary
+            outline = None
         
         # Render prayer name
         render_text(
@@ -117,13 +133,15 @@ def render_table(screen, scale_x, scale_y, table_font):
         # Render Adhan
         x_adhan = col_positions[1] + col_widths[1] // 2
         render_text(
-            screen, adhan, table_font, secondary,
-            (x_adhan, y), align="center"
+            screen, adhan, table_font, font_color,
+            (x_adhan, y), align="center",
+            outline_color=outline
         )
         
         # Render Iqamah
         x_iqamah = col_positions[2] + col_widths[2] // 2
         render_text(
-            screen, iqamah, table_font, secondary,
-            (x_iqamah, y), align="center"
+            screen, iqamah, table_font, font_color,
+            (x_iqamah, y), align="center",
+            outline_color=outline
         )
