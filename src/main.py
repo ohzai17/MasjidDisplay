@@ -7,6 +7,7 @@ from display import render_main
 from table import render_table
 from announcements import render_announcements
 from countdown import render_countdown
+from background import render_background
 
 # Temporary: Enable test mode and set test time
 TEST_MODE = True
@@ -44,7 +45,7 @@ def main():
             if event.type == pygame.KEYUP and event.key == pygame.K_RIGHT:
                 fast_forward = False
         
-        screen.fill((255,255,255))
+        render_background(screen)
         
         render_main(screen, scale_x, scale_y, time_font, title_font, detail_font)
         render_table(screen, scale_x, scale_y, table_font)

@@ -6,15 +6,19 @@ from config import CSV, DATA, BLACK
 from utils import render_text
 
 def load_prayer_times():
+    """Load today's prayer times from CSV."""
     
     from test import set_datetime # Temporary: Use test mode datetime
     today_str = set_datetime().strftime('%d %b %Y')
     
-    with open(CSV, 'r') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            if row['Date'].strip() == today_str:
-                return {k: v for k, v in row.items() if k != 'Date'}
+    try:
+        with open(CSV, 'r') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row['Date'].strip() == today_str:
+                    return {k: v for k, v in row.items() if k != 'Date'}
+    except FileNotFoundError:
+        pass
     return {}
 
 def format_table(prayer_times):
