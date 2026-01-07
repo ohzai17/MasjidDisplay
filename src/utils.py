@@ -1,7 +1,7 @@
 # utils.py
 
 import pygame
-from config import PRESET_MAP, FONT, BLACK, NAVY_BLUE, PEACH, WHITE
+from config import PRESET_MAP, FONT, BLACK, GOLD, WHITE
 
 def resize_window(window_preset):
     width, height, fullscreen = PRESET_MAP[window_preset]
@@ -54,18 +54,14 @@ def get_text_colors():
     if sunrise is None or maghrib is None:
         return BLACK, BLACK, BLACK
     
-    # Color change between 45 minutes before sunrise and 45 minutes before maghrib
-    if (sunrise - 2700) <= now_seconds < (maghrib - 2700):
-        return NAVY_BLUE, BLACK, WHITE
-    else:
-        return PEACH, WHITE, BLACK
+    return GOLD, WHITE, BLACK
 
 def render_text(
     surface, text, font, color, pos,
     align="center",
     scale_x = 1.0, scale_y = 1.0,
     outline_color = None, outline_width = 2,
-    shadow_color = None, shadow_offset = (2, 2)
+    shadow_color = None, shadow_offset = (1, 2)
 ):
     """Render text."""
     

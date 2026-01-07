@@ -110,7 +110,7 @@ def render_table(screen, scale_x, scale_y, table_font):
         
         render_text(
             screen, header_text, table_font, primary,
-            (x, y), align="center"
+            (x, y), align="center", shadow_color=tertiary
         )
     
     # Render prayer rows
@@ -120,14 +120,17 @@ def render_table(screen, scale_x, scale_y, table_font):
         if prayer_name == next_prayer:
             font_color = tertiary
             outline = secondary
+            shadow = None
         else:
             font_color = secondary
             outline = None
+            shadow = tertiary
         
         # Render prayer name
         render_text(
             screen, prayer_name, table_font, primary,
-            (col_positions[0], y), align="left"
+            (col_positions[0], y), align="left",
+            shadow_color=tertiary
         )
         
         # Render Adhan
@@ -135,7 +138,8 @@ def render_table(screen, scale_x, scale_y, table_font):
         render_text(
             screen, adhan, table_font, font_color,
             (x_adhan, y), align="center",
-            outline_color=outline
+            outline_color=outline,
+            shadow_color=shadow
         )
         
         # Render Iqamah
@@ -143,5 +147,6 @@ def render_table(screen, scale_x, scale_y, table_font):
         render_text(
             screen, iqamah, table_font, font_color,
             (x_iqamah, y), align="center",
-            outline_color=outline
+            outline_color=outline,
+            shadow_color=shadow
         )

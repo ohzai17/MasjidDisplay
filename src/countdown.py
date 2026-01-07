@@ -109,7 +109,7 @@ def render_countdown(screen, scale_x, scale_y, title_font, time_font):
         render_text(
             screen, header, title_font, primary,
             (int(1215 * scale_x), int(670 * scale_y)),
-            align="center"
+            align="center", shadow_color=tertiary
         )
         render_text(
             screen, countdown, time_font, tertiary,

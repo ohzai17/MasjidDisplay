@@ -21,32 +21,32 @@ def render_main(screen, scale_x, scale_y, time_font, title_font, detail_font):
     
     dates = date_str + " · " + hijri_str # Combine Gregorian and Hijri dates
     
-    primary, secondary, _ = get_text_colors()
+    primary, secondary, tertiary = get_text_colors()
     
     # Render name
     render_text(
         screen, NAME, title_font, primary,
         (int(1218 * scale_x), int(86 * scale_y)), 
-        align="center"
+        align="center", shadow_color=tertiary
     )
     
     # Render address
     render_text(
         screen, ADDRESS, detail_font, secondary,
         (int(1218 * scale_x), int(159 * scale_y)),
-        align="center"
+        align="center", shadow_color=tertiary
     )
     
     # Render time
     render_text(
         screen, time_str, time_font, primary,
         (int(363 * scale_x), int(174 * scale_y)), 
-        align="center"
+        align="center", shadow_color=tertiary
     )
     
     # Render dates
     render_text(
         screen, dates, detail_font, secondary,
         (int(363 * scale_x), int(68 * scale_y)),
-        align="center"
+        align="center", shadow_color=tertiary
     )
