@@ -111,8 +111,9 @@ def render_countdown(screen, scale_x, scale_y, title_font, time_font):
             (int(1215 * scale_x), int(670 * scale_y)),
             align="center", shadow_color=tertiary
         )
+        
         render_text(
-            screen, countdown, time_font, tertiary,
+            screen, countdown, time_font, secondary,
             (int(1217 * scale_x), int(801 * scale_y)),
-            align="center", outline_color=secondary
+            align="center", shadow_color=tertiary
         )
