@@ -52,7 +52,7 @@ def get_text_colors():
             continue
     
     if sunrise is None or maghrib is None:
-        return BLACK, BLACK, BLACK
+        return BLACK, BLACK, None
     
     return GOLD, WHITE, BLACK
 
