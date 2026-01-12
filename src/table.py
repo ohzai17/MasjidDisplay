@@ -78,10 +78,11 @@ def format_table(prayer_times):
     
     return formatted_prayer_times
 
-from countdown import get_next_event
 
 def render_table(screen, scale_x, scale_y, table_font):
     """Render the prayer times table."""
+    
+    from countdown import get_next_event
     
     primary, secondary, tertiary = get_text_colors()
     
