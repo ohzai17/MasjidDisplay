@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta, time, date
 from config import (
     CSV, REFRESH_INTERVAL, FETCH_WINDOW, 
-    LATITUDE, LONGITUDE, TIMEZONE, UTC_OFFSET, 
+    LATITUDE, LONGITUDE, TIMEZONE, 
     CALCULATION_METHOD, ASR_METHOD, ANGLES
 )
 
@@ -55,7 +55,7 @@ def fetch_data(start_date=date.today(), days=FETCH_WINDOW):
         dt_with_time = datetime.combine(date_iter, time(12, 0))
         try:
             offset = dt_with_time.astimezone(ZoneInfo(TIMEZONE)).utcoffset()
-            tz_offset = int(offset.total_seconds() // 3600) if offset is not None else UTC_OFFSET
+            tz_offset = int(offset.total_seconds() // 3600) if offset is not None else 0
             times = pt.getTimes(
                 [date_iter.year, date_iter.month, date_iter.day],
                 [LATITUDE, LONGITUDE],

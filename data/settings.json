@@ -11,13 +11,14 @@
         ]
     },
     "DATA": {
+        "CSV": {
+            "FETCH_WINDOW": 95,
+            "REFRESH_INTERVAL": 90
+        },
         "LOCATION": {
             "LATITUDE": 43.100903,
             "LONGITUDE": -75.232664,
-            "TIMEZONE": {
-                "NAME": "America/New_York",
-                "UTC_OFFSET": -5
-            },
+            "TIMEZONE": "America/New_York",
             "HIJRI_DATE_ADJUSTMENT": 0
         },
         "CALCULATION": {
@@ -61,6 +62,7 @@
             },
             "JUMMAH": {
                 "ADHAN_TIME": "12:30 PM",
+                "ADJUSTMENT": 0,
                 "IQAMAH_OFFSET": 30,
                 "DURATION": 30
             }
