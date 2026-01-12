@@ -6,7 +6,8 @@ import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 from data import refresh_data, fetch_data, save_data
 
-SETTINGS_PATH = "data/settings.json"
+SETTINGS = "data/settings.json"
+CSV = "data/data.csv"
 
 CALC_METHODS = [
     "MWL", "ISNA", "Egypt", "Makkah", "Karachi", "Tehran", "Jafari", "France", "Russia", "Singapore"
@@ -17,11 +18,11 @@ ASR_METHODS = ["Standard", "Hanafi"]
 HIJRI_ADJUSTMENTS = [-1, 0, 1]
 
 def load_settings():
-    with open(SETTINGS_PATH, "r") as f:
+    with open(SETTINGS, "r") as f:
         return json.load(f)
 
 def save_settings(settings):
-    with open(SETTINGS_PATH, "w") as f:
+    with open(SETTINGS, "w") as f:
         json.dump(settings, f, indent=4)
 
 class SettingsApp(tk.Tk):
@@ -62,12 +63,11 @@ class SettingsApp(tk.Tk):
         save_btn = ttk.Button(btn_frame, text="Save Changes", command=self.save_changes)
         save_btn.pack(side="left", padx=(0,10))
         restore_btn = ttk.Button(btn_frame, text="Restore Defaults", command=self.restore_defaults)
-        restore_btn.pack(side="left", padx=(10,0))
-        
-        ref_btn_frame = ttk.Frame(self)
-        ref_btn_frame.pack(pady=10)
-        refresh_btn = ttk.Button(ref_btn_frame, text="Refresh Data", command=self.refresh_data)
-        refresh_btn.pack(side="left")
+        restore_btn.pack(side="left", padx=(10,10))
+        refresh_btn = ttk.Button(btn_frame, text="Refresh Data", command=self.refresh_data)
+        refresh_btn.pack(side="left", padx=(10,10))
+        delete_btn = ttk.Button(btn_frame, text="Delete CSV", command=self.delete_csv)
+        delete_btn.pack(side="left", padx=(10,0))
 
     def create_display_tab(self, frame):
         display = self.settings["DISPLAY"]
@@ -216,6 +216,17 @@ class SettingsApp(tk.Tk):
                 self.status_var.set("Error refreshing data.")
         else:
             self.status_var.set("Data is up to date. No refresh needed.")
+
+    def delete_csv(self):
+        if os.path.exists(CSV):
+            try:
+                os.remove(CSV)
+                self.status_var.set("CSV deleted. Please refresh data.")
+                messagebox.showinfo("Deleted", "CSV file deleted successfully.")
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to delete CSV:\n{e}")
+        else:
+            messagebox.showinfo("Info", "CSV file does not exist.")
 
 if __name__ == "__main__":
     app = SettingsApp()
