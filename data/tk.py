@@ -5,6 +5,8 @@ from zoneinfo import available_timezones
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 from data import refresh_data, fetch_data, save_data
+import datetime
+import shutil
 
 SETTINGS = "data/settings.json"
 CSV = "data/data.csv"
@@ -22,8 +24,18 @@ def load_settings():
         return json.load(f)
 
 def save_settings(settings):
+    # Read current settings
+    with open(SETTINGS, "r") as f:
+        current = json.load(f)
+    # Only backup if there are changes
+    if current != settings:
+        backup_settings()
     with open(SETTINGS, "w") as f:
         json.dump(settings, f, indent=4)
+
+def backup_settings():
+    backup_name = f"data/backups/settings_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    shutil.copy2(SETTINGS, backup_name)
 
 class SettingsApp(tk.Tk):
     def __init__(self):
@@ -35,7 +47,6 @@ class SettingsApp(tk.Tk):
         self.create_widgets()
         style = ttk.Style()
         style.theme_use("clam")
-
 
     def create_widgets(self):
         notebook = ttk.Notebook(self)
