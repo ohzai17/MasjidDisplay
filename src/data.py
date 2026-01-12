@@ -8,7 +8,7 @@ from datetime import datetime, timedelta, time, date
 from config import (
     CSV, REFRESH_INTERVAL, FETCH_WINDOW, 
     LATITUDE, LONGITUDE, TIMEZONE, 
-    CALCULATION_METHOD, ASR_METHOD, ANGLES
+    CALCULATION_METHOD, ASR_METHOD
 )
 
 def format_time(t):
@@ -36,13 +36,7 @@ def refresh_data(csv_path=CSV, refresh_interval=REFRESH_INTERVAL):
 def fetch_data(start_date=date.today(), days=FETCH_WINDOW):
     """Fetch data from PrayTimes library."""
     
-    if CALCULATION_METHOD == 'Custom':
-        pt = PrayTimes(CALCULATION_METHOD)
-        pt.adjust({'fajr': ANGLES['FAJR']})
-        pt.adjust({'isha': ANGLES['ISHA']})
-    else:
-        pt = PrayTimes(CALCULATION_METHOD)
-    
+    pt = PrayTimes(CALCULATION_METHOD)
     pt.adjust({'asr': ASR_METHOD})
     pt.adjust({'maghrib': '0 min'})
     

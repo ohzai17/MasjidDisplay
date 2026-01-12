@@ -23,11 +23,7 @@
         },
         "CALCULATION": {
             "METHOD": "ISNA",
-            "ASR_METHOD": "Hanafi",
-            "ANGLES": {
-                "FAJR": 0,
-                "ISHA": 0
-            }
+            "ASR_METHOD": "Hanafi"
         },
         "PRAYERS": {
             "FAJR": {
