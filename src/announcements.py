@@ -20,8 +20,6 @@ def render_announcements(screen, scale_x, scale_y, title_font, detail_font):
         x = int(907 * scale_x)
         y = int((361 + i * 48) * scale_y)
         
-        before, after = text.split(':', 1)
-        
         # Render dash
         dash = render_text(
             screen, "-", detail_font, 
@@ -29,16 +27,22 @@ def render_announcements(screen, scale_x, scale_y, title_font, detail_font):
             shadow_color=tertiary
         )
         
-        # Render before colon
-        before = render_text(
-            screen, f"      {before.strip()}", detail_font,
-            primary, (dash.right, y), align="left",
-            shadow_color=tertiary
-        )
-        
-        # Render after colon (cut off at 26 characters)
-        render_text(
-            screen, f": {after.strip()[:26]}", detail_font,
-            secondary, (before.right, y), align="left",
-            shadow_color=tertiary
-        )
+        # Render announcement text
+        if ':' in text:
+            before, after = text.split(':', 1)
+            before = render_text(
+                screen, f"      {before.strip()}", detail_font,
+                primary, (dash.right, y), align="left",
+                shadow_color=tertiary
+            )
+            render_text(
+                screen, f": {after.strip()[:26]}", detail_font,
+                secondary, (before.right, y), align="left",
+                shadow_color=tertiary
+            )
+        else:
+            render_text(
+                screen, f"      {text.strip()[:43]}", detail_font,
+                secondary, (dash.right, y), align="left",
+                shadow_color=tertiary
+            )
