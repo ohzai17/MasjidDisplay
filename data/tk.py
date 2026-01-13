@@ -100,13 +100,11 @@ class SettingsApp(tk.Tk):
         data = self.settings["DATA"]
         
         loc = data["LOCATION"]
-        ttk.Label(frame, text="Latitude:").grid(row=0, column=0, sticky="w", pady=5, padx=5)
+        ttk.Label(frame, text="Latitude, Longitude:").grid(row=0, column=0, sticky="w", pady=5, padx=5)
         self.lat_var = tk.DoubleVar(value=loc["LATITUDE"])
-        ttk.Entry(frame, textvariable=self.lat_var, width=30).grid(row=0, column=1, pady=5, padx=5)
-
-        ttk.Label(frame, text="Longitude:").grid(row=1, column=0, sticky="w", pady=5, padx=5)
         self.lon_var = tk.DoubleVar(value=loc["LONGITUDE"])
-        ttk.Entry(frame, textvariable=self.lon_var, width=30).grid(row=1, column=1, pady=5, padx=5)
+        ttk.Entry(frame, textvariable=self.lat_var, width=14).grid(row=0, column=1, pady=5, padx=5, sticky="w")
+        ttk.Entry(frame, textvariable=self.lon_var, width=14).grid(row=0, column=1, pady=5, padx=5, sticky="e")
 
         ttk.Label(frame, text="Timezone:").grid(row=2, column=0, sticky="w", pady=5, padx=5)
         timezones = sorted([tz for tz in available_timezones() if "/" in tz and not tz.startswith("Etc/")])
