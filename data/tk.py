@@ -37,6 +37,30 @@ def backup_settings():
     backup_name = f"data/backups/settings_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     shutil.copy2(SETTINGS, backup_name)
 
+def tooltip(widget, text):
+    tipwindow = None
+
+    def show_tip(event=None):
+        nonlocal tipwindow
+        if tipwindow or not text:
+            return
+        x = widget.winfo_rootx()
+        y = widget.winfo_rooty() + 25
+        tipwindow = tw = tk.Toplevel(widget)
+        tw.wm_overrideredirect(True)
+        tw.wm_geometry(f"+{x}+{y}")
+        label = tk.Label(tw, text=text, justify='left', background="#ffffe0", relief='solid', borderwidth=1)
+        label.pack(ipadx=1)
+
+    def hide_tip(event=None):
+        nonlocal tipwindow
+        if tipwindow:
+            tipwindow.destroy()
+            tipwindow = None
+
+    widget.bind("<Enter>", show_tip)
+    widget.bind("<Leave>", hide_tip)
+
 class SettingsApp(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -103,8 +127,21 @@ class SettingsApp(tk.Tk):
         ttk.Label(frame, text="Latitude, Longitude:").grid(row=0, column=0, sticky="w", pady=5, padx=5)
         self.lat_var = tk.DoubleVar(value=loc["LATITUDE"])
         self.lon_var = tk.DoubleVar(value=loc["LONGITUDE"])
-        ttk.Entry(frame, textvariable=self.lat_var, width=14).grid(row=0, column=1, pady=5, padx=5, sticky="w")
-        ttk.Entry(frame, textvariable=self.lon_var, width=14).grid(row=0, column=1, pady=5, padx=5, sticky="e")
+        lat_entry = ttk.Entry(frame, textvariable=self.lat_var, width=14)
+        lat_entry.grid(row=0, column=1, pady=5, padx=5, sticky="w")
+        lon_entry = ttk.Entry(frame, textvariable=self.lon_var, width=14)
+        lon_entry.grid(row=0, column=1, pady=5, padx=5, sticky="e")
+
+        coord_help = (
+            "To find your Latitude and Longitude:\n\n"
+            "1. Open Google Maps (https://maps.google.com)\n"
+            "2. Right-click your location.\n"
+            "3. The coordinates (latitude, longitude) appear at the top of the menu — click to copy.\t\n"
+            "4. Enter each value in its respective box.\n"
+        )
+
+        tooltip(lat_entry, coord_help)
+        tooltip(lon_entry, coord_help)
 
         ttk.Label(frame, text="Timezone:").grid(row=2, column=0, sticky="w", pady=5, padx=5)
         timezones = sorted([tz for tz in available_timezones() if "/" in tz and not tz.startswith("Etc/")])
