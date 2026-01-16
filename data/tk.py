@@ -127,10 +127,15 @@ class SettingsApp(tk.Tk):
         ttk.Label(frame, text="Latitude, Longitude:").grid(row=0, column=0, sticky="w", pady=5, padx=5)
         self.lat_var = tk.DoubleVar(value=loc["LATITUDE"])
         self.lon_var = tk.DoubleVar(value=loc["LONGITUDE"])
-        lat_entry = ttk.Entry(frame, textvariable=self.lat_var, width=14)
-        lat_entry.grid(row=0, column=1, pady=5, padx=5, sticky="w")
-        lon_entry = ttk.Entry(frame, textvariable=self.lon_var, width=14)
-        lon_entry.grid(row=0, column=1, pady=5, padx=5, sticky="e")
+        
+        latlon_frame = ttk.Frame(frame)
+        latlon_frame.grid(row=0, column=1, pady=5, padx=100, sticky="w")
+        
+        lat_entry = ttk.Entry(latlon_frame, textvariable=self.lat_var, width=14)
+        lat_entry.pack(side="left", padx=10)
+        
+        lon_entry = ttk.Entry(latlon_frame, textvariable=self.lon_var, width=14)
+        lon_entry.pack(side="right", padx=10)
 
         coord_help = (
             "To find your Latitude and Longitude:\n\n"
