@@ -17,8 +17,6 @@ CALC_METHODS = [
 
 ASR_METHODS = ["Standard", "Hanafi"]
 
-HIJRI_ADJUSTMENTS = [-1, 0, 1]
-
 def load_settings():
     with open(SETTINGS, "r") as f:
         return json.load(f)
@@ -64,7 +62,7 @@ def tooltip(widget, text):
 class SettingsApp(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.geometry("600x500")
+        self.geometry("800x600")
         self.resizable(False, False)
         self.settings = load_settings()
         self.original_settings = json.loads(json.dumps(self.settings))  # Deep copy
@@ -129,7 +127,7 @@ class SettingsApp(tk.Tk):
         self.lon_var = tk.DoubleVar(value=loc["LONGITUDE"])
         
         latlon_frame = ttk.Frame(frame)
-        latlon_frame.grid(row=0, column=1, pady=5, padx=100, sticky="w")
+        latlon_frame.grid(row=0, column=1, pady=5, padx=125, sticky="w")
         
         lat_entry = ttk.Entry(latlon_frame, textvariable=self.lat_var, width=14)
         lat_entry.pack(side="left", padx=10)
@@ -155,7 +153,7 @@ class SettingsApp(tk.Tk):
 
         ttk.Label(frame, text="Hijri Date Adjustment:").grid(row=3, column=0, sticky="w", pady=5, padx=5)
         self.hijri_adj_var = tk.StringVar(value=str(loc.get("HIJRI_DATE_ADJUSTMENT")))
-        self.hijri_adj_combo = ttk.Combobox(frame, textvariable=self.hijri_adj_var, values=[str(x) for x in HIJRI_ADJUSTMENTS], width=29, state="readonly").grid(row=3, column=1, pady=5, padx=5)
+        self.hijri_adj_combo = ttk.Combobox(frame, textvariable=self.hijri_adj_var, values=[str(x) for x in list(range(-1, 2))], width=29, state="readonly").grid(row=3, column=1, pady=5, padx=5)
         
         calc = data["CALCULATION"]
         ttk.Label(frame, text="Calculation Method:").grid(row=4, column=0, sticky="w", pady=5, padx=5)
@@ -174,6 +172,96 @@ class SettingsApp(tk.Tk):
         ttk.Label(frame, text="Refresh Interval (days):").grid(row=7, column=0, sticky="w", pady=5, padx=5)
         self.refresh_var = tk.IntVar(value=csv["REFRESH_INTERVAL"])
         ttk.Entry(frame, textvariable=self.refresh_var, width=30).grid(row=7, column=1, pady=5, padx=5)
+        
+        # Create a separate frame for the prayer table to isolate its column configuration
+        table_frame = ttk.Frame(frame)
+        table_frame.grid(row=9, column=0, columnspan=5, sticky="w", padx=5, pady=10)
+        
+        prayers = "Fajr", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"
+        
+        # Table headers
+        headers = ["Prayer", "Adhan Time", "Adjustment (min)", "Iqamah Offset (min)", "Duration (min)"]
+        for col, header in enumerate(headers):
+            ttk.Label(table_frame, text=header).grid(row=0, column=col, padx=5, pady=5, sticky="w")
+
+        self.prayer_entries = {}
+
+        # Generate dropdown options
+        hour_options = [f"{h:02d}" for h in range(1, 13)]
+        minute_options = [f"{m:02d}" for m in range(0, 60, 5)]
+        am_pm_options = ["AM", "PM"]
+        adj_options = [str(i) for i in range(-10, 11)]
+        iqamah_options = [str(m) for m in range(0, 35, 5)]
+        duration_options = [str(m) for m in range(10, 35, 5)]
+
+        for i, prayer in enumerate(prayers):
+            prayer_key = prayer.upper()
+            row = 1 + i
+            ttk.Label(table_frame, text=prayer).grid(row=row, column=0, padx=(0, 5), pady=5, sticky="w")
+
+            # Adhan Time - Parse existing time if present
+            adhan_time = data["PRAYERS"].get(prayer_key, {}).get("ADHAN_TIME", "")
+            hour_part = ""
+            minute_part = ""
+            am_pm_part = ""
+            
+            if adhan_time:
+                parts = adhan_time.split()
+                if len(parts) == 2:
+                    time_parts = parts[0].split(":")
+                    if len(time_parts) == 2:
+                        hour_part = time_parts[0]
+                        minute_part = time_parts[1]
+                    am_pm_part = parts[1]
+            
+            adhan_hour_var = tk.StringVar(value=hour_part)
+            adhan_minute_var = tk.StringVar(value=minute_part)
+            adhan_am_pm_var = tk.StringVar(value=am_pm_part)
+            
+            time_frame = ttk.Frame(table_frame)
+            time_frame.grid(row=row, column=1, padx=5, pady=5, sticky="w")
+            
+            # Hour dropdown
+            hour_combo = ttk.Combobox(time_frame, textvariable=adhan_hour_var, values=hour_options, width=4, state="readonly")
+            hour_combo.pack(side="left", padx=5)
+            
+            # Minute dropdown
+            minute_combo = ttk.Combobox(time_frame, textvariable=adhan_minute_var, values=minute_options, width=4, state="readonly")
+            minute_combo.pack(side="left", padx=5)
+            
+            # AM/PM dropdown
+            am_pm_combo = ttk.Combobox(time_frame, textvariable=adhan_am_pm_var, values=am_pm_options, width=4, state="readonly")
+            am_pm_combo.pack(side="left", padx=5)
+            
+            def make_clear_fn(h=adhan_hour_var, m=adhan_minute_var, a=adhan_am_pm_var):
+                return lambda: (h.set(""), m.set(""), a.set(""))
+            
+            clear_btn = ttk.Button(time_frame, text="x", width=1, style="Clear.TButton", padding=(1,0), command=make_clear_fn())
+            clear_btn.pack(side="left", padx=5)
+            
+            # Adjustment
+            adj_var = tk.StringVar(value=str(data["PRAYERS"].get(prayer_key, {}).get("ADJUSTMENT")))
+            adj_combo = ttk.Combobox(table_frame, textvariable=adj_var, values=adj_options, width=12, state="readonly")
+            adj_combo.grid(row=row, column=2, padx=5, pady=5, sticky="w")
+
+            # Iqamah Offset
+            iqamah_var = tk.StringVar(value=f"{data['PRAYERS'].get(prayer_key, {}).get('IQAMAH_OFFSET')}")
+            iqamah_combo = ttk.Combobox(table_frame, textvariable=iqamah_var, values=iqamah_options, width=12, state="readonly")
+            iqamah_combo.grid(row=row, column=3, padx=5, pady=5, sticky="w")
+
+            # Duration
+            duration_var = tk.StringVar(value=f"{data['PRAYERS'].get(prayer_key, {}).get('DURATION')}")
+            duration_combo = ttk.Combobox(table_frame, textvariable=duration_var, values=duration_options, width=12, state="readonly")
+            duration_combo.grid(row=row, column=4, padx=5, pady=5, sticky="w")
+            
+            self.prayer_entries[prayer_key] = {
+                "ADHAN_HOUR": adhan_hour_var,
+                "ADHAN_MINUTE": adhan_minute_var,
+                "ADHAN_AMPM": adhan_am_pm_var,
+                "ADJUSTMENT": adj_var,
+                "IQAMAH_OFFSET": iqamah_var,
+                "DURATION": duration_var
+            }
 
     def restore_defaults(self):
         # Reload from the original loaded settings
@@ -201,6 +289,28 @@ class SettingsApp(tk.Tk):
         csv = data["CSV"]
         self.fetch_var.set(csv["FETCH_WINDOW"])
         self.refresh_var.set(csv["REFRESH_INTERVAL"])
+        
+        prayers = data["PRAYERS"]
+        for prayer_key, entries in self.prayer_entries.items():
+            prayer_data = prayers.get(prayer_key, {})
+            adhan_time = prayer_data.get("ADHAN_TIME", "")
+            hour_part = ""
+            minute_part = ""
+            am_pm_part = ""
+            if adhan_time:
+                parts = adhan_time.split()
+                if len(parts) == 2:
+                    time_parts = parts[0].split(":")
+                    if len(time_parts) == 2:
+                        hour_part = time_parts[0]
+                        minute_part = time_parts[1]
+                    am_pm_part = parts[1]
+            entries["ADHAN_HOUR"].set(hour_part)
+            entries["ADHAN_MINUTE"].set(minute_part)
+            entries["ADHAN_AMPM"].set(am_pm_part)
+            entries["ADJUSTMENT"].set(prayer_data.get("ADJUSTMENT"))
+            entries["IQAMAH_OFFSET"].set(prayer_data.get("IQAMAH_OFFSET"))
+            entries["DURATION"].set(prayer_data.get("DURATION"))
         
         save_settings(self.settings)
         messagebox.showinfo("Restored", "Settings restored to original loaded values.")
@@ -244,6 +354,22 @@ class SettingsApp(tk.Tk):
         csv = self.settings["DATA"]["CSV"]
         csv["FETCH_WINDOW"] = fetch_window
         csv["REFRESH_INTERVAL"] = refresh_interval
+        
+        prayers = self.settings["DATA"]["PRAYERS"]
+        for prayer_key, entries in self.prayer_entries.items():
+            hour = entries["ADHAN_HOUR"].get()
+            minute = entries["ADHAN_MINUTE"].get()
+            am_pm = entries["ADHAN_AMPM"].get()
+            if hour and minute and am_pm:
+                adhan_time = f"{hour}:{minute} {am_pm}"
+            else:
+                adhan_time = ""
+            prayers[prayer_key] = {
+                "ADHAN_TIME": adhan_time,
+                "ADJUSTMENT": int(entries["ADJUSTMENT"].get()),
+                "IQAMAH_OFFSET": int(entries["IQAMAH_OFFSET"].get()),
+                "DURATION": int(entries["DURATION"].get())
+            }
 
         try:
             save_settings(self.settings)
