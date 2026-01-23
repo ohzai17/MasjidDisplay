@@ -17,15 +17,20 @@ class Launcher(tk.Tk):
         self.left_frame = ttk.Frame(self.main_frame, relief="ridge")
         self.left_frame.grid(row=0, column=0, sticky="nsew", padx=(0, 5))
         
-        # Right frame
-        self.right_frame = ttk.Frame(self.main_frame, relief="ridge")
-        self.right_frame.grid(row=0, column=1, sticky="nsew", padx=(5, 0))
-        
         # Button row in left frame
         self.left_button_frame = ttk.Frame(self.left_frame)
         self.left_button_frame.pack(side="bottom", pady=10)
         ttk.Button(self.left_button_frame, text="Generate CSV").pack(side="left")
         ttk.Button(self.left_button_frame, text="Delete CSV").pack(side="left", padx=10)
+        
+        # Status label
+        self.status_var = tk.StringVar(value="Status")
+        self.status_entry = ttk.Entry(self.left_frame, textvariable=self.status_var, state="readonly", justify="center")
+        self.status_entry.pack(side="bottom", fill="x", padx=10, pady=(0, 5))
+        
+        # Right frame
+        self.right_frame = ttk.Frame(self.main_frame, relief="ridge")
+        self.right_frame.grid(row=0, column=1, sticky="nsew", padx=(5, 0))
         
         # Button row in right frame
         self.right_button_frame = ttk.Frame(self.right_frame)
@@ -33,7 +38,7 @@ class Launcher(tk.Tk):
         ttk.Button(self.right_button_frame, text="Save Changes").pack(side="left")
         ttk.Button(self.right_button_frame, text="Restore Defaults").pack(side="left", padx=10)
         
-        # Configure grid weights for columns and rows
+        # Configure grid weights for main frame
         self.main_frame.columnconfigure(0, weight=1)
         self.main_frame.columnconfigure(1, weight=2)
         self.main_frame.rowconfigure(0, weight=1)
