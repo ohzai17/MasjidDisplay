@@ -117,23 +117,29 @@ class Launcher(tk.Tk):
             
             # Adhan Time
             ttk.Combobox(table_frame, values=hours, state="readonly", width=5).grid(
-                row=row, column=1, padx=4, pady=2, sticky="nsew")
+                row=row, column=1, padx=4, pady=2, sticky="nsew"
+            )
             ttk.Combobox(table_frame, values=minutes, state="readonly", width=5).grid(
-                row=row, column=2, padx=4, pady=2, sticky="nsew")
+                row=row, column=2, padx=4, pady=2, sticky="nsew"
+            )
             ttk.Combobox(table_frame, values=ampm, state="readonly", width=5).grid(
-                row=row, column=3, padx=4, pady=2, sticky="nsew")
+                row=row, column=3, padx=4, pady=2, sticky="nsew"
+            )
             
             # Adjustment
             ttk.Combobox(table_frame, values=adjustment, state="readonly", width=5).grid(
-                row=row, column=4, padx=4, pady=2, sticky="nsew")
+                row=row, column=4, padx=4, pady=2, sticky="nsew"
+            )
             
             # Iqamah Offset
             ttk.Combobox(table_frame, values=offset, state="readonly", width=5).grid(
-                row=row, column=5, padx=4, pady=2, sticky="nsew")
+                row=row, column=5, padx=4, pady=2, sticky="nsew"
+            )
             
             # Duration
             ttk.Combobox(table_frame, values=duration, state="readonly", width=5).grid(
-                row=row, column=6, padx=4, pady=2, sticky="nsew")
+                row=row, column=6, padx=4, pady=2, sticky="nsew"
+            )
         
         # Configure grid weights for main frame
         self.main_frame.columnconfigure(0, weight=1)
