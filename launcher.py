@@ -1,10 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
+from zoneinfo import available_timezones
 
 class Launcher(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.geometry("1000x400")
+        self.geometry("1100x350")
         self.resizable(False, False)
         # style = ttk.Style()
         # style.theme_use("clam")
@@ -21,12 +22,48 @@ class Launcher(tk.Tk):
         self.left_button_frame = ttk.Frame(self.left_frame)
         self.left_button_frame.pack(side="bottom", pady=10)
         ttk.Button(self.left_button_frame, text="Generate CSV").pack(side="left")
-        ttk.Button(self.left_button_frame, text="Delete CSV").pack(side="left", padx=(5,0))
+        ttk.Button(self.left_button_frame, text="Delete CSV").pack(side="left", padx=10)
         
         # Status label
         self.status_var = tk.StringVar(value="Status")
         self.status_entry = ttk.Entry(self.left_frame, textvariable=self.status_var, state="readonly", justify="center")
         self.status_entry.pack(side="bottom", fill="x", padx=10)
+        
+        settings_labels = ["Latitude", "Longitude", "Timezone", "Hijri Date Adjustment", "Calculation Method", "Asr Method"]
+        
+        timezones = sorted(available_timezones())
+        hijri_adjustments = [f"{i}" for i in range(-1, 2)]
+        calc_methods = ["MWL", "ISNA", "Egypt", "Makkah", "Karachi", "Tehran", "Jafari", "France", "Russia", "Singapore"]
+        asr_methods = ["Standard", "Hanafi"]
+        
+        # Settings frame
+        settings_frame = ttk.Frame(self.left_frame)
+        settings_frame.pack(side="top", fill="x", padx=10, pady=(10, 0))
+        
+        for row, label in enumerate(settings_labels):
+            ttk.Label(settings_frame, text=label, anchor="w", font=("TkDefaultFont", 12, "bold")).grid(
+                row=row, column=0, padx=4, pady=2, sticky="nsew"
+            )
+            if row == 0 or row == 1:
+                ttk.Entry(settings_frame, width=20).grid(
+                    row=row, column=1, padx=(30, 0), pady=2, sticky="nsew"
+                )
+            elif row == 2:
+                ttk.Combobox(settings_frame, values=timezones, state="readonly", width=20).grid(
+                    row=row, column=1, padx=(30, 0), pady=2, sticky="nsew"
+                )
+            elif row == 3:
+                ttk.Combobox(settings_frame, values=hijri_adjustments, state="readonly", width=20).grid(
+                    row=row, column=1, padx=(30, 0), pady=2, sticky="nsew"
+                )
+            elif row == 4:
+                ttk.Combobox(settings_frame, values=calc_methods, state="readonly", width=20).grid(
+                    row=row, column=1, padx=(30, 0), pady=2, sticky="nsew"
+                )
+            elif row == 5:
+                ttk.Combobox(settings_frame, values=asr_methods, state="readonly", width=20).grid(
+                    row=row, column=1, padx=(30, 0), pady=2, sticky="nsew"
+                )
         
         # Right frame
         self.right_frame = ttk.Frame(self.main_frame, relief="ridge")
