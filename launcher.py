@@ -61,7 +61,7 @@ class Launcher(tk.Tk):
             
             # Hijri Date Adjustment
             elif row == 3:
-                ttk.Combobox(settings_frame, values=hijri_adjustments, state="readonly", width=20).grid(
+                ttk.Spinbox(settings_frame, values=hijri_adjustments, state="readonly", width=20).grid(
                     row=row, column=1, padx=(30, 0), pady=2, sticky="nsew"
                 )
             
@@ -93,7 +93,7 @@ class Launcher(tk.Tk):
         minutes = [""] + [f"{m:02d}" for m in range(0, 60)]
         ampm = [""] + ["AM", "PM"]
         
-        adjustment = [f"{i}" for i in range(-5, 6)]
+        adjustment = [f"{i}" for i in range(-10, 11)]
         offset = [f"{i}" for i in range(0, 31, 5)]
         duration = [f"{i}" for i in range(15, 31, 15)]
         
@@ -127,7 +127,7 @@ class Launcher(tk.Tk):
             )
             
             # Adjustment
-            ttk.Combobox(table_frame, values=adjustment, state="readonly", width=5).grid(
+            ttk.Spinbox(table_frame, values=adjustment, state="readonly", width=5).grid(
                 row=row, column=4, padx=4, pady=2, sticky="nsew"
             )
             
