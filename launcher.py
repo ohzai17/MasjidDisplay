@@ -41,25 +41,37 @@ class Launcher(tk.Tk):
         settings_frame.pack(side="top", fill="x", padx=10, pady=(10, 0))
         
         for row, label in enumerate(settings_labels):
+            
+            # Labels
             ttk.Label(settings_frame, text=label, anchor="w", font=("TkDefaultFont", 12, "bold")).grid(
                 row=row, column=0, padx=4, pady=2, sticky="nsew"
             )
+            
+            # Latitude and Longitude
             if row == 0 or row == 1:
                 ttk.Entry(settings_frame, width=20).grid(
                     row=row, column=1, padx=(30, 0), pady=2, sticky="nsew"
                 )
+            
+            # Timezone
             elif row == 2:
                 ttk.Combobox(settings_frame, values=timezones, state="readonly", width=20).grid(
                     row=row, column=1, padx=(30, 0), pady=2, sticky="nsew"
                 )
+            
+            # Hijri Date Adjustment
             elif row == 3:
                 ttk.Combobox(settings_frame, values=hijri_adjustments, state="readonly", width=20).grid(
                     row=row, column=1, padx=(30, 0), pady=2, sticky="nsew"
                 )
+            
+            # Calculation Method
             elif row == 4:
                 ttk.Combobox(settings_frame, values=calc_methods, state="readonly", width=20).grid(
                     row=row, column=1, padx=(30, 0), pady=2, sticky="nsew"
                 )
+                
+            # Asr Method
             elif row == 5:
                 ttk.Combobox(settings_frame, values=asr_methods, state="readonly", width=20).grid(
                     row=row, column=1, padx=(30, 0), pady=2, sticky="nsew"
@@ -72,8 +84,7 @@ class Launcher(tk.Tk):
         # Button row in right frame
         self.right_button_frame = ttk.Frame(self.right_frame)
         self.right_button_frame.pack(side="bottom", pady=10)
-        ttk.Button(self.right_button_frame, text="Save Changes").pack(side="left")
-        ttk.Button(self.right_button_frame, text="Restore Defaults").pack(side="left", padx=10)
+        ttk.Button(self.right_button_frame, text="Restore Defaults").pack(side="left")
         
         header = ["Prayer", "Adhan Time", "", "", "Adjustment (min)", "Iqamah Offset (min)", "Duration (min)"]
         prayers = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"]
@@ -91,35 +102,38 @@ class Launcher(tk.Tk):
         table_frame.pack(side="top", fill="x", padx=10, pady=(10, 0))
         
         # Header row
-        for col, text in enumerate(header):
-            lbl = ttk.Label(table_frame, text=text, anchor="w", justify="left", font=("TkDefaultFont", 12, "bold"))
-            lbl.grid(row=0, column=col, padx=4, pady=2, sticky="nsew")
+        for row, label in enumerate(header):
+            ttk.Label(table_frame, text=label, anchor="w", justify="left", font=("TkDefaultFont", 12, "bold")).grid(
+                row=0, column=row, padx=4, pady=2, sticky="nsew"
+            )
         
         # Prayer rows
-        for row, prayer in enumerate(prayers, start=1):
-            # Prayer name
-            lbl = ttk.Label(table_frame, text=prayer, anchor="w")
-            lbl.grid(row=row, column=0, padx=4, pady=2, sticky="nsew")
+        for row, label in enumerate(prayers, start=1):
             
-            # Adhan Time: hours, minutes, am/pm
-            cb_hour = ttk.Combobox(table_frame, values=hours, state="readonly", width=5)
-            cb_hour.grid(row=row, column=1, padx=4, pady=2, sticky="nsew")
-            cb_min = ttk.Combobox(table_frame, values=minutes, state="readonly", width=5)
-            cb_min.grid(row=row, column=2, padx=4, pady=2, sticky="nsew")
-            cb_ampm = ttk.Combobox(table_frame, values=ampm, state="readonly", width=5)
-            cb_ampm.grid(row=row, column=3, padx=4, pady=2, sticky="nsew")
+            # Prayer Names
+            ttk.Label(table_frame, text=label, anchor="w", font=("TkDefaultFont", 12, "bold")).grid(
+                row=row, column=0, padx=4, pady=2, sticky="nsew"
+            )
             
-            # Adjustment (min)
-            cb_adj = ttk.Combobox(table_frame, values=adjustment, state="readonly", width=5)
-            cb_adj.grid(row=row, column=4, padx=4, pady=2, sticky="nsew")
+            # Adhan Time
+            ttk.Combobox(table_frame, values=hours, state="readonly", width=5).grid(
+                row=row, column=1, padx=4, pady=2, sticky="nsew")
+            ttk.Combobox(table_frame, values=minutes, state="readonly", width=5).grid(
+                row=row, column=2, padx=4, pady=2, sticky="nsew")
+            ttk.Combobox(table_frame, values=ampm, state="readonly", width=5).grid(
+                row=row, column=3, padx=4, pady=2, sticky="nsew")
             
-            # Iqamah Offset (min)
-            cb_offset = ttk.Combobox(table_frame, values=offset, state="readonly", width=5)
-            cb_offset.grid(row=row, column=5, padx=4, pady=2, sticky="nsew")
+            # Adjustment
+            ttk.Combobox(table_frame, values=adjustment, state="readonly", width=5).grid(
+                row=row, column=4, padx=4, pady=2, sticky="nsew")
             
-            # Duration (min)
-            cb_dur = ttk.Combobox(table_frame, values=duration, state="readonly", width=5)
-            cb_dur.grid(row=row, column=6, padx=4, pady=2, sticky="nsew")
+            # Iqamah Offset
+            ttk.Combobox(table_frame, values=offset, state="readonly", width=5).grid(
+                row=row, column=5, padx=4, pady=2, sticky="nsew")
+            
+            # Duration
+            ttk.Combobox(table_frame, values=duration, state="readonly", width=5).grid(
+                row=row, column=6, padx=4, pady=2, sticky="nsew")
         
         # Configure grid weights for main frame
         self.main_frame.columnconfigure(0, weight=1)
@@ -127,8 +141,7 @@ class Launcher(tk.Tk):
         self.main_frame.rowconfigure(0, weight=1)
         
         # Launch button at the bottom
-        self.bottom_button = ttk.Button(self, text="Launch")
-        self.bottom_button.pack(pady=(0, 10))
+        ttk.Button(self, text="Launch").pack(pady=(0, 10))
 
 if __name__ == "__main__":
     app = Launcher()
