@@ -5,7 +5,7 @@ from zoneinfo import available_timezones
 class Launcher(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.geometry("1100x350")
+        self.geometry("1500x400")
         self.resizable(False, False)
         # style = ttk.Style()
         # style.theme_use("clam")
@@ -77,14 +77,14 @@ class Launcher(tk.Tk):
                     row=row, column=1, padx=(30, 0), pady=2, sticky="nsew"
                 )
         
-        # Right frame
-        self.right_frame = ttk.Frame(self.main_frame, relief="ridge")
-        self.right_frame.grid(row=0, column=1, sticky="nsew", padx=(5, 0))
+        # Middle frame
+        self.middle_frame = ttk.Frame(self.main_frame, relief="ridge")
+        self.middle_frame.grid(row=0, column=1, sticky="nsew", padx=(5, 5))
         
-        # Button row in right frame
-        self.right_button_frame = ttk.Frame(self.right_frame)
-        self.right_button_frame.pack(side="bottom", pady=10)
-        ttk.Button(self.right_button_frame, text="Restore Defaults").pack(side="left")
+        # Button row in middle frame
+        self.middle_button_frame = ttk.Frame(self.middle_frame)
+        self.middle_button_frame.pack(side="bottom", pady=10)
+        ttk.Button(self.middle_button_frame, text="Restore Defaults").pack(side="left")
         
         header = ["Prayer", "Adhan Time", "", "", "Adjustment (min)", "Iqamah Offset (min)", "Duration (min)"]
         prayers = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"]
@@ -98,7 +98,7 @@ class Launcher(tk.Tk):
         duration = [f"{i}" for i in range(15, 31, 15)]
         
         # Table frame
-        table_frame = ttk.Frame(self.right_frame)
+        table_frame = ttk.Frame(self.middle_frame)
         table_frame.pack(side="top", fill="x", padx=10, pady=(10, 0))
         
         # Header row
@@ -141,9 +141,56 @@ class Launcher(tk.Tk):
                 row=row, column=6, padx=4, pady=2, sticky="nsew"
             )
         
+        # Right frame
+        self.right_frame = ttk.Frame(self.main_frame, relief="ridge")
+        self.right_frame.grid(row=0, column=2, sticky="nsew", padx=(5, 0))
+        
+        # Button row in right frame
+        self.right_button_frame = ttk.Frame(self.right_frame)
+        self.right_button_frame.pack(side="bottom", pady=10)
+        ttk.Button(self.right_button_frame, text="Restore Defaults").pack(side="left")
+        
+        announcement_templates = [
+            "",
+            "Eid Al-Fitr Salah: Month DD, YYYY @ HH:MM AM",
+            "Zakat Al-Fitr: $XX Per Person",
+            "Eid Al-Adha Salah: Month DD, YYYY @ HH:MM AM"
+        ]
+        
+        # Display frame
+        display_frame = ttk.Frame(self.right_frame)
+        display_frame.pack(side="top", fill="x", padx=10, pady=(10, 0))
+        display_frame.columnconfigure(0, weight=1)
+        
+        # Masjid Name
+        ttk.Label(display_frame, text="Masjid Name", anchor="center", justify="center", font=("TkDefaultFont", 12, "bold")).grid(
+            row=0, column=0, padx=4, pady=2, sticky="ew"
+        )
+        ttk.Entry(display_frame, width=30, justify="center").grid(
+            row=1, column=0, padx=4, pady=2, sticky="ew"
+        )
+
+        # Masjid Address
+        ttk.Label(display_frame, text="Masjid Address", anchor="center", justify="center", font=("TkDefaultFont", 12, "bold")).grid(
+            row=2, column=0, padx=4, pady=2, sticky="ew"
+        )
+        ttk.Entry(display_frame, width=30, justify="center").grid(
+            row=3, column=0, padx=4, pady=2, sticky="ew"
+        )
+
+        # Announcements
+        ttk.Label(display_frame, text="Announcements", anchor="center", justify="center", font=("TkDefaultFont", 12, "bold")).grid(
+            row=4, column=0, padx=4, pady=2, sticky="ew"
+        )
+        for i in range(5):
+            ttk.Combobox(display_frame, values=announcement_templates, width=30, justify="center").grid(
+                row=5 + i, column=0, padx=4, pady=2, sticky="ew"
+            )
+        
         # Configure grid weights for main frame
         self.main_frame.columnconfigure(0, weight=1)
-        self.main_frame.columnconfigure(1, weight=2)
+        self.main_frame.columnconfigure(1, weight=1)
+        self.main_frame.columnconfigure(2, weight=8)
         self.main_frame.rowconfigure(0, weight=1)
         
         # Launch button at the bottom
