@@ -48,11 +48,11 @@ class Launcher(tk.Tk):
         self.main_frame.pack(fill="both", expand=True, padx=10, pady=10)
         
         # Load settings
-        settings = load_settings()
-        display = settings["DISPLAY"]
-        location = settings['DATA']['LOCATION']
-        calculation = settings['DATA']['CALCULATION']
-        prayers = settings['DATA']['PRAYERS']
+        self.settings = load_settings()
+        display = self.settings["DISPLAY"]
+        location = self.settings['DATA']['LOCATION']
+        calculation = self.settings['DATA']['CALCULATION']
+        prayers = self.settings['DATA']['PRAYERS']
         
         # Left frame
         self.left_frame = ttk.Frame(self.main_frame, relief="ridge")
@@ -104,41 +104,41 @@ class Launcher(tk.Tk):
             
             # Latitude
             if row == 0:
-                entry = ttk.Entry(settings_frame, width=20)
-                entry.insert(0, latitude)
-                entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
-                ToolTip(entry, coord_help)
+                self.latitude_entry = ttk.Entry(settings_frame, width=20)
+                self.latitude_entry.insert(0, latitude)
+                self.latitude_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
+                ToolTip(self.latitude_entry, coord_help)
             
             # Longitude
             elif row == 1:
-                entry = ttk.Entry(settings_frame, width=20)
-                entry.insert(0, longitude)
-                entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
-                ToolTip(entry, coord_help)
+                self.longitude_entry = ttk.Entry(settings_frame, width=20)
+                self.longitude_entry.insert(0, longitude)
+                self.longitude_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
+                ToolTip(self.longitude_entry, coord_help)
             
             # Timezone
             elif row == 2:
-                entry = ttk.Combobox(settings_frame, values=timezone_options, state="readonly", width=20)
-                entry.set(timezone)
-                entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
+                self.timezone_entry = ttk.Combobox(settings_frame, values=timezone_options, state="readonly", width=20)
+                self.timezone_entry.set(timezone)
+                self.timezone_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
             
             # Hijri Date Adjustment
             elif row == 3:
-                entry = ttk.Spinbox(settings_frame, values=hijri_date_adjustment_options, state="readonly", width=20)
-                entry.set(str(hijri_date_adjustment))
-                entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
+                self.hijri_date_adjustment_entry = ttk.Spinbox(settings_frame, values=hijri_date_adjustment_options, state="readonly", width=20)
+                self.hijri_date_adjustment_entry.set(str(hijri_date_adjustment))
+                self.hijri_date_adjustment_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
             
             # Calculation Method
             elif row == 4:
-                entry = ttk.Combobox(settings_frame, values=calculation_method_options, state="readonly", width=20)
-                entry.set(calculation_method)
-                entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
+                self.calculation_method_entry = ttk.Combobox(settings_frame, values=calculation_method_options, state="readonly", width=20)
+                self.calculation_method_entry.set(calculation_method)
+                self.calculation_method_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
             
             # Asr Method
             elif row == 5:
-                entry = ttk.Combobox(settings_frame, values=asr_method_options, state="readonly", width=20)
-                entry.set(asr_method)
-                entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
+                self.asr_method_entry = ttk.Combobox(settings_frame, values=asr_method_options, state="readonly", width=20)
+                self.asr_method_entry.set(asr_method)
+                self.asr_method_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
         
         # Middle frame
         self.middle_frame = ttk.Frame(self.main_frame, relief="ridge")
@@ -170,6 +170,13 @@ class Launcher(tk.Tk):
                 row=0, column=row, padx=4, pady=2, sticky="nsew"
             )
         
+        self.adhan_time_hour_entries = []
+        self.adhan_time_minute_entries = []
+        self.adhan_time_ampm_entries = []
+        self.adjustment_entries = []
+        self.iqamah_offset_entries = []
+        self.duration_entries = []
+        
         # Prayer rows
         for row, label in enumerate(prayer_labels, start=1):
             
@@ -190,30 +197,36 @@ class Launcher(tk.Tk):
             )
             
             # Adhan Time
-            entry = ttk.Combobox(table_frame, values=hours_options, state="readonly", width=5)
-            entry.set(hours)
-            entry.grid(row=row, column=1, padx=4, pady=2, sticky="nsew")
-            entry = ttk.Combobox(table_frame, values=minutes_options, state="readonly", width=5)
-            entry.set(minutes)
-            entry.grid(row=row, column=2, padx=4, pady=2, sticky="nsew")
-            entry = ttk.Combobox(table_frame, values=ampm_options, state="readonly", width=5)
-            entry.set(ampm)
-            entry.grid(row=row, column=3, padx=4, pady=2, sticky="nsew")
+            hour_entry = ttk.Combobox(table_frame, values=hours_options, state="readonly", width=5)
+            hour_entry.set(hours)
+            hour_entry.grid(row=row, column=1, padx=4, pady=2, sticky="nsew")
+            self.adhan_time_hour_entries.append(hour_entry)
+            minute_entry = ttk.Combobox(table_frame, values=minutes_options, state="readonly", width=5)
+            minute_entry.set(minutes)
+            minute_entry.grid(row=row, column=2, padx=4, pady=2, sticky="nsew")
+            self.adhan_time_minute_entries.append(minute_entry)
+            ampm_entry = ttk.Combobox(table_frame, values=ampm_options, state="readonly", width=5)
+            ampm_entry.set(ampm)
+            ampm_entry.grid(row=row, column=3, padx=4, pady=2, sticky="nsew")
+            self.adhan_time_ampm_entries.append(ampm_entry)
             
             # Adjustment
-            entry = ttk.Spinbox(table_frame, values=adjustment_options, state="readonly", width=5)
-            entry.set(adjustment)
-            entry.grid(row=row, column=4, padx=4, pady=2, sticky="nsew")
+            adjustment_entry = ttk.Spinbox(table_frame, values=adjustment_options, state="readonly", width=5)
+            adjustment_entry.set(adjustment)
+            adjustment_entry.grid(row=row, column=4, padx=4, pady=2, sticky="nsew")
+            self.adjustment_entries.append(adjustment_entry)
             
             # Iqamah Offset
-            entry = ttk.Combobox(table_frame, values=offset_options, state="readonly", width=5)
-            entry.set(iqamah_offset)
-            entry.grid(row=row, column=5, padx=4, pady=2, sticky="nsew")
+            iqamah_offset_entry = ttk.Combobox(table_frame, values=offset_options, state="readonly", width=5)
+            iqamah_offset_entry.set(iqamah_offset)
+            iqamah_offset_entry.grid(row=row, column=5, padx=4, pady=2, sticky="nsew")
+            self.iqamah_offset_entries.append(iqamah_offset_entry)
             
             # Duration
-            entry = ttk.Combobox(table_frame, values=duration_options, state="readonly", width=5)
-            entry.set(duration)
-            entry.grid(row=row, column=6, padx=4, pady=2, sticky="nsew")
+            duration_entry = ttk.Combobox(table_frame, values=duration_options, state="readonly", width=5)
+            duration_entry.set(duration)
+            duration_entry.grid(row=row, column=6, padx=4, pady=2, sticky="nsew")
+            self.duration_entries.append(duration_entry)
         
         # Right frame
         self.right_frame = ttk.Frame(self.main_frame, relief="ridge")
@@ -244,27 +257,29 @@ class Launcher(tk.Tk):
         ttk.Label(display_frame, text="Masjid Name", anchor="center", justify="center", font=("TkDefaultFont", 12, "bold")).grid(
             row=0, column=0, padx=4, pady=2, sticky="ew"
         )
-        entry = ttk.Entry(display_frame, width=30, justify="center")
-        entry.insert(0, name)
-        entry.grid(row=1, column=0, padx=4, pady=2, sticky="ew")
-
+        self.name_entry = ttk.Entry(display_frame, width=30, justify="center")
+        self.name_entry.insert(0, name)
+        self.name_entry.grid(row=1, column=0, padx=4, pady=2, sticky="ew")
+        
         # Masjid Address
         ttk.Label(display_frame, text="Masjid Address", anchor="center", justify="center", font=("TkDefaultFont", 12, "bold")).grid(
             row=2, column=0, padx=4, pady=2, sticky="ew"
         )
-        entry = ttk.Entry(display_frame, width=30, justify="center")
-        entry.insert(0, address)
-        entry.grid(row=3, column=0, padx=4, pady=2, sticky="ew")
-
+        self.address_entry = ttk.Entry(display_frame, width=30, justify="center")
+        self.address_entry.insert(0, address)
+        self.address_entry.grid(row=3, column=0, padx=4, pady=2, sticky="ew")
+        
         # Announcements
         ttk.Label(display_frame, text="Announcements", anchor="center", justify="center", font=("TkDefaultFont", 12, "bold")).grid(
             row=4, column=0, padx=4, pady=2, sticky="ew"
         )
+        self.announcement_entries = []
         for i in range(5):
-            entry = ttk.Combobox(display_frame, values=announcement_options, width=30, justify="center")
+            announcement_entry = ttk.Combobox(display_frame, values=announcement_options, width=30, justify="center")
             if i < len(announcements):
-                entry.set(announcements[i])
-            entry.grid(row=5 + i, column=0, padx=4, pady=2, sticky="ew")
+                announcement_entry.set(announcements[i])
+            announcement_entry.grid(row=5 + i, column=0, padx=4, pady=2, sticky="ew")
+            self.announcement_entries.append(announcement_entry)
         
         # Configure grid weights for main frame
         self.main_frame.columnconfigure(0, weight=1)
