@@ -313,6 +313,18 @@ class Launcher(tk.Tk):
         address = self.address_entry.get()
         announcements = [i.get() for i in self.announcement_entries if i.get()]
         
+        # Input validation
+        if len(name) > 20:
+            messagebox.showerror("Error", "Masjid Name exceeds character limit.")
+            return
+        if len(address) > 35:
+            messagebox.showerror("Error", "Masjid Address exceeds character limit.")
+            return
+        for i, announcement in enumerate(announcements):
+            if len(announcement) > 45:
+                messagebox.showerror("Error", f"Announcement {i+1} exceeds character limit.")
+                return
+        
         self.settings['DATA']['LOCATION']['LATITUDE'] = latitude
         self.settings['DATA']['LOCATION']['LONGITUDE'] = longitude
         self.settings['DATA']['LOCATION']['TIMEZONE'] = timezone
@@ -335,8 +347,7 @@ class Launcher(tk.Tk):
             # Ensure all parts of time are selected before saving
             if (hour and not minute) or (minute and not hour) or ((hour or minute) and not ampm):
                 messagebox.showerror(
-                    "Input Error",
-                    f"Please select hour, minute, and AM/PM for {label}."
+                    "Error", f"Please select hour, minute, and AM/PM for {label}."
                 )
                 return
             adhan_time = f"{hour}:{minute} {ampm}" if hour and minute and ampm else ""
