@@ -1,3 +1,4 @@
+import os
 import json
 import tkinter as tk
 from tkinter import ttk
@@ -5,6 +6,7 @@ from tkinter import messagebox
 from zoneinfo import available_timezones
 
 SETTINGS = 'data/settings.json'
+CSV = 'data/data.csv'
 
 def load_settings():
     """Load settings from JSON file."""
@@ -66,12 +68,15 @@ class Launcher(tk.Tk):
         self.left_button_frame = ttk.Frame(self.left_frame)
         self.left_button_frame.pack(side="bottom", pady=10)
         ttk.Button(self.left_button_frame, text="Generate CSV").pack(side="left")
-        ttk.Button(self.left_button_frame, text="Delete CSV").pack(side="left", padx=10)
+        ttk.Button(self.left_button_frame, text="Delete CSV", command=self.delete_csv).pack(side="left", padx=10)
         
         # Status label
         self.status_var = tk.StringVar(value="Status")
         self.status_entry = ttk.Entry(self.left_frame, textvariable=self.status_var, state="readonly", justify="center")
         self.status_entry.pack(side="bottom", fill="x", padx=10)
+        
+        # Update status label
+        self.status_var.set("CSV file present" if os.path.exists(CSV) else "CSV file not found")
         
         setting_labels = ["Latitude", "Longitude", "Timezone", "Hijri Date Adjustment", "Calculation Method", "Asr Method"]
         
@@ -296,7 +301,7 @@ class Launcher(tk.Tk):
         
         # Launch button at the bottom
         ttk.Button(self, text="Launch", command=self.save_settings).pack(pady=(0, 10))
-        
+    
     def save_settings(self):
         """Save settings to JSON file."""
         
@@ -376,6 +381,15 @@ class Launcher(tk.Tk):
         
         with open(SETTINGS, "w") as f:
             json.dump(self.settings, f, indent=4)
+    
+    def delete_csv(self):
+        """Delete the CSV file."""
+        
+        if os.path.exists(CSV):
+            try:
+                os.remove(CSV)
+            except Exception:
+                pass
 
 if __name__ == "__main__":
     app = Launcher()
