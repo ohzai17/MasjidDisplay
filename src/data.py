@@ -5,7 +5,7 @@ import csv
 from praytimes import PrayTimes
 from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta, time, date
-from config import (
+from .config import (
     CSV, REFRESH_INTERVAL, FETCH_WINDOW, 
     LATITUDE, LONGITUDE, TIMEZONE, 
     CALCULATION_METHOD, ASR_METHOD
