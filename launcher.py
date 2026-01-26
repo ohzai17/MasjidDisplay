@@ -301,12 +301,26 @@ class Launcher(tk.Tk):
         """Save settings to JSON file."""
         
         # Left frame
-        latitude = float(self.latitude_entry.get())
-        longitude = float(self.longitude_entry.get())
         timezone = self.timezone_entry.get()
         hijri_date_adjustment = int(self.hijri_date_adjustment_entry.get())
         calculation_method = self.calculation_method_entry.get()
         asr_method = self.asr_method_entry.get()
+        
+        # Input validation
+        try:
+            latitude = float(self.latitude_entry.get())
+            longitude = float(self.longitude_entry.get())
+            
+            if not (-90 <= latitude <= 90):
+                messagebox.showerror("Error", "Latitude must be between -90 and 90.")
+                return
+            if not (-180 <= longitude <= 180):
+                messagebox.showerror("Error", "Longitude must be between -180 and 180.")
+                return
+            
+        except ValueError:
+            messagebox.showerror("Error", "Latitude and Longitude must be valid numbers.\n\n(e.g., 40.7128, -74.0060)")
+            return
         
         # Right frame
         name = self.name_entry.get()
@@ -325,6 +339,7 @@ class Launcher(tk.Tk):
                 messagebox.showerror("Error", f"Announcement {i+1} exceeds character limit.")
                 return
         
+        # Update settings dictionary
         self.settings['DATA']['LOCATION']['LATITUDE'] = latitude
         self.settings['DATA']['LOCATION']['LONGITUDE'] = longitude
         self.settings['DATA']['LOCATION']['TIMEZONE'] = timezone
