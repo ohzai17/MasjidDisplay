@@ -2,6 +2,31 @@ import tkinter as tk
 from tkinter import ttk
 from zoneinfo import available_timezones
 
+def ToolTip(widget, text):
+    
+    tipwindow = None
+    
+    def show_tip(event=None):
+        nonlocal tipwindow
+        if tipwindow or not text:
+            return
+        x = widget.winfo_rootx()
+        y = widget.winfo_rooty() + 25
+        tipwindow = tw = tk.Toplevel(widget)
+        tw.wm_overrideredirect(True)
+        tw.wm_geometry(f"+{x}+{y}")
+        label = tk.Label(tw, text=text, justify='left', background="#ffffe0", relief='solid', borderwidth=1)
+        label.pack(ipadx=1)
+    
+    def hide_tip(event=None):
+        nonlocal tipwindow
+        if tipwindow:
+            tipwindow.destroy()
+            tipwindow = None
+    
+    widget.bind("<Enter>", show_tip)
+    widget.bind("<Leave>", hide_tip)
+
 class Launcher(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -47,11 +72,19 @@ class Launcher(tk.Tk):
                 row=row, column=0, padx=4, pady=2, sticky="nsew"
             )
             
+            coord_help = (
+                "To find your Latitude and Longitude:\n\n"
+                "1. Open Google Maps (https://maps.google.com)\n"
+                "2. Right-click your location.\n"
+                "3. The coordinates (latitude, longitude) appear at the top of the menu — click to copy.\t\n"
+                "4. Enter each value in its respective box.\n"
+            )
+            
             # Latitude and Longitude
             if row == 0 or row == 1:
-                ttk.Entry(settings_frame, width=20).grid(
-                    row=row, column=1, padx=(30, 0), pady=2, sticky="nsew"
-                )
+                entry = ttk.Entry(settings_frame, width=20)
+                entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
+                ToolTip(entry, coord_help)
             
             # Timezone
             elif row == 2:
