@@ -1,6 +1,7 @@
 import json
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 from zoneinfo import available_timezones
 
 SETTINGS = 'data/settings.json'
@@ -154,7 +155,7 @@ class Launcher(tk.Tk):
         ttk.Button(self.middle_button_frame, text="Restore Defaults").pack(side="left")
         
         header = ["Prayer", "Adhan Time", "", "", "Adjustment (min)", "Iqamah Offset (min)", "Duration (min)"]
-        prayer_labels = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"]
+        self.prayer_labels = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"]
         
         hours_options = [""] + [f"{i:02d}" for i in range(1, 13)]
         minutes_options = [""] + [f"{i:02d}" for i in range(0, 60, 5)]
@@ -182,7 +183,7 @@ class Launcher(tk.Tk):
         self.duration_entries = []
         
         # Prayer rows
-        for row, label in enumerate(prayer_labels, start=1):
+        for row, label in enumerate(self.prayer_labels, start=1):
             
             # Current settings from JSON (defaults are in place)
             prayer = prayers.get(label.upper(), {})
@@ -294,7 +295,61 @@ class Launcher(tk.Tk):
         self.main_frame.rowconfigure(0, weight=1)
         
         # Launch button at the bottom
-        ttk.Button(self, text="Launch").pack(pady=(0, 10))
+        ttk.Button(self, text="Launch", command=self.save_settings).pack(pady=(0, 10))
+        
+    def save_settings(self):
+        """Save settings to JSON file."""
+        
+        # Left frame
+        latitude = float(self.latitude_entry.get())
+        longitude = float(self.longitude_entry.get())
+        timezone = self.timezone_entry.get()
+        hijri_date_adjustment = int(self.hijri_date_adjustment_entry.get())
+        calculation_method = self.calculation_method_entry.get()
+        asr_method = self.asr_method_entry.get()
+        
+        # Right frame
+        name = self.name_entry.get()
+        address = self.address_entry.get()
+        announcements = [i.get() for i in self.announcement_entries if i.get()]
+        
+        self.settings['DATA']['LOCATION']['LATITUDE'] = latitude
+        self.settings['DATA']['LOCATION']['LONGITUDE'] = longitude
+        self.settings['DATA']['LOCATION']['TIMEZONE'] = timezone
+        self.settings['DATA']['LOCATION']['HIJRI_DATE_ADJUSTMENT'] = hijri_date_adjustment
+        self.settings['DATA']['CALCULATION']['METHOD'] = calculation_method
+        self.settings['DATA']['CALCULATION']['ASR_METHOD'] = asr_method
+        self.settings['DISPLAY']['NAME'] = name
+        self.settings['DISPLAY']['ADDRESS'] = address
+        self.settings['DISPLAY']['ANNOUNCEMENTS'] = announcements
+        
+        # Middle frame
+        for i, label in enumerate(self.prayer_labels):
+            hour = self.adhan_time_hour_entries[i].get()
+            minute = self.adhan_time_minute_entries[i].get()
+            ampm = self.adhan_time_ampm_entries[i].get()
+            adjustment = int(self.adjustment_entries[i].get())
+            iqamah_offset = int(self.iqamah_offset_entries[i].get())
+            duration = int(self.duration_entries[i].get())
+            
+            # Ensure all parts of time are selected before saving
+            if (hour and not minute) or (minute and not hour) or ((hour or minute) and not ampm):
+                messagebox.showerror(
+                    "Input Error",
+                    f"Please select hour, minute, and AM/PM for {label}."
+                )
+                return
+            adhan_time = f"{hour}:{minute} {ampm}" if hour and minute and ampm else ""
+            
+            self.settings['DATA']['PRAYERS'][label.upper()] = {
+                "ADHAN_TIME": adhan_time,
+                "ADJUSTMENT": adjustment,
+                "IQAMAH_OFFSET": iqamah_offset,
+                "DURATION": duration
+            }
+        
+        with open(SETTINGS, "w") as f:
+            json.dump(self.settings, f, indent=4)
 
 if __name__ == "__main__":
     app = Launcher()
