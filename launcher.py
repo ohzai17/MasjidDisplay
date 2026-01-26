@@ -6,10 +6,13 @@ from zoneinfo import available_timezones
 SETTINGS = 'data/settings.json'
 
 def load_settings():
+    """Load settings from JSON file."""
+    
     with open(SETTINGS, "r") as f:
         return json.load(f)
 
 def ToolTip(widget, text):
+    """Create a tooltip for a given widget."""
     
     tipwindow = None
     
@@ -76,6 +79,7 @@ class Launcher(tk.Tk):
         calculation_method_options = ["MWL", "ISNA", "Egypt", "Makkah", "Karachi", "Tehran", "Jafari", "France", "Russia", "Singapore"]
         asr_method_options = ["Standard", "Hanafi"]
         
+        # Current settings from JSON (defaults are in place)
         latitude = location.get("LATITUDE", "")
         longitude = location.get("LONGITUDE", "")
         timezone = location.get("TIMEZONE", "America/New_York")
@@ -180,6 +184,7 @@ class Launcher(tk.Tk):
         # Prayer rows
         for row, label in enumerate(prayer_labels, start=1):
             
+            # Current settings from JSON (defaults are in place)
             prayer = prayers.get(label.upper(), {})
             adhan_time = prayer.get("ADHAN_TIME", "")
             adjustment = prayer.get("ADJUSTMENT", 0)
@@ -244,6 +249,7 @@ class Launcher(tk.Tk):
             "Eid Al-Adha Salah: Month DD, YYYY @ HH:MM AM"
         ]
         
+        # Current settings from JSON (defaults are in place)
         name = display.get("NAME", "")
         address = display.get("ADDRESS", "")
         announcements = display.get("ANNOUNCEMENTS", [])
