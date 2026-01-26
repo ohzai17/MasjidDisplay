@@ -67,7 +67,7 @@ class Launcher(tk.Tk):
         # Button row in left frame
         self.left_button_frame = ttk.Frame(self.left_frame)
         self.left_button_frame.pack(side="bottom", pady=10)
-        ttk.Button(self.left_button_frame, text="Generate CSV").pack(side="left")
+        ttk.Button(self.left_button_frame, text="Generate CSV", command=self.generate_csv).pack(side="left")
         ttk.Button(self.left_button_frame, text="Delete CSV", command=self.delete_csv).pack(side="left", padx=10)
         
         # Status label
@@ -379,13 +379,27 @@ class Launcher(tk.Tk):
         with open(SETTINGS, "w") as f:
             json.dump(self.settings, f, indent=4)
     
+    def generate_csv(self):
+        """Generate the CSV file."""
+        
+        from src.data import fetch_data, save_data
+        
+        if os.path.exists(CSV):
+            messagebox.showinfo("Info", "CSV file already exists.")
+        else:
+            rows = fetch_data()
+            if save_data(rows):
+                messagebox.showinfo("Info", "CSV file generated.")
+            else:
+                messagebox.showerror("Error", "Failed to generate CSV file.")
+    
     def delete_csv(self):
         """Delete the CSV file."""
         
         if os.path.exists(CSV):
             try:
                 os.remove(CSV)
-                messagebox.showinfo("Info", "CSV file deleted successfully.")
+                messagebox.showinfo("Info", "CSV file deleted.")
             except Exception:
                 messagebox.showerror("Error", "Failed to delete CSV file.")
                 pass
