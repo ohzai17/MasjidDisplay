@@ -1,6 +1,13 @@
+import json
 import tkinter as tk
 from tkinter import ttk
 from zoneinfo import available_timezones
+
+SETTINGS = 'data/settings.json'
+
+def load_settings():
+    with open(SETTINGS, "r") as f:
+        return json.load(f)
 
 def ToolTip(widget, text):
     
@@ -40,6 +47,13 @@ class Launcher(tk.Tk):
         self.main_frame = ttk.Frame(self)
         self.main_frame.pack(fill="both", expand=True, padx=10, pady=10)
         
+        # Load settings
+        settings = load_settings()
+        display = settings["DISPLAY"]
+        location = settings['DATA']['LOCATION']
+        calculation = settings['DATA']['CALCULATION']
+        prayers = settings['DATA']['PRAYERS']
+        
         # Left frame
         self.left_frame = ttk.Frame(self.main_frame, relief="ridge")
         self.left_frame.grid(row=0, column=0, sticky="nsew", padx=(0, 5))
@@ -55,18 +69,25 @@ class Launcher(tk.Tk):
         self.status_entry = ttk.Entry(self.left_frame, textvariable=self.status_var, state="readonly", justify="center")
         self.status_entry.pack(side="bottom", fill="x", padx=10)
         
-        settings_labels = ["Latitude", "Longitude", "Timezone", "Hijri Date Adjustment", "Calculation Method", "Asr Method"]
+        setting_labels = ["Latitude", "Longitude", "Timezone", "Hijri Date Adjustment", "Calculation Method", "Asr Method"]
         
-        timezones = sorted(available_timezones())
-        hijri_adjustments = [f"{i}" for i in range(-1, 2)]
-        calc_methods = ["MWL", "ISNA", "Egypt", "Makkah", "Karachi", "Tehran", "Jafari", "France", "Russia", "Singapore"]
-        asr_methods = ["Standard", "Hanafi"]
+        timezone_options = sorted(available_timezones())
+        hijri_date_adjustment_options = [f"{i}" for i in range(-1, 2)]
+        calculation_method_options = ["MWL", "ISNA", "Egypt", "Makkah", "Karachi", "Tehran", "Jafari", "France", "Russia", "Singapore"]
+        asr_method_options = ["Standard", "Hanafi"]
+        
+        latitude = location.get("LATITUDE", "")
+        longitude = location.get("LONGITUDE", "")
+        timezone = location.get("TIMEZONE", "America/New_York")
+        hijri_date_adjustment = location.get("HIJRI_DATE_ADJUSTMENT", 0)
+        calculation_method = calculation.get("METHOD", "ISNA")
+        asr_method = calculation.get("ASR_METHOD", "Standard")
         
         # Settings frame
         settings_frame = ttk.Frame(self.left_frame)
         settings_frame.pack(side="top", fill="x", padx=10, pady=(10, 0))
         
-        for row, label in enumerate(settings_labels):
+        for row, label in enumerate(setting_labels):
             
             # Labels
             ttk.Label(settings_frame, text=label, anchor="w", font=("TkDefaultFont", 12, "bold")).grid(
@@ -84,33 +105,39 @@ class Launcher(tk.Tk):
             # Latitude
             if row == 0:
                 entry = ttk.Entry(settings_frame, width=20)
+                entry.insert(0, latitude)
                 entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
                 ToolTip(entry, coord_help)
             
             # Longitude
             elif row == 1:
                 entry = ttk.Entry(settings_frame, width=20)
+                entry.insert(0, longitude)
                 entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
                 ToolTip(entry, coord_help)
             
             # Timezone
             elif row == 2:
-                entry = ttk.Combobox(settings_frame, values=timezones, state="readonly", width=20)
+                entry = ttk.Combobox(settings_frame, values=timezone_options, state="readonly", width=20)
+                entry.set(timezone)
                 entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
             
             # Hijri Date Adjustment
             elif row == 3:
-                entry = ttk.Spinbox(settings_frame, values=hijri_adjustments, state="readonly", width=20)
+                entry = ttk.Spinbox(settings_frame, values=hijri_date_adjustment_options, state="readonly", width=20)
+                entry.set(str(hijri_date_adjustment))
                 entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
             
             # Calculation Method
             elif row == 4:
-                entry = ttk.Combobox(settings_frame, values=calc_methods, state="readonly", width=20)
+                entry = ttk.Combobox(settings_frame, values=calculation_method_options, state="readonly", width=20)
+                entry.set(calculation_method)
                 entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
             
             # Asr Method
             elif row == 5:
-                entry = ttk.Combobox(settings_frame, values=asr_methods, state="readonly", width=20)
+                entry = ttk.Combobox(settings_frame, values=asr_method_options, state="readonly", width=20)
+                entry.set(asr_method)
                 entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
         
         # Middle frame
@@ -146,6 +173,17 @@ class Launcher(tk.Tk):
         # Prayer rows
         for row, label in enumerate(prayer_labels, start=1):
             
+            prayer = prayers.get(label.upper(), {})
+            adhan_time = prayer.get("ADHAN_TIME", "")
+            adjustment = prayer.get("ADJUSTMENT", 0)
+            iqamah_offset = prayer.get("IQAMAH_OFFSET", 0)
+            duration = prayer.get("DURATION", 15)
+            
+            hours, minutes, ampm = "", "", ""
+            if adhan_time:
+                hhmm, ampm = adhan_time.split()
+                hours, minutes = hhmm.split(":")
+            
             # Prayer Names
             ttk.Label(table_frame, text=label, anchor="w", font=("TkDefaultFont", 12, "bold")).grid(
                 row=row, column=0, padx=4, pady=2, sticky="nsew"
@@ -153,22 +191,28 @@ class Launcher(tk.Tk):
             
             # Adhan Time
             entry = ttk.Combobox(table_frame, values=hours_options, state="readonly", width=5)
+            entry.set(hours)
             entry.grid(row=row, column=1, padx=4, pady=2, sticky="nsew")
             entry = ttk.Combobox(table_frame, values=minutes_options, state="readonly", width=5)
+            entry.set(minutes)
             entry.grid(row=row, column=2, padx=4, pady=2, sticky="nsew")
             entry = ttk.Combobox(table_frame, values=ampm_options, state="readonly", width=5)
+            entry.set(ampm)
             entry.grid(row=row, column=3, padx=4, pady=2, sticky="nsew")
             
             # Adjustment
             entry = ttk.Spinbox(table_frame, values=adjustment_options, state="readonly", width=5)
+            entry.set(adjustment)
             entry.grid(row=row, column=4, padx=4, pady=2, sticky="nsew")
             
             # Iqamah Offset
             entry = ttk.Combobox(table_frame, values=offset_options, state="readonly", width=5)
+            entry.set(iqamah_offset)
             entry.grid(row=row, column=5, padx=4, pady=2, sticky="nsew")
             
             # Duration
             entry = ttk.Combobox(table_frame, values=duration_options, state="readonly", width=5)
+            entry.set(duration)
             entry.grid(row=row, column=6, padx=4, pady=2, sticky="nsew")
         
         # Right frame
@@ -187,6 +231,10 @@ class Launcher(tk.Tk):
             "Eid Al-Adha Salah: Month DD, YYYY @ HH:MM AM"
         ]
         
+        name = display.get("NAME", "")
+        address = display.get("ADDRESS", "")
+        announcements = display.get("ANNOUNCEMENTS", [])
+        
         # Display frame
         display_frame = ttk.Frame(self.right_frame)
         display_frame.pack(side="top", fill="x", padx=10, pady=(10, 0))
@@ -197,6 +245,7 @@ class Launcher(tk.Tk):
             row=0, column=0, padx=4, pady=2, sticky="ew"
         )
         entry = ttk.Entry(display_frame, width=30, justify="center")
+        entry.insert(0, name)
         entry.grid(row=1, column=0, padx=4, pady=2, sticky="ew")
 
         # Masjid Address
@@ -204,6 +253,7 @@ class Launcher(tk.Tk):
             row=2, column=0, padx=4, pady=2, sticky="ew"
         )
         entry = ttk.Entry(display_frame, width=30, justify="center")
+        entry.insert(0, address)
         entry.grid(row=3, column=0, padx=4, pady=2, sticky="ew")
 
         # Announcements
@@ -212,6 +262,8 @@ class Launcher(tk.Tk):
         )
         for i in range(5):
             entry = ttk.Combobox(display_frame, values=announcement_options, width=30, justify="center")
+            if i < len(announcements):
+                entry.set(announcements[i])
             entry.grid(row=5 + i, column=0, padx=4, pady=2, sticky="ew")
         
         # Configure grid weights for main frame
