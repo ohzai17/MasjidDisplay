@@ -75,9 +75,6 @@ class Launcher(tk.Tk):
         self.status_entry = ttk.Entry(self.left_frame, textvariable=self.status_var, state="readonly", justify="center")
         self.status_entry.pack(side="bottom", fill="x", padx=10)
         
-        # Update status label
-        self.status_var.set("CSV file present" if os.path.exists(CSV) else "CSV file not found")
-        
         setting_labels = ["Latitude", "Longitude", "Timezone", "Hijri Date Adjustment", "Calculation Method", "Asr Method"]
         
         timezone_options = sorted(available_timezones())
@@ -388,8 +385,12 @@ class Launcher(tk.Tk):
         if os.path.exists(CSV):
             try:
                 os.remove(CSV)
+                messagebox.showinfo("Info", "CSV file deleted successfully.")
             except Exception:
+                messagebox.showerror("Error", "Failed to delete CSV file.")
                 pass
+        else:
+            messagebox.showinfo("Info", "CSV file does not exist.")
 
 if __name__ == "__main__":
     app = Launcher()
