@@ -1,5 +1,6 @@
 import os
 import json
+import subprocess
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -46,8 +47,8 @@ class Launcher(tk.Tk):
         super().__init__()
         self.geometry("1500x400")
         self.resizable(False, False)
-        # style = ttk.Style()
-        # style.theme_use("clam")
+        style = ttk.Style()
+        style.configure("Launch.TButton", font=("TkDefaultFont", 12, "bold"))
         
         # Main container for frames
         self.main_frame = ttk.Frame(self)
@@ -296,8 +297,15 @@ class Launcher(tk.Tk):
         self.main_frame.columnconfigure(2, weight=8)
         self.main_frame.rowconfigure(0, weight=1)
         
-        # Save button at the bottom
-        ttk.Button(self, text="Save Changes", command=self.save_settings).pack(pady=(0, 10))
+        # Launch button at the bottom
+        ttk.Button(self, text="Launch", style="Launch.TButton", command=self.launch).pack(pady=(0, 10))
+    
+    def launch(self):
+        """Launch the main application."""
+        
+        if self.save_settings():
+            self.destroy()
+            subprocess.Popen(["python", "src/main.py"])
     
     def save_settings(self):
         """Save settings to JSON file."""
@@ -315,14 +323,14 @@ class Launcher(tk.Tk):
             
             if not (-90 <= latitude <= 90):
                 messagebox.showerror("Error", "Latitude must be between -90 and 90.")
-                return
+                return False
             if not (-180 <= longitude <= 180):
                 messagebox.showerror("Error", "Longitude must be between -180 and 180.")
-                return
+                return False
             
         except ValueError:
             messagebox.showerror("Error", "Latitude and Longitude must be valid numbers.\n\n(e.g., 40.7128, -74.0060)")
-            return
+            return False
         
         # Right frame
         name = self.name_entry.get()
@@ -332,14 +340,14 @@ class Launcher(tk.Tk):
         # Input validation
         if len(name) > 20:
             messagebox.showerror("Error", "Masjid Name exceeds character limit.")
-            return
+            return False
         if len(address) > 35:
             messagebox.showerror("Error", "Masjid Address exceeds character limit.")
-            return
+            return False
         for i, announcement in enumerate(announcements):
             if len(announcement) > 45:
                 messagebox.showerror("Error", f"Announcement {i+1} exceeds character limit.")
-                return
+                return False
         
         # Update settings dictionary
         self.settings['DATA']['LOCATION']['LATITUDE'] = latitude
@@ -362,11 +370,11 @@ class Launcher(tk.Tk):
             duration = int(self.duration_entries[i].get())
             
             # Ensure all parts of time are selected before saving
-            if (hour and not minute) or (minute and not hour) or ((hour or minute) and not ampm):
+            if (hour and not minute) or (minute and not hour) or ((hour or minute) and not ampm) or (ampm and not (hour and minute)):
                 messagebox.showerror(
                     "Error", f"Please select hour, minute, and AM/PM for {label}."
                 )
-                return
+                return False
             adhan_time = f"{hour}:{minute} {ampm}" if hour and minute and ampm else ""
             
             self.settings['DATA']['PRAYERS'][label.upper()] = {
@@ -378,6 +386,8 @@ class Launcher(tk.Tk):
         
         with open(SETTINGS, "w") as f:
             json.dump(self.settings, f, indent=4)
+        
+        return True
     
     def restore_prayer_defaults(self):
         """Restore the prayer table fields to initial values."""
