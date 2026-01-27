@@ -16,7 +16,7 @@ def render_announcements(screen, scale_x, scale_y, title_font, detail_font):
     )
     
     # Render announcements
-    for i, text in enumerate(ANNOUNCEMENTS):
+    for i, text in enumerate(ANNOUNCEMENTS[:5]):
         x = int(907 * scale_x)
         y = int((361 + i * 48) * scale_y)
         

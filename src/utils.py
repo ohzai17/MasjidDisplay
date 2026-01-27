@@ -61,7 +61,7 @@ def render_text(
     align="center",
     scale_x = 1.0, scale_y = 1.0,
     outline_color = None, outline_width = 2,
-    shadow_color = None, shadow_offset = (3, 4)
+    shadow_color = None, shadow_offset = (2, 2)
 ):
     """Render text."""
     

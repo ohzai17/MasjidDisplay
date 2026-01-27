@@ -61,9 +61,9 @@ def main():
         from test import advance_time
         if TEST_MODE:
             if fast_forward:
-                advance_time(seconds=50)  # Fast forward by 50 seconds per frame
+                advance_time(seconds=500)  # Fast forward by 500 seconds per frame
             elif rewind:
-                advance_time(seconds=-10) # Rewind by 10 seconds per frame
+                advance_time(seconds=-100) # Rewind by 100  seconds per frame
             else:
                 advance_time(seconds=1/30)
     

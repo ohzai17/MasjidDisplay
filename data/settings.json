@@ -3,8 +3,6 @@
         "NAME": "Masjid Nurul Islam",
         "ADDRESS": "615 Rutger St, Utica, NY 13501",
         "ANNOUNCEMENTS": [
-            "Ramadan Begins: February 13, 2025",
-            "Taraweeh Salah: 09:15 PM",
             "Eid Al-Fitr Salah: June 06, 2025 @ 08:30 AM",
             "Zakat Al-Fitr: $15 Per Person",
             "Eid Al-Adha Salah: June 16, 2025 @ 08:30 AM"
@@ -48,7 +46,7 @@
                 "ADHAN_TIME": "",
                 "ADJUSTMENT": 0,
                 "IQAMAH_OFFSET": 0,
-                "DURATION": 10
+                "DURATION": 15
             },
             "ISHA": {
                 "ADHAN_TIME": "",
