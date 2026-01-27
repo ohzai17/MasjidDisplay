@@ -154,7 +154,7 @@ class Launcher(tk.Tk):
         # Button row in middle frame
         self.middle_button_frame = ttk.Frame(self.middle_frame)
         self.middle_button_frame.pack(side="bottom", pady=10)
-        ttk.Button(self.middle_button_frame, text="Restore Defaults").pack(side="left")
+        ttk.Button(self.middle_button_frame, text="Restore Defaults", command=self.restore_prayer_defaults).pack(side="left")
         
         header = ["Prayer", "Adhan Time", "", "", "Adjustment (min)", "Iqamah Offset (min)", "Duration (min)"]
         self.prayer_labels = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"]
@@ -243,7 +243,7 @@ class Launcher(tk.Tk):
         # Button row in right frame
         self.right_button_frame = ttk.Frame(self.right_frame)
         self.right_button_frame.pack(side="bottom", pady=10)
-        ttk.Button(self.right_button_frame, text="Restore Defaults").pack(side="left")
+        ttk.Button(self.right_button_frame, text="Restore Defaults", command=self.restore_display_defaults).pack(side="left")
         
         announcement_options = [
             "",
@@ -296,8 +296,8 @@ class Launcher(tk.Tk):
         self.main_frame.columnconfigure(2, weight=8)
         self.main_frame.rowconfigure(0, weight=1)
         
-        # Launch button at the bottom
-        ttk.Button(self, text="Launch", command=self.save_settings).pack(pady=(0, 10))
+        # Save button at the bottom
+        ttk.Button(self, text="Save Changes", command=self.save_settings).pack(pady=(0, 10))
     
     def save_settings(self):
         """Save settings to JSON file."""
@@ -378,6 +378,46 @@ class Launcher(tk.Tk):
         
         with open(SETTINGS, "w") as f:
             json.dump(self.settings, f, indent=4)
+    
+    def restore_prayer_defaults(self):
+        """Restore the prayer table fields to initial values."""
+        
+        prayers = load_settings()['DATA']['PRAYERS']
+        
+        for i, label in enumerate(self.prayer_labels):
+            
+            prayer = prayers.get(label.upper(), {})
+            adhan_time = prayer.get("ADHAN_TIME", "")
+            adjustment = prayer.get("ADJUSTMENT", 0)
+            iqamah_offset = prayer.get("IQAMAH_OFFSET", 0)
+            duration = prayer.get("DURATION", 15)
+            
+            hours, minutes, ampm = "", "", ""
+            if adhan_time:
+                hhmm, ampm = adhan_time.split()
+                hours, minutes = hhmm.split(":")
+            
+            self.adhan_time_hour_entries[i].set(hours)
+            self.adhan_time_minute_entries[i].set(minutes)
+            self.adhan_time_ampm_entries[i].set(ampm)
+            self.adjustment_entries[i].set(adjustment)
+            self.iqamah_offset_entries[i].set(iqamah_offset)
+            self.duration_entries[i].set(duration)
+    
+    def restore_display_defaults(self):
+        """Restore the display fields to initial values."""
+        
+        display = load_settings()['DISPLAY']
+        
+        self.name_entry.delete(0, tk.END)
+        self.name_entry.insert(0, display.get("NAME", ""))
+        
+        self.address_entry.delete(0, tk.END)
+        self.address_entry.insert(0, display.get("ADDRESS", ""))
+        
+        announcements = display.get("ANNOUNCEMENTS", [])
+        for i, entry in enumerate(self.announcement_entries):
+            entry.set(announcements[i] if i < len(announcements) else "")
     
     def generate_csv(self):
         """Generate the CSV file."""
