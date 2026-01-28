@@ -1,6 +1,7 @@
 # main.py
 
 import pygame
+import subprocess
 from datetime import datetime
 from utils import resize_window
 from display import render_main
@@ -29,6 +30,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 running = False
+                subprocess.Popen(["python", "launcher.py"])
             if event.type == pygame.KEYDOWN and event.key in (pygame.K_1, pygame.K_2, pygame.K_3):
                 window_preset = {pygame.K_1: 1, pygame.K_2: 2, pygame.K_3: 3}[event.key]
                 screen, scale_x, scale_y, time_font, title_font, detail_font, table_font = resize_window(window_preset)
