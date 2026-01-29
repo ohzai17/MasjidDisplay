@@ -19,17 +19,18 @@ def render_main(screen, scale_x, scale_y, time_font, title_font, detail_font):
     prayer_times = load_prayer_times()
     
     # Advance Hijri date if past Maghrib
-    maghrib_time_str = prayer_times["Maghrib"]
     hijri_date_dt = now
     try:
-        maghrib_dt = datetime.strptime(maghrib_time_str, "%I:%M %p").replace(
-            year=now.year, month=now.month, day=now.day
-        )
-        if now >= maghrib_dt:
-            hijri_date_dt += timedelta(days=1)
+        maghrib_str = prayer_times.get("Maghrib") if prayer_times else None
+        if maghrib_str:
+            maghrib_time = datetime.strptime(maghrib_str, "%I:%M %p")
+            maghrib_dt = now.replace(
+                hour=maghrib_time.hour, minute=maghrib_time.minute
+            )
+            if now >= maghrib_dt:
+                hijri_date_dt += timedelta(days=1)
     except Exception:
         pass
-    
     
     # Hijri date formatting
     hijri_date = Gregorian(hijri_date_dt.year, hijri_date_dt.month, hijri_date_dt.day).to_hijri()
