@@ -9,38 +9,6 @@ from zoneinfo import available_timezones
 SETTINGS = 'data/settings.json'
 CSV = 'data/data.csv'
 
-def load_settings():
-    """Load settings from JSON file."""
-    
-    with open(SETTINGS, "r") as f:
-        return json.load(f)
-
-def ToolTip(widget, text):
-    """Create a tooltip for a given widget."""
-    
-    tipwindow = None
-    
-    def show_tip(event=None):
-        nonlocal tipwindow
-        if tipwindow or not text:
-            return
-        x = widget.winfo_rootx()
-        y = widget.winfo_rooty() + 25
-        tipwindow = tw = tk.Toplevel(widget)
-        tw.wm_overrideredirect(True)
-        tw.wm_geometry(f"+{x}+{y}")
-        label = tk.Label(tw, text=text, justify='left', background="#ffffe0", relief='solid', borderwidth=1)
-        label.pack(ipadx=1)
-    
-    def hide_tip(event=None):
-        nonlocal tipwindow
-        if tipwindow:
-            tipwindow.destroy()
-            tipwindow = None
-    
-    widget.bind("<Enter>", show_tip)
-    widget.bind("<Leave>", hide_tip)
-
 class Launcher(tk.Tk):
     def __init__(self):
         
@@ -455,6 +423,38 @@ class Launcher(tk.Tk):
                 pass
         else:
             messagebox.showinfo("Info", "CSV file does not exist.")
+
+def load_settings():
+    """Load settings from JSON file."""
+    
+    with open(SETTINGS, "r") as f:
+        return json.load(f)
+
+def ToolTip(widget, text):
+    """Create a tooltip for a given widget."""
+    
+    tipwindow = None
+    
+    def show_tip(event=None):
+        nonlocal tipwindow
+        if tipwindow or not text:
+            return
+        x = widget.winfo_rootx()
+        y = widget.winfo_rooty() + 25
+        tipwindow = tw = tk.Toplevel(widget)
+        tw.wm_overrideredirect(True)
+        tw.wm_geometry(f"+{x}+{y}")
+        label = tk.Label(tw, text=text, justify='left', background="#ffffe0", relief='solid', borderwidth=1)
+        label.pack(ipadx=1)
+    
+    def hide_tip(event=None):
+        nonlocal tipwindow
+        if tipwindow:
+            tipwindow.destroy()
+            tipwindow = None
+    
+    widget.bind("<Enter>", show_tip)
+    widget.bind("<Leave>", hide_tip)
 
 if __name__ == "__main__":
     app = Launcher()
