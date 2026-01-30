@@ -308,8 +308,14 @@ class Launcher(tk.Tk):
         announcements = [i.get() for i in self.announcement_entries if i.get()]
         
         # Input validation
+        if not name.strip():
+            messagebox.showerror("Error", "Masjid Name cannot be empty.")
+            return False
         if len(name) > 20:
             messagebox.showerror("Error", "Masjid Name exceeds character limit.")
+            return False
+        if not address.strip():
+            messagebox.showerror("Error", "Masjid Address cannot be empty.")
             return False
         if len(address) > 35:
             messagebox.showerror("Error", "Masjid Address exceeds character limit.")
