@@ -1,4 +1,5 @@
 import os
+import csv
 import json
 import subprocess
 import tkinter as tk
@@ -40,9 +41,10 @@ class Launcher(tk.Tk):
         ttk.Button(self.left_button_frame, text="Delete CSV", command=self.delete_csv).pack(side="left", padx=10)
         
         # Status label
-        self.status_var = tk.StringVar(value="Status")
+        self.status_var = tk.StringVar()
         self.status_entry = ttk.Entry(self.left_frame, textvariable=self.status_var, state="readonly", justify="center")
         self.status_entry.pack(side="bottom", fill="x", padx=10)
+        self.update_status()
         
         setting_labels = ["Latitude", "Longitude", "Timezone", "Hijri Date Adjustment", "Calculation Method", "Asr Method"]
         
@@ -397,32 +399,39 @@ class Launcher(tk.Tk):
         for i, entry in enumerate(self.announcement_entries):
             entry.set(announcements[i] if i < len(announcements) else "")
     
+    def update_status(self):
+        """Update the status label."""
+        
+        if os.path.exists(CSV):
+            with open(CSV, newline='') as f:
+                rows = list(csv.reader(f))[1:]  # Skip header
+                last_date = rows and rows[-1] and rows[-1][0] # Get last date from first column
+                self.status_var.set(f"Last date on CSV file: {last_date}")
+        else:
+            self.status_var.set("CSV file does not exist.")
+    
     def generate_csv(self):
         """Generate the CSV file."""
         
         from src.data import fetch_data, save_data
         
         if os.path.exists(CSV):
-            messagebox.showinfo("Info", "CSV file already exists.")
+            self.status_var.set("CSV file exists.")
+            self.after(2000, self.update_status)
         else:
             rows = fetch_data()
             if save_data(rows):
-                messagebox.showinfo("Info", "CSV file generated.")
-            else:
-                messagebox.showerror("Error", "Failed to generate CSV file.")
+                self.status_var.set("CSV file generated.")
+                self.after(2000, self.update_status)
     
     def delete_csv(self):
         """Delete the CSV file."""
         
         if os.path.exists(CSV):
-            try:
-                os.remove(CSV)
-                messagebox.showinfo("Info", "CSV file deleted.")
-            except Exception:
-                messagebox.showerror("Error", "Failed to delete CSV file.")
-                pass
+            os.remove(CSV)
+            self.status_var.set("CSV file deleted.")
         else:
-            messagebox.showinfo("Info", "CSV file does not exist.")
+            self.status_var.set("CSV file does not exist.")
 
 def load_settings():
     """Load settings from JSON file."""
