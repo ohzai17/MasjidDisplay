@@ -2,7 +2,7 @@
 
 from datetime import datetime, timedelta
 from hijridate import Gregorian
-from config import NAME, ADDRESS, HIJRI_MONTH_NAMES
+from config import NAME, ADDRESS, HIJRI_MONTH_NAMES, HIJRI_DATE_ADJUSTMENT
 from utils import render_text, get_text_colors
 from table import load_prayer_times
 
@@ -31,6 +31,9 @@ def render_main(screen, scale_x, scale_y, time_font, title_font, detail_font):
                 hijri_date_dt += timedelta(days=1)
     except Exception:
         pass
+    
+    # Apply Hijri date adjustment
+    hijri_date_dt += timedelta(days=HIJRI_DATE_ADJUSTMENT)
     
     # Hijri date formatting
     hijri_date = Gregorian(hijri_date_dt.year, hijri_date_dt.month, hijri_date_dt.day).to_hijri()
