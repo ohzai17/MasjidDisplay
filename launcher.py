@@ -19,6 +19,8 @@ class Launcher(tk.Tk):
         style = ttk.Style()
         style.configure("Launch.TButton", font=("TkDefaultFont", 12, "bold"))
         
+        self.focus_force() # Temporary: Focus on launcher window
+        
         # Main container for frames
         self.main_frame = ttk.Frame(self)
         self.main_frame.pack(fill="both", expand=True, padx=10, pady=10)
