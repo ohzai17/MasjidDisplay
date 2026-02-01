@@ -12,7 +12,7 @@ from background import render_background
 
 # Temporary: Enable test mode and set test time
 TEST_MODE = True
-test_time = datetime(2026, 1, 30, 12, 29, 57)
+test_time = datetime(2026, 2, 28, 12, 29, 57)
 
 def main():
     pygame.init()
@@ -63,9 +63,9 @@ def main():
         from test import advance_time
         if TEST_MODE:
             if fast_forward:
-                advance_time(seconds=500)  # Fast forward by 500 seconds per frame
+                advance_time(seconds=1000)  # Fast forward by 1000 seconds per frame
             elif rewind:
-                advance_time(seconds=-100) # Rewind by 100  seconds per frame
+                advance_time(seconds=-1000) # Rewind by 1000 seconds per frame
             else:
                 advance_time(seconds=1/30)
     
