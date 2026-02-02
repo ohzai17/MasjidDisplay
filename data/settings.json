@@ -9,10 +9,6 @@
         ]
     },
     "DATA": {
-        "CSV": {
-            "FETCH_WINDOW": 95,
-            "REFRESH_INTERVAL": 90
-        },
         "LOCATION": {
             "LATITUDE": 43.100903,
             "LONGITUDE": -75.232664,
