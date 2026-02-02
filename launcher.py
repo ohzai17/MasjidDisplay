@@ -221,7 +221,6 @@ class Launcher(tk.Tk):
         announcement_options = [
             "",
             "Eid Al-Fitr Salah: Month DD, YYYY @ HH:MM AM",
-            "Zakat Al-Fitr: $XX Per Person",
             "Eid Al-Adha Salah: Month DD, YYYY @ HH:MM AM"
         ]
         
