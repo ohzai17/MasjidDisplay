@@ -6,8 +6,7 @@ from praytimes import PrayTimes
 from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta, time, date
 from .config import (
-    CSV, REFRESH_INTERVAL, FETCH_WINDOW, 
-    LATITUDE, LONGITUDE, TIMEZONE, 
+    CSV, LATITUDE, LONGITUDE, TIMEZONE, 
     CALCULATION_METHOD, ASR_METHOD
 )
 
@@ -19,21 +18,7 @@ def format_time(t):
     except Exception:
         return t
 
-def refresh_data(csv_path=CSV, refresh_interval=REFRESH_INTERVAL):
-    """Check if data needs to be refreshed based on last modified time."""
-    
-    try:
-        mod_time = os.path.getmtime(csv_path)
-        last_modified = datetime.fromtimestamp(mod_time).date()
-        days_since = (date.today() - last_modified).days
-        return days_since >= refresh_interval
-    except FileNotFoundError:
-        return True  # File missing, needs refresh
-    except Exception as e:
-        print(f"Error checking file modification time: {e}")
-        return True  # Error occurred, assume refresh needed
-
-def fetch_data(start_date=date.today(), days=FETCH_WINDOW):
+def fetch_data(start_date=date.today(), days=365):
     """Fetch data from PrayTimes library."""
     
     pt = PrayTimes(CALCULATION_METHOD)
@@ -87,11 +72,8 @@ def save_data(rows, csv_path=CSV):
 def main():
     """Fetch and save prayer times if needed."""
     
-    if refresh_data():
-        rows = fetch_data()
-        save_data(rows)
-    else:
-        print("Data is up to date. No refresh needed.")
+    rows = fetch_data()
+    save_data(rows)
 
 if __name__ == "__main__":
     main()
