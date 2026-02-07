@@ -53,15 +53,15 @@ class Launcher(tk.Tk):
         timezone_options = sorted(available_timezones())
         hijri_date_adjustment_options = [f"{i}" for i in range(-1, 2)]
         calculation_method_options = ["MWL", "ISNA", "Egypt", "Makkah", "Karachi", "Tehran", "Jafari", "France", "Russia", "Singapore"]
-        asr_method_options = ["Standard", "Hanafi"]
+        asr_method_options = ["Shafi", "Hanafi"]
         
         # Current settings from JSON (defaults are in place)
         latitude = location.get("LATITUDE", "")
         longitude = location.get("LONGITUDE", "")
-        timezone = location.get("TIMEZONE", "America/New_York")
+        timezone = location.get("TIMEZONE_NAME", "")
         hijri_date_adjustment = location.get("HIJRI_DATE_ADJUSTMENT", 0)
-        calculation_method = calculation.get("METHOD", "ISNA")
-        asr_method = calculation.get("ASR_METHOD", "Standard")
+        calculation_method = calculation.get("METHOD", "")
+        asr_method = calculation.get("JURISTIC_METHOD", "")
         
         # Settings frame
         settings_frame = ttk.Frame(self.left_frame)
@@ -329,10 +329,10 @@ class Launcher(tk.Tk):
         # Update settings dictionary
         self.settings['DATA']['LOCATION']['LATITUDE'] = latitude
         self.settings['DATA']['LOCATION']['LONGITUDE'] = longitude
-        self.settings['DATA']['LOCATION']['TIMEZONE'] = timezone
+        self.settings['DATA']['LOCATION']['TIMEZONE_NAME'] = timezone
         self.settings['DATA']['LOCATION']['HIJRI_DATE_ADJUSTMENT'] = hijri_date_adjustment
         self.settings['DATA']['CALCULATION']['METHOD'] = calculation_method
-        self.settings['DATA']['CALCULATION']['ASR_METHOD'] = asr_method
+        self.settings['DATA']['CALCULATION']['JURISTIC_METHOD'] = asr_method
         self.settings['DISPLAY']['NAME'] = name
         self.settings['DISPLAY']['ADDRESS'] = address
         self.settings['DISPLAY']['ANNOUNCEMENTS'] = announcements
