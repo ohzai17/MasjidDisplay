@@ -53,16 +53,6 @@ def format_table(prayer_times):
         # Format adhan time
         adhan_time = adhan_time.strip() if adhan_time and adhan_time.strip() else PLACEHOLDER
         
-        # Apply adjustment
-        adjustment = DATA["PRAYERS"].get(prayer_name.upper(), {}).get("ADJUSTMENT", 0)
-        if adhan_time != PLACEHOLDER:
-            try:
-                adhan_dt = datetime.strptime(adhan_time, "%I:%M %p")
-                adhan_dt += timedelta(minutes=adjustment)
-                adhan_time = adhan_dt.strftime("%I:%M %p")
-            except Exception:
-                pass
-        
         # Calculate Iqamah time
         iqamah_time = PLACEHOLDER
         if adhan_time != PLACEHOLDER:
