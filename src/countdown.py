@@ -24,8 +24,14 @@ def get_next_event(now, formatted_prayer_times):
         if adhan == PLACEHOLDER:
             continue
         
-        # Get the duration for 'In Progress' status from settings
-        duration = DATA["PRAYERS"].get(prayer.upper(), {}).get("DURATION", 0)
+        # Determine 'In Progress' durations for each prayer
+        if prayer.upper() == "JUMMAH":
+            duration = 30
+        elif prayer.upper() in ["FAJR", "DHUHR", "ASR", "MAGHRIB", "ISHA"]:
+            duration = 15
+        else:
+            duration = 0
+        
         try:
             adhan_dt = datetime.strptime(adhan, "%I:%M %p").replace(
                 year=now.year, month=now.month, day=now.day
