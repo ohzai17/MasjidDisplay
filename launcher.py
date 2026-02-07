@@ -413,23 +413,19 @@ class Launcher(tk.Tk):
             with open(CSV, newline='') as f:
                 rows = list(csv.reader(f))[1:]  # Skip header
                 last_date = rows and rows[-1] and rows[-1][0] # Get last date from first column
-                self.status_var.set(f"Last date on CSV file: {last_date}")
+                self.status_var.set(f"Last date on file: {last_date}")
         else:
             self.status_var.set("CSV file does not exist.")
     
     def generate_csv(self):
         """Generate the CSV file."""
         
-        from src.data import fetch_data, save_data
+        from src.data import fetch_data
         
-        if os.path.exists(CSV):
-            self.status_var.set("CSV file exists.")
-            self.after(2000, self.update_status)
-        else:
-            rows = fetch_data()
-            if save_data(rows):
-                self.status_var.set("CSV file generated.")
-                self.after(2000, self.update_status)
+        self.save_settings()
+        fetch_data()
+        self.status_var.set("CSV file generated.")
+        self.after(1500, self.update_status)
     
     def delete_csv(self):
         """Delete the CSV file."""
