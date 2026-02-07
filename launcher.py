@@ -14,7 +14,7 @@ class Launcher(tk.Tk):
     def __init__(self):
         
         super().__init__()
-        self.geometry("1400x400")
+        self.geometry("1300x400")
         self.resizable(False, False)
         style = ttk.Style()
         style.configure("Launch.TButton", font=("TkDefaultFont", 12, "bold"))
@@ -129,14 +129,13 @@ class Launcher(tk.Tk):
         self.middle_button_frame.pack(side="bottom", pady=10)
         ttk.Button(self.middle_button_frame, text="Restore Defaults", command=self.restore_prayer_defaults).pack(side="left")
         
-        header = ["Prayer", "Adhan Time", "", "", "Adjustment (min)", "Iqamah Offset (min)"]
+        header = ["Prayer", "Adhan Time", "", "", "Iqamah Offset (min)"]
         self.prayer_labels = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"]
         
         hours_options = [""] + [f"{i:02d}" for i in range(1, 13)]
         minutes_options = [""] + [f"{i:02d}" for i in range(0, 60, 5)]
         ampm_options = [""] + ["AM", "PM"]
         
-        adjustment_options = [f"{i}" for i in range(-10, 11)]
         offset_options = [f"{i}" for i in range(0, 31, 5)]
         
         # Table frame
@@ -152,7 +151,6 @@ class Launcher(tk.Tk):
         self.adhan_time_hour_entries = []
         self.adhan_time_minute_entries = []
         self.adhan_time_ampm_entries = []
-        self.adjustment_entries = []
         self.iqamah_offset_entries = []
         
         # Prayer rows
@@ -161,7 +159,6 @@ class Launcher(tk.Tk):
             # Current settings from JSON (defaults are in place)
             prayer = prayers.get(label.upper(), {})
             adhan_time = prayer.get("ADHAN_TIME", "")
-            adjustment = prayer.get("ADJUSTMENT", 0)
             iqamah_offset = prayer.get("IQAMAH_OFFSET", 0)
             
             hours, minutes, ampm = "", "", ""
@@ -188,16 +185,10 @@ class Launcher(tk.Tk):
             ampm_entry.grid(row=row, column=3, padx=4, pady=2, sticky="nsew")
             self.adhan_time_ampm_entries.append(ampm_entry)
             
-            # Adjustment
-            adjustment_entry = ttk.Spinbox(table_frame, values=adjustment_options, state="readonly", width=5)
-            adjustment_entry.set(adjustment)
-            adjustment_entry.grid(row=row, column=4, padx=4, pady=2, sticky="nsew")
-            self.adjustment_entries.append(adjustment_entry)
-            
             # Iqamah Offset
             iqamah_offset_entry = ttk.Combobox(table_frame, values=offset_options, state="readonly", width=5)
             iqamah_offset_entry.set(iqamah_offset)
-            iqamah_offset_entry.grid(row=row, column=5, padx=4, pady=2, sticky="nsew")
+            iqamah_offset_entry.grid(row=row, column=4, padx=4, pady=2, sticky="nsew")
             self.iqamah_offset_entries.append(iqamah_offset_entry)
         
         # Right frame
@@ -333,7 +324,6 @@ class Launcher(tk.Tk):
             hour = self.adhan_time_hour_entries[i].get()
             minute = self.adhan_time_minute_entries[i].get()
             ampm = self.adhan_time_ampm_entries[i].get()
-            adjustment = int(self.adjustment_entries[i].get())
             iqamah_offset = int(self.iqamah_offset_entries[i].get())
             
             # Ensure all parts of time are selected before saving
@@ -346,7 +336,6 @@ class Launcher(tk.Tk):
             
             self.settings['DATA']['PRAYERS'][label.upper()] = {
                 "ADHAN_TIME": adhan_time,
-                "ADJUSTMENT": adjustment,
                 "IQAMAH_OFFSET": iqamah_offset,
             }
         
@@ -364,7 +353,6 @@ class Launcher(tk.Tk):
             
             prayer = prayers.get(label.upper(), {})
             adhan_time = prayer.get("ADHAN_TIME", "")
-            adjustment = prayer.get("ADJUSTMENT", 0)
             iqamah_offset = prayer.get("IQAMAH_OFFSET", 0)
             
             hours, minutes, ampm = "", "", ""
@@ -375,7 +363,6 @@ class Launcher(tk.Tk):
             self.adhan_time_hour_entries[i].set(hours)
             self.adhan_time_minute_entries[i].set(minutes)
             self.adhan_time_ampm_entries[i].set(ampm)
-            self.adjustment_entries[i].set(adjustment)
             self.iqamah_offset_entries[i].set(iqamah_offset)
     
     def restore_display_defaults(self):
