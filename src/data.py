@@ -7,7 +7,7 @@ import csv
 import math
 from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta
-from config import (
+from .config import (
     CSV, LATITUDE, LONGITUDE, TIMEZONE_NAME, 
     CALCULATION_METHOD, JURISTIC_METHOD
 )
@@ -61,7 +61,7 @@ class PrayerTimes:
         else:
             self.asrJuristic = 0
     
-    def getTimes(self, date, coords, timezone_offset, fmt='12h'):
+    def getTimes(self, date, coords, timezone_offset):
         """Main entry: Calculate prayer times for a given date, coordinates, and timezone."""
         
         self.lat = coords[0]
