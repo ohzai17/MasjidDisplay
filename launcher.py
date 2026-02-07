@@ -14,7 +14,7 @@ class Launcher(tk.Tk):
     def __init__(self):
         
         super().__init__()
-        self.geometry("1500x400")
+        self.geometry("1400x400")
         self.resizable(False, False)
         style = ttk.Style()
         style.configure("Launch.TButton", font=("TkDefaultFont", 12, "bold"))
@@ -129,7 +129,7 @@ class Launcher(tk.Tk):
         self.middle_button_frame.pack(side="bottom", pady=10)
         ttk.Button(self.middle_button_frame, text="Restore Defaults", command=self.restore_prayer_defaults).pack(side="left")
         
-        header = ["Prayer", "Adhan Time", "", "", "Adjustment (min)", "Iqamah Offset (min)", "Duration (min)"]
+        header = ["Prayer", "Adhan Time", "", "", "Adjustment (min)", "Iqamah Offset (min)"]
         self.prayer_labels = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"]
         
         hours_options = [""] + [f"{i:02d}" for i in range(1, 13)]
@@ -138,7 +138,6 @@ class Launcher(tk.Tk):
         
         adjustment_options = [f"{i}" for i in range(-10, 11)]
         offset_options = [f"{i}" for i in range(0, 31, 5)]
-        duration_options = [f"{i}" for i in range(15, 31, 15)]
         
         # Table frame
         table_frame = ttk.Frame(self.middle_frame)
@@ -155,7 +154,6 @@ class Launcher(tk.Tk):
         self.adhan_time_ampm_entries = []
         self.adjustment_entries = []
         self.iqamah_offset_entries = []
-        self.duration_entries = []
         
         # Prayer rows
         for row, label in enumerate(self.prayer_labels, start=1):
@@ -165,7 +163,6 @@ class Launcher(tk.Tk):
             adhan_time = prayer.get("ADHAN_TIME", "")
             adjustment = prayer.get("ADJUSTMENT", 0)
             iqamah_offset = prayer.get("IQAMAH_OFFSET", 0)
-            duration = prayer.get("DURATION", 15)
             
             hours, minutes, ampm = "", "", ""
             if adhan_time:
@@ -202,12 +199,6 @@ class Launcher(tk.Tk):
             iqamah_offset_entry.set(iqamah_offset)
             iqamah_offset_entry.grid(row=row, column=5, padx=4, pady=2, sticky="nsew")
             self.iqamah_offset_entries.append(iqamah_offset_entry)
-            
-            # Duration
-            duration_entry = ttk.Combobox(table_frame, values=duration_options, state="readonly", width=5)
-            duration_entry.set(duration)
-            duration_entry.grid(row=row, column=6, padx=4, pady=2, sticky="nsew")
-            self.duration_entries.append(duration_entry)
         
         # Right frame
         self.right_frame = ttk.Frame(self.main_frame, relief="ridge")
@@ -344,7 +335,6 @@ class Launcher(tk.Tk):
             ampm = self.adhan_time_ampm_entries[i].get()
             adjustment = int(self.adjustment_entries[i].get())
             iqamah_offset = int(self.iqamah_offset_entries[i].get())
-            duration = int(self.duration_entries[i].get())
             
             # Ensure all parts of time are selected before saving
             if (hour and not minute) or (minute and not hour) or ((hour or minute) and not ampm) or (ampm and not (hour and minute)):
@@ -358,7 +348,6 @@ class Launcher(tk.Tk):
                 "ADHAN_TIME": adhan_time,
                 "ADJUSTMENT": adjustment,
                 "IQAMAH_OFFSET": iqamah_offset,
-                "DURATION": duration
             }
         
         with open(SETTINGS, "w") as f:
@@ -377,7 +366,6 @@ class Launcher(tk.Tk):
             adhan_time = prayer.get("ADHAN_TIME", "")
             adjustment = prayer.get("ADJUSTMENT", 0)
             iqamah_offset = prayer.get("IQAMAH_OFFSET", 0)
-            duration = prayer.get("DURATION", 15)
             
             hours, minutes, ampm = "", "", ""
             if adhan_time:
@@ -389,7 +377,6 @@ class Launcher(tk.Tk):
             self.adhan_time_ampm_entries[i].set(ampm)
             self.adjustment_entries[i].set(adjustment)
             self.iqamah_offset_entries[i].set(iqamah_offset)
-            self.duration_entries[i].set(duration)
     
     def restore_display_defaults(self):
         """Restore the display fields to initial values."""
