@@ -257,7 +257,7 @@ class Launcher(tk.Tk):
         """Launch the main application."""
         
         if not os.path.exists(CSV):
-            messagebox.showerror("Error", "CSV file does not exist. Please generate the CSV file before launching.")
+            messagebox.showerror("Error", "CSV file does not exist. Generate CSV file before launching.")
             return
         
         if self.save_settings():
@@ -332,9 +332,7 @@ class Launcher(tk.Tk):
             
             # Ensure all parts of time are selected before saving
             if (hour and not minute) or (minute and not hour) or ((hour or minute) and not ampm) or (ampm and not (hour and minute)):
-                messagebox.showerror(
-                    "Error", f"Please select hour, minute, and AM/PM for {label}."
-                )
+                messagebox.showerror("Error", f"Select hour, minute, and AM/PM for {label}.")
                 return False
             adhan_time = f"{hour}:{minute} {ampm}" if hour and minute and ampm else ""
             
