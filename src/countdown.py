@@ -107,8 +107,6 @@ def render_countdown(screen, scale_x, scale_y, title_font, time_font):
             # Set header text based on event and prayer type
             if prayer == "Sunrise":
                 header = "Time Until Sunrise"
-            elif prayer == "Jummah":
-                header = "Time Until Jummah" if event == "Adhan" else "Time Until Khutbah"
             else:
                 header = f"Time Until {prayer}" if event == "Adhan" else "Time Until Iqamah"
         
