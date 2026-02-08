@@ -53,7 +53,7 @@ class Launcher(tk.Tk):
         timezone_options = sorted(available_timezones())
         hijri_date_adjustment_options = [f"{i}" for i in range(-1, 2)]
         calculation_method_options = ["MWL", "ISNA", "Egypt", "Makkah", "Karachi", "Tehran", "Jafari", "France", "Russia", "Singapore"]
-        asr_method_options = ["Shafi", "Hanafi"]
+        asr_method_options = ["Standard (Shafi, Maliki, Hanbali)", "Hanafi"]
         
         # Current settings from JSON (defaults are in place)
         latitude = location.get("LATITUDE", "")
@@ -255,6 +255,10 @@ class Launcher(tk.Tk):
     
     def launch(self):
         """Launch the main application."""
+        
+        if not os.path.exists(CSV):
+            messagebox.showerror("Error", "CSV file does not exist. Please generate the CSV file before launching.")
+            return
         
         if self.save_settings():
             self.destroy()
