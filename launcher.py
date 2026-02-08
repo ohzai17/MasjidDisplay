@@ -70,9 +70,8 @@ class Launcher(tk.Tk):
         for row, label in enumerate(setting_labels):
             
             # Labels
-            ttk.Label(settings_frame, text=label, anchor="w", font=("TkDefaultFont", 12, "bold")).grid(
-                row=row, column=0, padx=4, pady=2, sticky="nsew"
-            )
+            settings_label = ttk.Label(settings_frame, text=label, anchor="w", font=("TkDefaultFont", 12, "bold"))
+            settings_label.grid(row=row, column=0, padx=4, pady=2, sticky="w")
             
             coord_help = (
                 "To find your Latitude and Longitude:\n\n"
@@ -88,13 +87,14 @@ class Launcher(tk.Tk):
                 self.latitude_entry = ttk.Entry(settings_frame, width=25)
                 self.latitude_entry.insert(0, latitude)
                 self.latitude_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
-                ToolTip(self.latitude_entry, coord_help)
+                ToolTip(settings_label, coord_help)
             
             # Longitude
             elif row == 1:
                 self.longitude_entry = ttk.Entry(settings_frame, width=25)
                 self.longitude_entry.insert(0, longitude)
                 self.longitude_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
+                ToolTip(settings_label, coord_help)
             
             # Timezone
             elif row == 2:
