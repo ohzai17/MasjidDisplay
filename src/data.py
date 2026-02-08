@@ -38,10 +38,10 @@ class PrayerTimes:
         self.calcMethod = method
         self.settings = self.methods[method]
         
-        # Juristic method for Asr: Shafi (0) or Hanafi (1)
+        # Juristic method for Asr: Standard (0) or Hanafi (1)
         self.asrJuristic = 0
         
-        # Optional minute offsets for Dhuhr, Maghrib, Isha
+        # Minute offsets for Dhuhr, Maghrib, Isha
         self.dhuhrMinutes = 0
         self.maghribMinutes = 0
         self.ishaMinutes = 0
@@ -54,7 +54,7 @@ class PrayerTimes:
             self.calcMethod = method
     
     def setAsrMethod(self, method):
-        """Set Asr juristic method: 'Hanafi' or 'Shafi'."""
+        """Set Asr juristic method: 'Hanafi' or 'Standard (Shafi, Maliki, Hanbali)'."""
         
         if method == 'Hanafi':
             self.asrJuristic = 1
@@ -263,11 +263,20 @@ def fetch_data():
         date_str = current_date.strftime("%d %b %Y")
         
         def float_to_time(t):
+            """Convert float hours to 12-hour time format."""
+            
             t = t % 24
             hours = int(t)
-            minutes = int((t - hours) * 60)
+            minutes = int(round((t - hours) * 60))
+            
+            # Handle rounding that pushes minutes to 60
+            if minutes == 60:
+                hours += 1
+                minutes = 0
+            hours = hours % 24
+            
             dt = datetime(current_date.year, current_date.month, current_date.day, hours, minutes, tzinfo=ZoneInfo(TIMEZONE_NAME))
-            return dt.strftime("%-I:%M %p")
+            return dt.strftime("%I:%M %p")
         
         time_list = [
             float_to_time(times['Fajr']),
