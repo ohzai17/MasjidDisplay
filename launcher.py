@@ -2,6 +2,7 @@ import os
 import csv
 import json
 import subprocess
+from datetime import datetime
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -265,7 +266,7 @@ class Launcher(tk.Tk):
         """Launch the main application."""
         
         if not os.path.exists(CSV):
-            messagebox.showerror("Error", "CSV file does not exist. Generate CSV file before launching.")
+            messagebox.showerror("Error", "CSV file does not exist. \n\nGenerate before launching.")
             return
         
         if self.save_settings():
@@ -332,6 +333,8 @@ class Launcher(tk.Tk):
         self.settings['DISPLAY']['ANNOUNCEMENTS'] = announcements
         
         # Middle frame
+        prev_minutes = None
+        
         for i, label in enumerate(self.prayer_labels):
             hour = self.adhan_time_hour_entries[i].get()
             minute = self.adhan_time_minute_entries[i].get()
@@ -342,6 +345,19 @@ class Launcher(tk.Tk):
             if (hour and not minute) or (minute and not hour) or ((hour or minute) and not ampm) or (ampm and not (hour and minute)):
                 messagebox.showerror("Error", f"Select hour, minute, and AM/PM for {label}.")
                 return False
+            
+            # Check order of prayer times (excluding Jummah): Fajr < Dhuhr < Asr < Maghrib < Isha
+            if hour and minute and ampm:
+                time_str = f"{hour}:{minute} {ampm}"
+                current_minutes = datetime.strptime(time_str, "%I:%M %p").hour * 60 + int(minute)
+                
+                if label != "Jummah":
+                    if prev_minutes is not None and current_minutes <= prev_minutes:
+                        messagebox.showerror(
+                            "Error", f"{label} is not in the correct order. \n\n(Fajr, Dhuhr, Asr, Maghrib, Isha)")
+                        return False
+                    prev_minutes = current_minutes
+            
             adhan_time = f"{hour}:{minute} {ampm}" if hour and minute and ampm else ""
             
             self.settings['DATA']['PRAYERS'][label.upper()] = {
