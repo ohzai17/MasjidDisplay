@@ -14,7 +14,7 @@ class Launcher(tk.Tk):
     def __init__(self):
         
         super().__init__()
-        self.geometry("1350x400")
+        self.geometry("1400x400")
         self.resizable(False, False)
         style = ttk.Style()
         style.configure("Launch.TButton", font=("TkDefaultFont", 12, "bold"))
@@ -129,7 +129,7 @@ class Launcher(tk.Tk):
         self.middle_button_frame.pack(side="bottom", pady=10)
         ttk.Button(self.middle_button_frame, text="Restore Defaults", command=self.restore_prayer_defaults).pack(side="left")
         
-        header = ["Prayer", "Adhan Time", "", "", "Iqamah Offset (min)"]
+        header = ["Prayer", "Hour", "Minute", "AM/PM", "Clear", "Iqamah Offset (min)"]
         self.prayer_labels = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"]
         
         hours_options = [""] + [f"{i:02d}" for i in range(1, 13)]
@@ -144,9 +144,14 @@ class Launcher(tk.Tk):
         
         # Header row
         for row, label in enumerate(header):
-            ttk.Label(table_frame, text=label, anchor="w", justify="left", font=("TkDefaultFont", 12, "bold")).grid(
-                row=0, column=row, padx=4, pady=2, sticky="nsew"
-            )
+            if label == "Prayer":
+                ttk.Label(table_frame, text=label, anchor="w", font=("TkDefaultFont", 12, "bold")).grid(
+                    row=0, column=row, padx=4, pady=2, sticky="nsew"
+                )
+            else:
+                ttk.Label(table_frame, text=label, anchor="center", font=("TkDefaultFont", 12, "bold")).grid(
+                    row=0, column=row, padx=4, pady=2, sticky="nsew"
+                )
         
         self.adhan_time_hour_entries = []
         self.adhan_time_minute_entries = []
@@ -185,10 +190,13 @@ class Launcher(tk.Tk):
             ampm_entry.grid(row=row, column=3, padx=4, pady=2, sticky="nsew")
             self.adhan_time_ampm_entries.append(ampm_entry)
             
+            ttk.Button(table_frame, text="X", width=1,command=lambda i=row-1: self.clear_adhan_time_field(i)
+                ).grid(row=row, column=4, padx=4, pady=2, sticky="nsew")
+            
             # Iqamah Offset
             iqamah_offset_entry = ttk.Combobox(table_frame, values=offset_options, state="readonly", width=5)
             iqamah_offset_entry.set(iqamah_offset)
-            iqamah_offset_entry.grid(row=row, column=4, padx=4, pady=2, sticky="nsew")
+            iqamah_offset_entry.grid(row=row, column=5, padx=4, pady=2, sticky="nsew")
             self.iqamah_offset_entries.append(iqamah_offset_entry)
         
         # Right frame
@@ -217,7 +225,7 @@ class Launcher(tk.Tk):
         display_frame.columnconfigure(0, weight=1)
         
         # Masjid Name
-        ttk.Label(display_frame, text="Masjid Name", anchor="center", justify="center", font=("TkDefaultFont", 12, "bold")).grid(
+        ttk.Label(display_frame, text="Masjid Name", anchor="center", font=("TkDefaultFont", 12, "bold")).grid(
             row=0, column=0, padx=4, pady=2, sticky="ew"
         )
         self.name_entry = ttk.Entry(display_frame, width=30, justify="center")
@@ -225,7 +233,7 @@ class Launcher(tk.Tk):
         self.name_entry.grid(row=1, column=0, padx=4, pady=2, sticky="ew")
         
         # Masjid Address
-        ttk.Label(display_frame, text="Masjid Address", anchor="center", justify="center", font=("TkDefaultFont", 12, "bold")).grid(
+        ttk.Label(display_frame, text="Masjid Address", anchor="center", font=("TkDefaultFont", 12, "bold")).grid(
             row=2, column=0, padx=4, pady=2, sticky="ew"
         )
         self.address_entry = ttk.Entry(display_frame, width=30, justify="center")
@@ -233,7 +241,7 @@ class Launcher(tk.Tk):
         self.address_entry.grid(row=3, column=0, padx=4, pady=2, sticky="ew")
         
         # Announcements
-        ttk.Label(display_frame, text="Announcements", anchor="center", justify="center", font=("TkDefaultFont", 12, "bold")).grid(
+        ttk.Label(display_frame, text="Announcements", anchor="center", font=("TkDefaultFont", 12, "bold")).grid(
             row=4, column=0, padx=4, pady=2, sticky="ew"
         )
         self.announcement_entries = []
@@ -345,6 +353,13 @@ class Launcher(tk.Tk):
             json.dump(self.settings, f, indent=4)
         
         return True
+    
+    def clear_adhan_time_field(self, i):
+        """Clear hour, minute, and AM/PM fields for a specific prayer."""
+        
+        self.adhan_time_hour_entries[i].set("")
+        self.adhan_time_minute_entries[i].set("")
+        self.adhan_time_ampm_entries[i].set("")
     
     def restore_prayer_defaults(self):
         """Restore the prayer table fields to initial values."""
