@@ -20,6 +20,7 @@ class Launcher(tk.Tk):
         self.geometry("1400x430")
         self.resizable(False, False)
         style = ttk.Style()
+        style.configure("Button.TButton", font=("TkDefaultFont", 12, "bold"))
         style.configure("Launch.TButton", font=("TkDefaultFont", 12, "bold"), foreground="red")
         
         self.focus_force() # Temporary: Focus on launcher window
@@ -42,7 +43,7 @@ class Launcher(tk.Tk):
         # Button row in left frame
         self.left_button_frame = ttk.Frame(self.left_frame)
         self.left_button_frame.pack(side="bottom", pady=10)
-        ttk.Button(self.left_button_frame, text="Generate CSV", command=self.generate_csv).pack(side="left")
+        ttk.Button(self.left_button_frame, text="Generate CSV", command=self.generate_csv, style="Button.TButton").pack(side="left")
         
         loccal_help = (
             "Set your location and calculation method for accurate prayer times.\n\n"
@@ -62,7 +63,7 @@ class Launcher(tk.Tk):
         setting_labels = ["Latitude", "Longitude", "Timezone", "Hijri Date Adjustment", "Calculation Method", "Asr Method"]
         
         timezone_options = sorted(available_timezones())
-        hijri_date_adjustment_options = [f"{i}" for i in range(-1, 2)]
+        hijri_date_adjustment_options = [str(i) for i in range(-1, 2)]
         calculation_method_options = ["MWL", "ISNA", "Egypt", "Makkah", "Karachi", "Tehran", "Jafari", "France", "Russia", "Singapore"]
         asr_method_options = ["Standard (Shafi, Maliki, Hanbali)", "Hanafi"]
         
@@ -164,7 +165,7 @@ class Launcher(tk.Tk):
         # Button row in middle frame
         self.middle_button_frame = ttk.Frame(self.middle_frame)
         self.middle_button_frame.pack(side="bottom", pady=10)
-        ttk.Button(self.middle_button_frame, text="Restore Defaults", command=self.restore_prayer_defaults).pack(side="left")
+        ttk.Button(self.middle_button_frame, text="Restore Defaults", command=self.restore_prayer_defaults, style="Button.TButton").pack(side="left")
         
         table_help = (
             "Set the fixed Adhan time and Iqamah offset for each prayer below.\n\n"
@@ -256,7 +257,7 @@ class Launcher(tk.Tk):
         # Button row in right frame
         self.right_button_frame = ttk.Frame(self.right_frame)
         self.right_button_frame.pack(side="bottom", pady=10)
-        ttk.Button(self.right_button_frame, text="Restore Defaults", command=self.restore_display_defaults).pack(side="left")
+        ttk.Button(self.right_button_frame, text="Restore Defaults", command=self.restore_display_defaults, style="Button.TButton").pack(side="left")
         
         masjid_info_help = (
             "Set the display information for your Masjid.\n"
