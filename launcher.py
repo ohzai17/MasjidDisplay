@@ -42,6 +42,15 @@ class Launcher(tk.Tk):
         self.left_button_frame.pack(side="bottom", pady=10)
         ttk.Button(self.left_button_frame, text="Generate CSV", command=self.generate_csv).pack(side="left")
         
+        loccal_help = (
+            "Set your location and calculation method for accurate prayer times.\n\n"
+            "After entering your settings, click 'Generate CSV' to fetch prayer times data.\n"
+        )
+        
+        title = ttk.Label(self.left_frame, text="Location & Calculation", font=("TkDefaultFont", 12, "bold", "underline"))
+        title.pack(side="top", pady=10)
+        ToolTip(title, loccal_help)
+        
         # Status label
         self.status_var = tk.StringVar()
         self.status_entry = ttk.Entry(self.left_frame, textvariable=self.status_var, state="readonly", justify="center")
@@ -129,6 +138,17 @@ class Launcher(tk.Tk):
         self.middle_button_frame.pack(side="bottom", pady=10)
         ttk.Button(self.middle_button_frame, text="Restore Defaults", command=self.restore_prayer_defaults).pack(side="left")
         
+        table_help = (
+            "Set the fixed Adhan time and Iqamah offset for each prayer below.\n\n"
+            "Adhan Time: Choose the hour, minute, and AM/PM for each prayer.\n"
+            "Iqamah Offset: Enter how many minutes after the Adhan the Iqamah will be displayed.\n\n"
+            "Leave fields blank to use calculated times instead of fixed times.\n"
+        )
+        
+        title = ttk.Label(self.middle_frame, text="Prayer Times Table", font=("TkDefaultFont", 12, "bold", "underline"))
+        title.pack(side="top", pady=10)
+        ToolTip(title, table_help)
+        
         header = ["Prayer", "Hour", "Minute", "AM/PM", "Clear", "Iqamah Offset (min)"]
         self.prayer_labels = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"]
         
@@ -208,6 +228,14 @@ class Launcher(tk.Tk):
         self.right_button_frame = ttk.Frame(self.right_frame)
         self.right_button_frame.pack(side="bottom", pady=10)
         ttk.Button(self.right_button_frame, text="Restore Defaults", command=self.restore_display_defaults).pack(side="left")
+        
+        masjid_info_help = (
+            "Set the display information for your Masjid.\n"
+        )
+        
+        title = ttk.Label(self.right_frame, text="Masjid Information", font=("TkDefaultFont", 12, "bold", "underline"))
+        title.pack(side="top", pady=10)
+        ToolTip(title, masjid_info_help)
         
         announcement_options = [
             "",
