@@ -82,13 +82,35 @@ class Launcher(tk.Tk):
             settings_label = ttk.Label(settings_frame, text=label, anchor="w", font=("TkDefaultFont", 12, "bold"))
             settings_label.grid(row=row, column=0, padx=4, pady=2, sticky="w")
             
-            coord_help = (
-                "To find your Latitude and Longitude:\n\n"
-                "1. Open Google Maps (https://maps.google.com)\n"
-                "2. Search for your location or navigate to it manually.\n"
-                "3. Right-click your location.\n"
-                "4. The coordinates (latitude, longitude) appear at the top of the menu — click to copy.\t\n"
-                "5. Enter each value in its respective box.\n"
+            latlon_help = (
+                "How to find your Latitude and Longitude:\n\n"
+                "1. Open Google Maps (https://maps.google.com).\n"
+                "2. Search for your location or move to it manually.\n"
+                "3. Right-click on your location.\n"
+                "4. The coordinates (latitude, longitude) will appear at the top of the menu — click to copy.\n"
+                "5. Paste each value into its respective box below.\n"
+            )
+            
+            timezone_help = (
+                "Select your timezone from the dropdown menu.\n\n"
+                "If your city isn't listed, choose the nearest major city in your timezone.\n"
+                "For example, if you are in New York, select 'America/New_York'.\n"
+            )
+            
+            hijri_adj_help = (
+                "Adjust the Hijri date if your local moon sighting differs from the calculated date.\n\n"
+                "Enter -1 to subtract a day, 0 for no adjustment, or +1 to add a day.\n"
+            )
+            
+            calc_method_help = (
+                "Choose the calculation method used by your local mosque.\n\n"
+                "For example, in North America, the most common methods are ISNA and MWL.\n"
+            )
+            
+            asr_method_help = (
+                "Select the Asr juristic method used by your mosque.\n\n"
+                "Standard (Shafi, Maliki, Hanbali): Asr begins when the shadow of an object equals its height.\n"
+                "Hanafi: Asr begins when the shadow of an object is twice its height.\n"
             )
             
             # Latitude
@@ -96,38 +118,42 @@ class Launcher(tk.Tk):
                 self.latitude_entry = ttk.Entry(settings_frame, width=25)
                 self.latitude_entry.insert(0, latitude)
                 self.latitude_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
-                ToolTip(settings_label, coord_help)
+                ToolTip(settings_label, latlon_help)
             
             # Longitude
             elif row == 1:
                 self.longitude_entry = ttk.Entry(settings_frame, width=25)
                 self.longitude_entry.insert(0, longitude)
                 self.longitude_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
-                ToolTip(settings_label, coord_help)
+                ToolTip(settings_label, latlon_help)
             
             # Timezone
             elif row == 2:
                 self.timezone_entry = ttk.Combobox(settings_frame, values=timezone_options, state="readonly", width=25)
                 self.timezone_entry.set(timezone)
                 self.timezone_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
-            
+                ToolTip(settings_label, timezone_help)
+                
             # Hijri Date Adjustment
             elif row == 3:
                 self.hijri_date_adjustment_entry = ttk.Combobox(settings_frame, values=hijri_date_adjustment_options, state="readonly", width=25)
                 self.hijri_date_adjustment_entry.set(str(hijri_date_adjustment))
                 self.hijri_date_adjustment_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
+                ToolTip(settings_label, hijri_adj_help)
             
             # Calculation Method
             elif row == 4:
                 self.calculation_method_entry = ttk.Combobox(settings_frame, values=calculation_method_options, state="readonly", width=25)
                 self.calculation_method_entry.set(calculation_method)
                 self.calculation_method_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
+                ToolTip(settings_label, calc_method_help)
             
             # Asr Method
             elif row == 5:
                 self.asr_method_entry = ttk.Combobox(settings_frame, values=asr_method_options, state="readonly", width=25)
                 self.asr_method_entry.set(asr_method)
                 self.asr_method_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
+                ToolTip(settings_label, asr_method_help)
         
         # Middle frame
         self.middle_frame = ttk.Frame(self.main_frame, relief="ridge")
