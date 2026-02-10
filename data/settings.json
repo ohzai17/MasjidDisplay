@@ -21,23 +21,28 @@
         "PRAYERS": {
             "FAJR": {
                 "ADHAN_TIME": "",
-                "IQAMAH_OFFSET": 15
+                "IQAMAH_OFFSET": 15,
+                "MINUTE_ADJUSTMENT": 0
             },
             "DHUHR": {
                 "ADHAN_TIME": "",
-                "IQAMAH_OFFSET": 15
+                "IQAMAH_OFFSET": 15,
+                "MINUTE_ADJUSTMENT": 0
             },
             "ASR": {
                 "ADHAN_TIME": "",
-                "IQAMAH_OFFSET": 15
+                "IQAMAH_OFFSET": 15,
+                "MINUTE_ADJUSTMENT": 0
             },
             "MAGHRIB": {
                 "ADHAN_TIME": "",
-                "IQAMAH_OFFSET": 0
+                "IQAMAH_OFFSET": 0,
+                "MINUTE_ADJUSTMENT": 0
             },
             "ISHA": {
                 "ADHAN_TIME": "",
-                "IQAMAH_OFFSET": 15
+                "IQAMAH_OFFSET": 15,
+                "MINUTE_ADJUSTMENT": 0
             },
             "JUMMAH": {
                 "ADHAN_TIME": "12:30 PM",
