@@ -293,7 +293,7 @@ class Launcher(tk.Tk):
         
         announcement_help = (
             "Set up to 5 custom announcements to display on the screen.\n\n"
-            "Press 'A' key in the main display to toggle announcements on/off.\n\n"
+            "Press the 'A' key in the main display to toggle announcements on/off.\n\n"
             "There are pre-formatted options for Eid prayer times.\n\n"
             "Leave fields blank if you do not want to use all announcement fields.\n"
         )
