@@ -321,7 +321,7 @@ def fetch_data():
         writer = csv.writer(f)
         writer.writerow(header)
         writer.writerows(rows)
-        print(f"\nPrayer times data saved to {CSV}\n")
+        print(f"Prayer times data saved to {CSV}")
 
 def main():
     """Fetch prayer time data and save to CSV."""

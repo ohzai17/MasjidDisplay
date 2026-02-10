@@ -19,6 +19,7 @@ class Launcher(tk.Tk):
         super().__init__()
         self.geometry("1400x460")
         self.resizable(False, False)
+        self.bind("<Escape>", lambda event: self.destroy()) # Temporary: Allow exiting with ESC key
         style = ttk.Style()
         style.configure("Button.TButton", font=("TkDefaultFont", 12, "bold"))
         style.configure("Launch.TButton", font=("TkDefaultFont", 12, "bold"), foreground="red")
@@ -369,8 +370,16 @@ class Launcher(tk.Tk):
         self.main_frame.columnconfigure(2, weight=10)
         self.main_frame.rowconfigure(0, weight=1)
         
+        launch_info = (
+            "Review your settings and click 'Launch' to open the main display.\n\n"
+            "If you update any calculation settings, click 'Generate CSV' again to refresh the data before launching.\n\n"
+            "To return to this launcher from the main display, press the 'ESC' key.\n"
+        )
+        
         # Launch button at the bottom
-        ttk.Button(self, text="Launch", style="Launch.TButton", command=self.launch).pack(pady=(0, 10))
+        launch_btn = ttk.Button(self, text="Launch", style="Launch.TButton", command=self.launch)
+        launch_btn.pack(pady=(0, 10))
+        ToolTip(launch_btn, launch_info)
     
     def launch(self):
         """Launch the main application."""
