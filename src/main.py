@@ -3,12 +3,12 @@
 import pygame
 import subprocess
 from datetime import datetime
-from utils import resize_window
-from display import render_main
 from table import render_table
-from announcements import render_announcements
+from display import render_main
+from utils import resize_window
 from countdown import render_countdown
 from background import render_background
+from announcements import render_announcements
 
 # Temporary: Enable test mode and set test time
 TEST_MODE = True

@@ -1,3 +1,5 @@
+# background.py
+
 import pygame
 from datetime import datetime
 from config import GRADIENTS, BLACK, WHITE

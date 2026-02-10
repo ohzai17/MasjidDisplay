@@ -3,8 +3,8 @@
 from datetime import datetime, timedelta
 from hijridate import Gregorian
 from config import load_settings, HIJRI_MONTH_NAMES
-from utils import render_text, get_text_colors
 from table import load_prayer_times
+from utils import render_text, get_text_colors
 
 def render_main(screen, scale_x, scale_y, time_font, title_font, detail_font):
     """Render main display."""
