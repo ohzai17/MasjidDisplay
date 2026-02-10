@@ -9,7 +9,8 @@ from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta
 from .config import (
     CSV, LATITUDE, LONGITUDE, TIMEZONE_NAME, 
-    CALCULATION_METHOD, JURISTIC_METHOD
+    CALCULATION_METHOD, JURISTIC_METHOD,
+    MINUTE_ADJUSTMENTS
 )
 
 class PrayerTimes:
@@ -41,8 +42,10 @@ class PrayerTimes:
         # Juristic method for Asr: Standard (0) or Hanafi (1)
         self.asrJuristic = 0
         
-        # Minute offsets for Dhuhr, Maghrib, Isha
+        # Minute offsets for all prayers
+        self.fajrMinutes = 0
         self.dhuhrMinutes = 0
+        self.asrMinutes = 0
         self.maghribMinutes = 0
         self.ishaMinutes = 0
     
@@ -106,8 +109,11 @@ class PrayerTimes:
         asr = self.asrTime(self.asrJuristic + 1, times['Asr'])
         sunset = self.sunAngleTime(self.riseSetAngle(), times['Sunset'])
         
-        # Maghrib: If custom minutes, use sun angle; else, use sunset
-        maghrib = self.sunAngleTime(4, times['Maghrib']) if self.maghribMinutes else sunset
+        # Maghrib: Standard calculation is to use the time of sunset as Maghrib.
+        maghrib = sunset
+        
+        # Alternative Maghrib calculation: Calculate Maghrib using a fixed sun angle (4° below horizon) instead of sunset. 
+        # maghrib = self.sunAngleTime(4, times['Maghrib']) if self.maghribMinutes else sunset
         
         # Isha: If method uses minutes after sunset, add minutes; else, use sun angle
         if isinstance(params['isha'], str) and "min" in params['isha']:
@@ -135,8 +141,12 @@ class PrayerTimes:
             times[key] += self.timezone_offset - self.lng / 15.0
         
         # Apply custom minute adjustments
+        if self.fajrMinutes:
+            times['Fajr'] += self.fajrMinutes / 60.0
         if self.dhuhrMinutes:
             times['Dhuhr'] += self.dhuhrMinutes / 60.0
+        if self.asrMinutes:
+            times['Asr'] += self.asrMinutes / 60.0
         if self.maghribMinutes:
             times['Maghrib'] += self.maghribMinutes / 60.0
         if self.ishaMinutes:
@@ -250,6 +260,11 @@ def fetch_data():
     # Initialize
     prayer_times = PrayerTimes(CALCULATION_METHOD)
     prayer_times.setAsrMethod(JURISTIC_METHOD)
+    prayer_times.fajrMinutes = MINUTE_ADJUSTMENTS["FAJR"]
+    prayer_times.dhuhrMinutes = MINUTE_ADJUSTMENTS["DHUHR"]
+    prayer_times.asrMinutes = MINUTE_ADJUSTMENTS["ASR"]
+    prayer_times.maghribMinutes = MINUTE_ADJUSTMENTS["MAGHRIB"]
+    prayer_times.ishaMinutes = MINUTE_ADJUSTMENTS["ISHA"]
     
     header = ["Date", "Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"]
     rows = []
