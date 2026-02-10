@@ -341,6 +341,11 @@ class Launcher(tk.Tk):
             ampm = self.adhan_time_ampm_entries[i].get()
             iqamah_offset = int(self.iqamah_offset_entries[i].get())
             
+            # Ensure Jummah time is selected before saving
+            if label == "Jummah" and not (hour and minute and ampm):
+                messagebox.showerror("Error", f"Select hour, minute, and AM/PM for Jummah.")
+                return False
+            
             # Ensure all parts of time are selected before saving
             if (hour and not minute) or (minute and not hour) or ((hour or minute) and not ampm) or (ampm and not (hour and minute)):
                 messagebox.showerror("Error", f"Select hour, minute, and AM/PM for {label}.")
