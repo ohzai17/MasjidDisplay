@@ -7,11 +7,7 @@ import csv
 import math
 from zoneinfo import ZoneInfo
 from datetime import datetime, timedelta
-from .config import (
-    CSV, LATITUDE, LONGITUDE, TIMEZONE_NAME, 
-    CALCULATION_METHOD, JURISTIC_METHOD,
-    MINUTE_ADJUSTMENTS
-)
+from .config import CSV, load_settings
 
 class PrayerTimes:
     """
@@ -256,6 +252,23 @@ class PrayerTimes:
 
 def fetch_data():
     """Fetch prayer time data and save to CSV."""
+    
+    settings = load_settings()
+    
+    DATA = settings['DATA']
+    LATITUDE = DATA['LOCATION']['LATITUDE']
+    LONGITUDE = DATA['LOCATION']['LONGITUDE']
+    TIMEZONE_NAME = DATA['LOCATION']['TIMEZONE_NAME']
+    CALCULATION_METHOD = DATA['CALCULATION']['METHOD']
+    JURISTIC_METHOD = DATA['CALCULATION']['JURISTIC_METHOD']
+    
+    MINUTE_ADJUSTMENTS = {
+        "FAJR": DATA['PRAYERS']['FAJR']['MINUTE_ADJUSTMENT'],
+        "DHUHR": DATA['PRAYERS']['DHUHR']['MINUTE_ADJUSTMENT'],
+        "ASR": DATA['PRAYERS']['ASR']['MINUTE_ADJUSTMENT'],
+        "MAGHRIB": DATA['PRAYERS']['MAGHRIB']['MINUTE_ADJUSTMENT'],
+        "ISHA": DATA['PRAYERS']['ISHA']['MINUTE_ADJUSTMENT']
+    }
     
     # Initialize
     prayer_times = PrayerTimes(CALCULATION_METHOD)

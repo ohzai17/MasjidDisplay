@@ -1,10 +1,15 @@
 # announcements.py
 
-from config import ANNOUNCEMENTS
+from config import load_settings
 from utils import render_text, get_text_colors
 
 def render_announcements(screen, scale_x, scale_y, title_font, detail_font):
     """Render announcements."""
+    
+    settings = load_settings()
+    
+    DISPLAY = settings['DISPLAY']
+    ANNOUNCEMENTS = DISPLAY['ANNOUNCEMENTS']
     
     primary, secondary, tertiary = get_text_colors()
     

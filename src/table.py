@@ -2,7 +2,7 @@
 
 import csv
 from datetime import datetime, timedelta
-from config import CSV, DATA
+from config import CSV, load_settings
 from utils import render_text, get_text_colors
 
 def load_prayer_times():
@@ -23,6 +23,10 @@ def load_prayer_times():
 
 def format_table(prayer_times):
     """Format prayer times into a table."""
+    
+    settings = load_settings()
+    
+    DATA = settings['DATA']
     
     prayers = [
         "Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"

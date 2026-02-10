@@ -2,12 +2,21 @@
 
 from datetime import datetime, timedelta
 from hijridate import Gregorian
-from config import NAME, ADDRESS, HIJRI_MONTH_NAMES, HIJRI_DATE_ADJUSTMENT
+from config import load_settings, HIJRI_MONTH_NAMES
 from utils import render_text, get_text_colors
 from table import load_prayer_times
 
 def render_main(screen, scale_x, scale_y, time_font, title_font, detail_font):
     """Render main display."""
+    
+    settings = load_settings()
+    
+    DISPLAY = settings['DISPLAY']
+    NAME = DISPLAY['NAME']
+    ADDRESS = DISPLAY['ADDRESS']
+    
+    DATA = settings['DATA']
+    HIJRI_DATE_ADJUSTMENT = DATA['LOCATION']['HIJRI_DATE_ADJUSTMENT']
     
     from test import set_datetime # Temporary: Use test mode datetime
     now = set_datetime()

@@ -1,6 +1,5 @@
 import math
 from datetime import datetime, timedelta
-from config import DATA, BLACK
 from audio import generate_beep
 from utils import render_text, get_text_colors
 from table import load_prayer_times, format_table
@@ -76,7 +75,7 @@ def get_next_event(now, formatted_prayer_times):
                 )
             except Exception:
                 return (None, None, None, None)
-            duration = DATA["PRAYERS"].get("FAJR", {}).get("DURATION", 0)
+            duration = 15 # Fajr duration
             return ("Adhan", "Fajr", adhan_dt, duration)
     return (None, None, None, None)
 
