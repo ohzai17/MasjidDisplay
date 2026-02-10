@@ -1,3 +1,5 @@
+# launcher.py
+
 import os
 import csv
 import json
@@ -15,10 +17,10 @@ class Launcher(tk.Tk):
     def __init__(self):
         
         super().__init__()
-        self.geometry("1400x400")
+        self.geometry("1400x430")
         self.resizable(False, False)
         style = ttk.Style()
-        style.configure("Launch.TButton", font=("TkDefaultFont", 12, "bold"))
+        style.configure("Launch.TButton", font=("TkDefaultFont", 12, "bold"), foreground="red")
         
         self.focus_force() # Temporary: Focus on launcher window
         
@@ -167,7 +169,8 @@ class Launcher(tk.Tk):
         table_help = (
             "Set the fixed Adhan time and Iqamah offset for each prayer below.\n\n"
             "Adhan Time: Choose the hour, minute, and AM/PM for each prayer.\n"
-            "Iqamah Offset: Enter how many minutes after the Adhan the Iqamah will be displayed.\n\n"
+            "Iqamah Offset: Enter how many minutes after the Adhan the Iqamah will be displayed.\n"
+            "Clear Button: Delete all fields for a specific prayer.\n\n"
             "Leave fields blank to use calculated times instead of fixed times.\n"
         )
         
