@@ -41,7 +41,6 @@ class Launcher(tk.Tk):
         self.left_button_frame = ttk.Frame(self.left_frame)
         self.left_button_frame.pack(side="bottom", pady=10)
         ttk.Button(self.left_button_frame, text="Generate CSV", command=self.generate_csv).pack(side="left")
-        ttk.Button(self.left_button_frame, text="Delete CSV", command=self.delete_csv).pack(side="left", padx=10)
         
         # Status label
         self.status_var = tk.StringVar()
@@ -149,6 +148,7 @@ class Launcher(tk.Tk):
                 ttk.Label(table_frame, text=label, anchor="w", font=("TkDefaultFont", 12, "bold")).grid(
                     row=0, column=row, padx=4, pady=2, sticky="nsew"
                 )
+            
             else:
                 ttk.Label(table_frame, text=label, anchor="center", font=("TkDefaultFont", 12, "bold")).grid(
                     row=0, column=row, padx=4, pady=2, sticky="nsew"
@@ -290,10 +290,11 @@ class Launcher(tk.Tk):
             if not (-90 <= latitude <= 90):
                 messagebox.showerror("Error", "Latitude must be between -90 and 90.")
                 return False
+            
             if not (-180 <= longitude <= 180):
                 messagebox.showerror("Error", "Longitude must be between -180 and 180.")
                 return False
-            
+        
         except ValueError:
             messagebox.showerror("Error", "Latitude and Longitude must be valid numbers.\n\n(e.g., 40.7128, -74.0060)")
             return False
@@ -307,15 +308,19 @@ class Launcher(tk.Tk):
         if not name.strip():
             messagebox.showerror("Error", "Masjid Name cannot be empty.")
             return False
+        
         if len(name) > 20:
             messagebox.showerror("Error", "Masjid Name exceeds character limit.")
             return False
+        
         if not address.strip():
             messagebox.showerror("Error", "Masjid Address cannot be empty.")
             return False
+        
         if len(address) > 35:
             messagebox.showerror("Error", "Masjid Address exceeds character limit.")
             return False
+        
         for i, announcement in enumerate(announcements):
             if len(announcement) > 45:
                 messagebox.showerror("Error", f"Announcement {i+1} exceeds character limit.")
@@ -361,6 +366,7 @@ class Launcher(tk.Tk):
                         messagebox.showerror(
                             "Error", f"{label} is not in the correct order. \n\n(Fajr, Dhuhr, Asr, Maghrib, Isha)")
                         return False
+                    
                     prev_minutes = current_minutes
             
             adhan_time = f"{hour}:{minute} {ampm}" if hour and minute and ampm else ""
@@ -426,6 +432,7 @@ class Launcher(tk.Tk):
                 rows = list(csv.reader(f))[1:]  # Skip header
                 last_date = rows and rows[-1] and rows[-1][0] # Get last date from first column
                 self.status_var.set(f"Last date on file: {last_date}")
+        
         else:
             self.status_var.set("CSV file does not exist.")
     
@@ -438,15 +445,6 @@ class Launcher(tk.Tk):
         fetch_data()
         self.status_var.set("CSV file generated.")
         self.after(1500, self.update_status)
-    
-    def delete_csv(self):
-        """Delete the CSV file."""
-        
-        if os.path.exists(CSV):
-            os.remove(CSV)
-            self.status_var.set("CSV file deleted.")
-        else:
-            self.status_var.set("CSV file does not exist.")
 
 def load_settings():
     """Load settings from JSON file."""
