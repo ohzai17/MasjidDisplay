@@ -279,26 +279,44 @@ class Launcher(tk.Tk):
         display_frame.pack(side="top", fill="x", padx=10, pady=(10, 0))
         display_frame.columnconfigure(0, weight=1)
         
-        # Masjid Name
-        ttk.Label(display_frame, text="Masjid Name", anchor="center", font=("TkDefaultFont", 12, "bold")).grid(
-            row=0, column=0, padx=4, pady=2, sticky="ew"
+        name_help = (
+            "Enter the name of your Masjid.\n"
         )
+        
+        address_help = (
+            "Enter the address of your Masjid.\n"
+        )
+        
+        announcement_help = (
+            "Set up to 5 custom announcements to display on the screen.\n\n"
+            "Press 'A' key in the main display to toggle announcements on/off.\n\n"
+            "There are pre-formatted options for Eid prayer times.\n\n"
+            "Leave fields blank if you do not want to use all announcement fields.\n"
+        )
+        
+        # Masjid Name
+        name_label = ttk.Label(display_frame, text="Name", anchor="center", font=("TkDefaultFont", 12, "bold"))
+        name_label.grid(row=0, column=0, padx=4, pady=2, sticky="ew")
+        ToolTip(name_label, name_help)
+        
         self.name_entry = ttk.Entry(display_frame, width=30, justify="center")
         self.name_entry.insert(0, name)
         self.name_entry.grid(row=1, column=0, padx=4, pady=2, sticky="ew")
         
         # Masjid Address
-        ttk.Label(display_frame, text="Masjid Address", anchor="center", font=("TkDefaultFont", 12, "bold")).grid(
-            row=2, column=0, padx=4, pady=2, sticky="ew"
-        )
+        address_label = ttk.Label(display_frame, text="Address", anchor="center", font=("TkDefaultFont", 12, "bold"))
+        address_label.grid(row=2, column=0, padx=4, pady=2, sticky="ew")
+        ToolTip(address_label, address_help)
+        
         self.address_entry = ttk.Entry(display_frame, width=30, justify="center")
         self.address_entry.insert(0, address)
         self.address_entry.grid(row=3, column=0, padx=4, pady=2, sticky="ew")
         
         # Announcements
-        ttk.Label(display_frame, text="Announcements", anchor="center", font=("TkDefaultFont", 12, "bold")).grid(
-            row=4, column=0, padx=4, pady=2, sticky="ew"
-        )
+        announcement_label = ttk.Label(display_frame, text="Announcements", anchor="center", font=("TkDefaultFont", 12, "bold"))
+        announcement_label.grid(row=4, column=0, padx=4, pady=2, sticky="ew")
+        ToolTip(announcement_label, announcement_help)
+        
         self.announcement_entries = []
         for i in range(5):
             announcement_entry = ttk.Combobox(display_frame, values=announcement_options, width=30, justify="center")
