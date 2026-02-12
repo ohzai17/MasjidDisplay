@@ -3,14 +3,14 @@
         "NAME": "Masjid Nurul Islam",
         "ADDRESS": "615 Rutger St, Utica, NY 13501",
         "ANNOUNCEMENTS": [
-            "Eid Al-Fitr Salah: June 06, 2025 @ 08:30 AM",
-            "Eid Al-Adha Salah: June 16, 2025 @ 08:30 AM"
+            "Eid Al-Fitr Salah: Month DD, YYYY @ HH:MM AM",
+            "Eid Al-Adha Salah: Month DD, YYYY @ HH:MM AM"
         ]
     },
     "DATA": {
         "LOCATION": {
-            "LATITUDE": 43.100903,
-            "LONGITUDE": -75.232664,
+            "LATITUDE": 43.1548,
+            "LONGITUDE": -75.1426,
             "TIMEZONE_NAME": "America/New_York",
             "HIJRI_DATE_ADJUSTMENT": 0
         },
