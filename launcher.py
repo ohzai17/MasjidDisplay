@@ -89,10 +89,12 @@ class Launcher(tk.Tk):
             latlon_help = (
                 "How to find your Latitude and Longitude:\n\n"
                 "1. Open Google Maps (https://maps.google.com).\n"
-                "2. Search for your location or move to it manually.\n"
-                "3. Right-click on your location.\n"
-                "4. The coordinates (latitude, longitude) will appear at the top of the menu — click to copy.\n"
-                "5. Paste each value into its respective box below.\n"
+                "2. Search for your city (e.g., 'Utica, NY').\n"
+                "3. Right-click on the city center or your mosque location.\n"
+                "4. Click the coordinates at the top of the menu (e.g., 43.1548, -75.1426) — they will be copied automatically.\n"
+                "5. Paste each value into its respective box.\n\n"
+                "Tip: You can also search '[Your City] coordinates' online to find standard city center values used by most timetables.\n"
+                "Small differences in coordinates don't significantly affect prayer times for locations within the same city.\n"
             )
             
             timezone_help = (
@@ -165,7 +167,7 @@ class Launcher(tk.Tk):
         min_adj_frame.columnconfigure(tuple(range(5)), weight=1)
         
         min_adj_help = (
-            "Add a fixed number of minutes to each prayer time.\n\n"
+            "Add or subtract a fixed number of minutes to each prayer time.\n\n"
             "Leave as 0 for no adjustment.\n"
         )
         
@@ -203,10 +205,10 @@ class Launcher(tk.Tk):
         ttk.Button(self.middle_button_frame, text="Restore Defaults", command=self.restore_prayer_defaults, style="Button.TButton").pack(side="left")
         
         table_help = (
-            "Set the fixed Adhan time and Iqamah offset for each prayer below.\n\n"
-            "Adhan Time: Choose the hour, minute, and AM/PM for each prayer.\n"
-            "Iqamah Offset: Enter how many minutes after the Adhan the Iqamah will be displayed.\n"
-            "Clear Button: Delete all fields for a specific prayer.\n\n"
+            "Set the fixed Adhan time and Iqamah offset for each prayer.\n\n"
+            "Adhan Time: Choose the hour, minute, and AM/PM for the adhan.\n"
+            "Iqamah Offset: Enter how many minutes after the adhan the iqamah will be displayed.\n"
+            "Clear Button: Delete all fields for that prayer.\n\n"
             "Leave fields blank to use calculated times instead of fixed times.\n"
         )
         
@@ -295,7 +297,7 @@ class Launcher(tk.Tk):
         ttk.Button(self.right_button_frame, text="Restore Defaults", command=self.restore_display_defaults, style="Button.TButton").pack(side="left")
         
         masjid_info_help = (
-            "Set the display information for your Masjid.\n"
+            "Set the display information for your masjid.\n"
         )
         
         title = ttk.Label(self.right_frame, text="Masjid Information", font=("TkDefaultFont", 12, "bold", "underline"))
@@ -319,18 +321,18 @@ class Launcher(tk.Tk):
         display_frame.columnconfigure(0, weight=1)
         
         name_help = (
-            "Enter the name of your Masjid.\n"
+            "Enter the name of your masjid.\n"
         )
         
         address_help = (
-            "Enter the address of your Masjid.\n"
+            "Enter the address of your masjid.\n"
         )
         
         announcement_help = (
             "Set up to 5 custom announcements to display on the screen.\n\n"
-            "Press the 'A' key in the main display to toggle announcements on/off.\n\n"
+            "Press the 'A' key in the main display to toggle announcements on/off.\n"
             "There are pre-formatted options for Eid prayer times.\n\n"
-            "Leave fields blank if you do not want to use all announcement fields.\n"
+            "Leave fields blank if you do not want to use all announcement slots.\n"
         )
         
         # Masjid Name
@@ -372,7 +374,7 @@ class Launcher(tk.Tk):
         
         launch_info = (
             "Review your settings and click 'Launch' to open the main display.\n\n"
-            "If you update any calculation settings, click 'Generate CSV' again to refresh the data before launching.\n\n"
+            "If you update any calculation settings, click 'Generate CSV' again to refresh the data before launching.\n"
             "To return to this launcher from the main display, press the 'ESC' key.\n"
         )
         
