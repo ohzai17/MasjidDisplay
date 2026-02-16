@@ -41,10 +41,16 @@ class Launcher(tk.Tk):
         self.left_frame = ttk.Frame(self.main_frame, relief="ridge")
         self.left_frame.grid(row=0, column=0, sticky="nsew", padx=(0, 5))
         
+        generate_csv_help = (
+            "After setting your location and calculation preferences, click 'Generate CSV' to fetch prayer times data.\n"
+        )
+        
         # Button row in left frame
         self.left_button_frame = ttk.Frame(self.left_frame)
         self.left_button_frame.pack(side="bottom", pady=10)
-        ttk.Button(self.left_button_frame, text="Generate CSV", command=self.generate_csv, style="Button.TButton").pack(side="left")
+        generate_csv_btn = ttk.Button(self.left_button_frame, text="Generate CSV", command=self.generate_csv, style="Button.TButton")
+        generate_csv_btn.pack(side="left")
+        ToolTip(generate_csv_btn, generate_csv_help)
         
         loccal_help = (
             "Set your location and calculation method for accurate prayer times.\n\n"
@@ -199,10 +205,16 @@ class Launcher(tk.Tk):
         self.middle_frame = ttk.Frame(self.main_frame, relief="ridge")
         self.middle_frame.grid(row=0, column=1, sticky="nsew", padx=(5, 5))
         
+        restore_defaults_help = (
+            "Restore initially loaded settings for the prayer times table.\n"
+        )
+        
         # Button row in middle frame
         self.middle_button_frame = ttk.Frame(self.middle_frame)
         self.middle_button_frame.pack(side="bottom", pady=10)
-        ttk.Button(self.middle_button_frame, text="Restore Defaults", command=self.restore_prayer_defaults, style="Button.TButton").pack(side="left")
+        restore_btn = ttk.Button(self.middle_button_frame, text="Restore Defaults", command=self.restore_prayer_defaults, style="Button.TButton")
+        restore_btn.pack(side="left")
+        ToolTip(restore_btn, restore_defaults_help)
         
         table_help = (
             "Set the fixed Adhan time and Iqamah offset for each prayer.\n\n"
@@ -291,10 +303,16 @@ class Launcher(tk.Tk):
         self.right_frame = ttk.Frame(self.main_frame, relief="ridge")
         self.right_frame.grid(row=0, column=2, sticky="nsew", padx=(5, 0))
         
+        restore_defaults_help = (
+            "Restore initially loaded settings for the masjid information.\n"
+        )
+        
         # Button row in right frame
         self.right_button_frame = ttk.Frame(self.right_frame)
         self.right_button_frame.pack(side="bottom", pady=10)
-        ttk.Button(self.right_button_frame, text="Restore Defaults", command=self.restore_display_defaults, style="Button.TButton").pack(side="left")
+        restore_btn = ttk.Button(self.right_button_frame, text="Restore Defaults", command=self.restore_display_defaults, style="Button.TButton")
+        ToolTip(restore_btn, restore_defaults_help)
+        restore_btn.pack(side="left")
         
         masjid_info_help = (
             "Set the display information for your masjid.\n"
