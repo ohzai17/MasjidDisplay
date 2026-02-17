@@ -4,10 +4,11 @@ import os
 import csv
 import json
 import subprocess
-from datetime import datetime
 import tkinter as tk
 from tkinter import ttk
+from datetime import datetime
 from tkinter import messagebox
+from tzlocal import get_localzone_name
 from zoneinfo import available_timezones
 
 SETTINGS = 'data/settings.json'
@@ -77,7 +78,15 @@ class Launcher(tk.Tk):
         # Current settings from JSON (defaults are in place)
         latitude = location.get("LATITUDE", "")
         longitude = location.get("LONGITUDE", "")
-        timezone = location.get("TIMEZONE_NAME", "")
+        
+        # Auto-detect system timezone
+        try:
+            timezone = get_localzone_name()
+        except Exception:
+            timezone = ""
+        
+        timezone = timezone if timezone in timezone_options else location.get("TIMEZONE_NAME", "")
+        
         hijri_date_adjustment = location.get("HIJRI_DATE_ADJUSTMENT", 0)
         calculation_method = calculation.get("METHOD", "")
         asr_method = calculation.get("JURISTIC_METHOD", "")
@@ -95,18 +104,20 @@ class Launcher(tk.Tk):
             latlon_help = (
                 "How to find your Latitude and Longitude:\n\n"
                 "1. Open Google Maps (https://maps.google.com).\n"
-                "2. Search for your city (e.g., 'Utica, NY').\n"
-                "3. Right-click on the city center or your mosque location.\n"
+                "2. Search for your masjid or city (e.g., 'Utica, NY').\n"
+                "3. Right-click on your masjid or city center.\n"
                 "4. Click the coordinates at the top of the menu (e.g., 43.1548, -75.1426) — they will be copied automatically.\n"
                 "5. Paste each value into its respective box.\n\n"
-                "Tip: You can also search '[Your City] coordinates' online to find standard city center values used by most timetables.\n"
+                "Tip: For the most accurate times, use your masjid's exact coordinates rather than the city center.\n"
                 "Small differences in coordinates don't significantly affect prayer times for locations within the same city.\n"
             )
             
             timezone_help = (
                 "Select your timezone from the dropdown menu.\n\n"
+                "Your timezone will be auto-detected, but please verify it is correct before proceeding.\n"
                 "If your city isn't listed, choose the nearest major city in your timezone.\n"
-                "For example, if you are in New York, select 'America/New_York'.\n"
+                "For example, New York uses 'America/New_York'.\n\n"
+                "If you cannot find your city, search online for '[Your City] IANA timezone'."
             )
             
             hijri_adj_help = (
