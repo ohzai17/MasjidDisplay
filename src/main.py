@@ -23,8 +23,10 @@ def main():
     show_announcements = False
     
     # Temporary: Variables for time control in test mode
-    rewind = False
     fast_forward = False
+    seconds_up = False
+    rewind = False
+    seconds_down = False
     
     while running:
         for event in pygame.event.get():
@@ -38,14 +40,22 @@ def main():
                 show_announcements = not show_announcements
             
             # Temporary: Time control for test mode
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
-                rewind = True
-            if event.type == pygame.KEYUP and event.key == pygame.K_LEFT:
-                rewind = False
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
                 fast_forward = True
             if event.type == pygame.KEYUP and event.key == pygame.K_RIGHT:
                 fast_forward = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                seconds_up = True
+            if event.type == pygame.KEYUP and event.key == pygame.K_UP:
+                seconds_up = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
+                rewind = True
+            if event.type == pygame.KEYUP and event.key == pygame.K_LEFT:
+                rewind = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
+                seconds_down = True
+            if event.type == pygame.KEYUP and event.key == pygame.K_DOWN:
+                seconds_down = False
         
         render_background(screen)
         
@@ -63,9 +73,13 @@ def main():
         from test import advance_time
         if TEST_MODE:
             if fast_forward:
-                advance_time(seconds=1000)  # Fast forward by 1000 seconds per frame
+                advance_time(seconds=100)
+            elif seconds_up:
+                advance_time(seconds=1)
             elif rewind:
-                advance_time(seconds=-1000) # Rewind by 1000 seconds per frame
+                advance_time(seconds=-50)
+            elif seconds_down:
+                advance_time(seconds=-1)
             else:
                 advance_time(seconds=1/30)
     
