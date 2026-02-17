@@ -270,7 +270,7 @@ def fetch_data():
     header = ["Date", "Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"]
     rows = []
     
-    for i in range(365 * 50): # 50 years
+    for i in range(365 * 10): # 10 years
         current_date = datetime.now() + timedelta(days=i)
         dt_with_tz = datetime(current_date.year, current_date.month, current_date.day, 12, 0, tzinfo=ZoneInfo(TIMEZONE_NAME))
         offset = dt_with_tz.utcoffset()
