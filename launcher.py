@@ -174,7 +174,8 @@ class Launcher(tk.Tk):
         
         min_adj_help = (
             "Add or subtract a fixed number of minutes to each prayer time.\n\n"
-            "Leave as 0 for no adjustment.\n"
+            "Leave as 0 for no adjustment.\n\n"
+            "Generate CSV after making any changes.\n"
         )
         
         min_adj_header = ttk.Label(min_adj_frame, text="Minutes Adjustment", font=("TkDefaultFont", 12, "bold"))
