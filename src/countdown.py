@@ -81,13 +81,9 @@ def get_next_event(now, formatted_prayer_times):
             return ("Adhan", "Fajr", adhan_dt, duration)
     return (None, None, None, None)
 
-# Track last event 
-_last_event = None
 
 def render_countdown(screen, scale_x, scale_y, title_font, time_font):
     """Render countdown to next prayer event."""
-    
-    global _last_event
     
     primary, secondary, tertiary = get_text_colors()
     
@@ -98,13 +94,6 @@ def render_countdown(screen, scale_x, scale_y, title_font, time_font):
     prayer_times = load_prayer_times()
     formatted_prayer_times = format_table(prayer_times)
     event, prayer, event_time, _ = get_next_event(now, formatted_prayer_times)
-    
-    # Play a beep when moving to a new event (Adhan or Iqamah)
-    current_event = (event, prayer, event_time) if event else None
-    if _last_event != current_event:
-        if _last_event and _last_event[0] in ("Adhan", "Iqamah"): # Only beep on Adhan and Iqamah
-            generate_beep().play()
-    # _last_event = current_event # Commented for testing, uncomment in production
     
     if event and prayer and event_time:
         # If prayer is in progress, show status
