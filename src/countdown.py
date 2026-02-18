@@ -89,8 +89,7 @@ def render_countdown(screen, scale_x, scale_y, title_font, time_font):
     
     primary, secondary, tertiary = get_text_colors()
     
-    from test import set_datetime  # Temporary: Use test mode datetime
-    now = set_datetime()
+    now = datetime.now()
     
     # Get formatted prayer times for today
     prayer_times = load_prayer_times()

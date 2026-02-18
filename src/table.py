@@ -8,8 +8,7 @@ from utils import render_text, get_text_colors
 def load_prayer_times():
     """Load today's prayer times from CSV."""
     
-    from test import set_datetime # Temporary: Use test mode datetime
-    today_str = set_datetime().strftime('%d %b %Y')
+    today_str = datetime.now().strftime('%d %b %Y')
     
     try:
         with open(CSV, 'r') as f:
@@ -80,8 +79,7 @@ def render_table(screen, scale_x, scale_y, table_font):
     
     primary, secondary, tertiary = get_text_colors()
     
-    from test import set_datetime # Temporary: Use test mode datetime
-    now = set_datetime()
+    now = datetime.now()
     
     prayer_times = load_prayer_times()
     formatted_prayer_times = format_table(prayer_times)

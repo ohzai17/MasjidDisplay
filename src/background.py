@@ -61,8 +61,7 @@ def draw_gradient(surface, top_color, bottom_color):
 def render_background(screen):
     """Get current time, calculate gradient, and render background."""
     
-    from test import set_datetime  # Use test time if in test mode
-    now = set_datetime()
+    now = datetime.now()
     
     now_seconds = now.hour * 3600 + now.minute * 60 + now.second
     top_color, bottom_color = get_gradient_colors(now_seconds)

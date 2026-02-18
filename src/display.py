@@ -18,8 +18,7 @@ def render_main(screen, scale_x, scale_y, time_font, title_font, detail_font):
     DATA = settings['DATA']
     HIJRI_DATE_ADJUSTMENT = DATA['LOCATION']['HIJRI_DATE_ADJUSTMENT']
     
-    from test import set_datetime # Temporary: Use test mode datetime
-    now = set_datetime()
+    now = datetime.now()
     
     # Time and date formatting
     time_str = now.strftime("%I:%M:%S %p")
