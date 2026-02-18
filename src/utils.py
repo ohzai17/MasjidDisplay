@@ -4,6 +4,8 @@ import pygame
 from config import PRESET_MAP, FONT, BLACK, GOLD, WHITE
 
 def resize_window(window_preset):
+    """Resize the window based on the selected preset and return screen and fonts."""
+    
     width, height, fullscreen = PRESET_MAP[window_preset]
     
     if fullscreen:
