@@ -447,7 +447,7 @@ class Launcher(tk.Tk):
                 return False
         
         except ValueError:
-            messagebox.showerror("Error", "Latitude and Longitude must be valid numbers.\n\n(e.g., 40.7128, -74.0060)")
+            messagebox.showerror("Error", "Latitude and Longitude must be valid numbers.\n\n(e.g., 43.1548, -75.1426)")
             return False
         
         # Right frame
@@ -498,9 +498,12 @@ class Launcher(tk.Tk):
             iqamah_offset = int(self.iqamah_offset_entries[i].get())
             minute_adjustment = int(self.min_adj_entries[i].get()) if i < len(self.min_adj_entries) else 0
             
+            # Compose time string if all parts are selected
+            time_str = f"{hour}:{minute} {ampm}" if hour and minute and ampm else None
+            
             # Ensure Jummah time is selected before saving
             if label == "Jummah" and not (hour and minute and ampm):
-                messagebox.showerror("Error", f"Select hour, minute, and AM/PM for Jummah.")
+                messagebox.showerror("Error", "Select hour, minute, and AM/PM for Jummah.")
                 return False
             
             # Ensure all parts of time are selected before saving
@@ -509,14 +512,12 @@ class Launcher(tk.Tk):
                 return False
             
             # Check order of prayer times (excluding Jummah): Fajr < Dhuhr < Asr < Maghrib < Isha
-            if hour and minute and ampm:
-                time_str = f"{hour}:{minute} {ampm}"
+            if time_str:
                 current_minutes = datetime.strptime(time_str, "%I:%M %p").hour * 60 + int(minute)
                 
                 if label != "Jummah":
                     if prev_minutes is not None and current_minutes <= prev_minutes:
-                        messagebox.showerror(
-                            "Error", f"{label} is not in the correct order. \n\n(Fajr, Dhuhr, Asr, Maghrib, Isha)")
+                        messagebox.showerror("Error", f"{label} is not in the correct order. \n\n(Fajr, Dhuhr, Asr, Maghrib, Isha)")
                         return False
                     
                     prev_minutes = current_minutes
