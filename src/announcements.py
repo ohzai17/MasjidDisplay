@@ -47,7 +47,7 @@ def render_announcements(screen, scale_x, scale_y, title_font, detail_font):
             )
         else:
             render_text(
-                screen, f"      {text.strip()[:43]}", detail_font,
+                screen, f"      {text.strip()[:38]}", detail_font,
                 secondary, (dash.right, y), align="left",
                 shadow_color=tertiary
             )
