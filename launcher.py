@@ -54,7 +54,7 @@ class Launcher(tk.Tk):
         ToolTip(generate_csv_btn, generate_csv_help)
         
         loccal_help = (
-            "Set your location and calculation method for accurate prayer times.\n\n"
+            "Set your location, timezone, calculation method, and Asr juristic method for accurate prayer times.\n\n"
             "After entering your settings, click 'Generate CSV' to fetch prayer times data.\n"
         )
         
@@ -114,10 +114,10 @@ class Launcher(tk.Tk):
             
             timezone_help = (
                 "Select your timezone from the dropdown menu.\n\n"
-                "Your timezone will be auto-detected, but please verify it is correct before proceeding.\n"
+                "Your timezone will be auto-detected. Verify it is correct before proceeding.\n"
                 "If your city isn't listed, choose the nearest major city in your timezone.\n"
                 "For example, New York uses 'America/New_York'.\n\n"
-                "If you cannot find your city, search online for '[Your City] IANA timezone'."
+                "If you cannot find your city, search online for '[Your City] IANA timezone'.\n"
             )
             
             hijri_adj_help = (
