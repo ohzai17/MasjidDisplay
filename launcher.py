@@ -424,6 +424,75 @@ class Launcher(tk.Tk):
             self.destroy()
             subprocess.Popen(["python", "src/main.py"])
     
+    def update_status(self):
+        """Update the status label."""
+        
+        if os.path.exists(CSV):
+            with open(CSV, newline='') as f:
+                rows = list(csv.reader(f))[1:]  # Skip header
+                last_date = rows and rows[-1] and rows[-1][0] # Get last date from first column
+                self.status_var.set(f"Last date on file: {last_date}")
+        
+        else:
+            self.status_var.set("CSV file does not exist.")
+    
+    def generate_csv(self):
+        """Generate the CSV file."""
+        
+        from src.data import fetch_data
+        
+        if self.save_settings():
+            try:
+                fetch_data()
+                self.status_var.set("CSV file generated.")
+            except Exception:
+                messagebox.showerror("Error", "CSV file failed to generate.\n\n"
+                                    "This may be caused by invalid location settings (e.g., latitude or longitude).")
+            self.after(1500, self.update_status)
+    
+    def clear_adhan_time_field(self, i):
+        """Clear hour, minute, and AM/PM fields for a specific prayer."""
+        
+        self.adhan_time_hour_entries[i].set("")
+        self.adhan_time_minute_entries[i].set("")
+        self.adhan_time_ampm_entries[i].set("")
+    
+    def restore_prayer_defaults(self):
+        """Restore the prayer table fields to initial values."""
+        
+        prayers = load_settings()['DATA']['PRAYERS']
+        
+        for i, label in enumerate(self.prayer_labels):
+            
+            prayer = prayers.get(label.upper(), {})
+            adhan_time = prayer.get("ADHAN_TIME", "")
+            iqamah_offset = prayer.get("IQAMAH_OFFSET", 0)
+            
+            hours, minutes, ampm = "", "", ""
+            if adhan_time:
+                hhmm, ampm = adhan_time.split()
+                hours, minutes = hhmm.split(":")
+            
+            self.adhan_time_hour_entries[i].set(hours)
+            self.adhan_time_minute_entries[i].set(minutes)
+            self.adhan_time_ampm_entries[i].set(ampm)
+            self.iqamah_offset_entries[i].set(iqamah_offset)
+    
+    def restore_display_defaults(self):
+        """Restore the display fields to initial values."""
+        
+        display = load_settings()['DISPLAY']
+        
+        self.name_entry.delete(0, tk.END)
+        self.name_entry.insert(0, display.get("NAME", ""))
+        
+        self.address_entry.delete(0, tk.END)
+        self.address_entry.insert(0, display.get("ADDRESS", ""))
+        
+        announcements = display.get("ANNOUNCEMENTS", [])
+        for i, entry in enumerate(self.announcement_entries):
+            entry.set(announcements[i] if i < len(announcements) else "")
+    
     def save_settings(self):
         """Save settings to JSON file."""
         
@@ -546,71 +615,6 @@ class Launcher(tk.Tk):
             json.dump(self.settings, f, indent=4)
         
         return True
-    
-    def clear_adhan_time_field(self, i):
-        """Clear hour, minute, and AM/PM fields for a specific prayer."""
-        
-        self.adhan_time_hour_entries[i].set("")
-        self.adhan_time_minute_entries[i].set("")
-        self.adhan_time_ampm_entries[i].set("")
-    
-    def restore_prayer_defaults(self):
-        """Restore the prayer table fields to initial values."""
-        
-        prayers = load_settings()['DATA']['PRAYERS']
-        
-        for i, label in enumerate(self.prayer_labels):
-            
-            prayer = prayers.get(label.upper(), {})
-            adhan_time = prayer.get("ADHAN_TIME", "")
-            iqamah_offset = prayer.get("IQAMAH_OFFSET", 0)
-            
-            hours, minutes, ampm = "", "", ""
-            if adhan_time:
-                hhmm, ampm = adhan_time.split()
-                hours, minutes = hhmm.split(":")
-            
-            self.adhan_time_hour_entries[i].set(hours)
-            self.adhan_time_minute_entries[i].set(minutes)
-            self.adhan_time_ampm_entries[i].set(ampm)
-            self.iqamah_offset_entries[i].set(iqamah_offset)
-    
-    def restore_display_defaults(self):
-        """Restore the display fields to initial values."""
-        
-        display = load_settings()['DISPLAY']
-        
-        self.name_entry.delete(0, tk.END)
-        self.name_entry.insert(0, display.get("NAME", ""))
-        
-        self.address_entry.delete(0, tk.END)
-        self.address_entry.insert(0, display.get("ADDRESS", ""))
-        
-        announcements = display.get("ANNOUNCEMENTS", [])
-        for i, entry in enumerate(self.announcement_entries):
-            entry.set(announcements[i] if i < len(announcements) else "")
-    
-    def update_status(self):
-        """Update the status label."""
-        
-        if os.path.exists(CSV):
-            with open(CSV, newline='') as f:
-                rows = list(csv.reader(f))[1:]  # Skip header
-                last_date = rows and rows[-1] and rows[-1][0] # Get last date from first column
-                self.status_var.set(f"Last date on file: {last_date}")
-        
-        else:
-            self.status_var.set("CSV file does not exist.")
-    
-    def generate_csv(self):
-        """Generate the CSV file."""
-        
-        from src.data import fetch_data
-        
-        self.save_settings()
-        fetch_data()
-        self.status_var.set("CSV file generated.")
-        self.after(1500, self.update_status)
 
 def load_settings():
     """Load settings from JSON file."""
