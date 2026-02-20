@@ -473,9 +473,14 @@ class Launcher(tk.Tk):
             return False
         
         for i, announcement in enumerate(announcements):
-            if len(announcement) > 45:
-                messagebox.showerror("Error", f"Announcement {i+1} exceeds character limit.")
-                return False
+            if ':' in announcement:
+                if len(announcement.strip()) > 45:
+                    messagebox.showerror("Error", f"Announcement {i+1} exceeds character limit.")
+                    return False
+            else:
+                if len(announcement.strip()) > 38:
+                    messagebox.showerror("Error", f"Announcement {i+1} exceeds character limit.")
+                    return False
         
         # Update settings dictionary
         self.settings['DATA']['LOCATION']['LATITUDE'] = latitude
