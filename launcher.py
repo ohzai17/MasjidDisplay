@@ -493,10 +493,11 @@ class Launcher(tk.Tk):
         for i, entry in enumerate(self.announcement_entries):
             entry.set(announcements[i] if i < len(announcements) else "")
     
-    def save_settings(self):
-        """Save settings to JSON file."""
+    def validate_settings(self):
+        """Validate settings before saving."""
         
         # Left frame
+        
         timezone = self.timezone_entry.get()
         hijri_date_adjustment = int(self.hijri_date_adjustment_entry.get())
         calculation_method = self.calculation_method_entry.get()
@@ -520,6 +521,7 @@ class Launcher(tk.Tk):
             return False
         
         # Right frame
+        
         name = self.name_entry.get()
         address = self.address_entry.get()
         announcements = [i.get() for i in self.announcement_entries if i.get()]
@@ -563,7 +565,6 @@ class Launcher(tk.Tk):
         self.settings['DISPLAY']['ANNOUNCEMENTS'] = announcements
         
         # Middle frame
-        prev_minutes = None
         
         for i, label in enumerate(self.prayer_labels):
             hour = self.adhan_time_hour_entries[i].get()
@@ -643,6 +644,14 @@ class Launcher(tk.Tk):
             
             # Update settings
             self.settings['DATA']['PRAYERS'][label.upper()] = prayer_dict
+        
+        return True
+    
+    def save_settings(self):
+        """Save settings to JSON file."""
+        
+        if not self.validate_settings():
+            return False
         
         with open(SETTINGS, "w") as f:
             json.dump(self.settings, f, indent=4)
