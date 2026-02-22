@@ -16,6 +16,7 @@ CSV = 'data/data.csv'
 
 class Launcher(tk.Tk):
     def __init__(self):
+        """Initialize the launcher window."""
         
         super().__init__()
         self.geometry("1400x460")
@@ -220,7 +221,7 @@ class Launcher(tk.Tk):
             min_adj_entry.set(str(min_adjustments))
             min_adj_entry.grid(row=2, column=row, padx=10, pady=(0, 2))
             self.min_adj_entries.append(min_adj_entry)
-        
+    
     def setup_middle_frame(self):
         """Set up the middle frame with prayer times table."""
         
@@ -323,7 +324,7 @@ class Launcher(tk.Tk):
             iqamah_offset_entry.set(iqamah_offset)
             iqamah_offset_entry.grid(row=row, column=5, padx=4, pady=2, sticky="nsew")
             self.iqamah_offset_entries.append(iqamah_offset_entry)
-        
+    
     def setup_right_frame(self):
         """Set up the right frame with masjid display information."""
         
