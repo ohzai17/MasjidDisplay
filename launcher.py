@@ -33,12 +33,20 @@ class Launcher(tk.Tk):
         
         # Load settings
         self.settings = load_settings()
-        display = self.settings["DISPLAY"]
+        
+        # Set up frames
+        self.setup_left_frame()
+        self.setup_middle_frame()
+        self.setup_right_frame()
+    
+    def setup_left_frame(self):
+        """Set up the left frame with location and calculation settings."""
+        
+        # Load settings
         location = self.settings['DATA']['LOCATION']
         calculation = self.settings['DATA']['CALCULATION']
         prayers = self.settings['DATA']['PRAYERS']
         
-        # Left frame
         self.left_frame = ttk.Frame(self.main_frame, relief="ridge")
         self.left_frame.grid(row=0, column=0, sticky="nsew", padx=(0, 5))
         
@@ -213,7 +221,12 @@ class Launcher(tk.Tk):
             min_adj_entry.grid(row=2, column=row, padx=10, pady=(0, 2))
             self.min_adj_entries.append(min_adj_entry)
         
-        # Middle frame
+    def setup_middle_frame(self):
+        """Set up the middle frame with prayer times table."""
+        
+        # Load settings
+        prayers = self.settings['DATA']['PRAYERS']
+        
         self.middle_frame = ttk.Frame(self.main_frame, relief="ridge")
         self.middle_frame.grid(row=0, column=1, sticky="nsew", padx=(5, 5))
         
@@ -311,7 +324,12 @@ class Launcher(tk.Tk):
             iqamah_offset_entry.grid(row=row, column=5, padx=4, pady=2, sticky="nsew")
             self.iqamah_offset_entries.append(iqamah_offset_entry)
         
-        # Right frame
+    def setup_right_frame(self):
+        """Set up the right frame with masjid display information."""
+        
+        # Load settings
+        display = self.settings["DISPLAY"]
+        
         self.right_frame = ttk.Frame(self.main_frame, relief="ridge")
         self.right_frame.grid(row=0, column=2, sticky="nsew", padx=(5, 0))
         
