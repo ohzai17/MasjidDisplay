@@ -585,16 +585,49 @@ class Launcher(tk.Tk):
                 messagebox.showerror("Error", f"Select hour, minute, and AM/PM for {label}.")
                 return False
             
-            # Check order of prayer times (excluding Jummah): Fajr < Dhuhr < Asr < Maghrib < Isha
-            if time_str:
-                current_minutes = datetime.strptime(time_str, "%I:%M %p").hour * 60 + int(minute)
-                
-                if label != "Jummah":
-                    if prev_minutes is not None and current_minutes <= prev_minutes:
-                        messagebox.showerror("Error", f"{label} is not in the correct order. \n\n(Fajr, Dhuhr, Asr, Maghrib, Isha)")
-                        return False
-                    
-                    prev_minutes = current_minutes
+            # Ensure that manual data entry is not earlier or later than calculated times in CSV
+            if label != "Jummah" and time_str and os.path.exists(CSV):
+                with open(CSV, newline='') as f:
+                    reader = csv.DictReader(f)
+                    today = datetime.now().strftime("%d %b %Y")
+                    for row in reader:
+                        
+                        # Check that manual times are not earlier than calculated times
+                        if row["Date"] == today:
+                            manual_dt = datetime.strptime(time_str, "%I:%M %p")
+                            calc_time = row[label]
+                            if calc_time:
+                                calc_dt = datetime.strptime(calc_time.strip(), "%I:%M %p")
+                                if manual_dt < calc_dt:
+                                    messagebox.showerror("Error", f"{label} cannot be earlier than the calculated time. ({calc_time})")
+                                    return False
+                            
+                            # Check that Fajr is not at or after Sunrise
+                            if label == "Fajr":
+                                sunrise_time = row.get("Sunrise")
+                                if sunrise_time:
+                                    sunrise_dt = datetime.strptime(sunrise_time.strip(), "%I:%M %p")
+                                    if manual_dt > sunrise_dt:
+                                        messagebox.showerror("Error", f"Fajr cannot be later than Sunrise. ({sunrise_time})")
+                                        return False
+                                    if manual_dt == sunrise_dt:
+                                        messagebox.showerror("Error", f"Fajr cannot be the same as Sunrise. ({sunrise_time})")
+                                        return False
+                            
+                            # Check against next prayer's calculated time
+                            if i < len(self.prayer_labels) - 2:  # Exclude Isha and Jummah
+                                next_label = self.prayer_labels[i + 1]
+                                next_calc_time = row[next_label]
+                                if next_calc_time:
+                                    next_calc_dt = datetime.strptime(next_calc_time.strip(), "%I:%M %p")
+                                    if manual_dt > next_calc_dt:
+                                        messagebox.showerror("Error", f"{label} cannot be later than {next_label}. ({next_calc_time})")
+                                        return False
+                                    if manual_dt == next_calc_dt:
+                                        messagebox.showerror("Error", f"{label} cannot be the same as {next_label}. ({next_calc_time})")
+                                        return False
+                            
+                            break
             
             adhan_time = f"{hour}:{minute} {ampm}" if hour and minute and ampm else ""
             
