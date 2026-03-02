@@ -49,7 +49,7 @@ class Launcher(tk.Tk):
         prayers = self.settings['DATA']['PRAYERS']
         
         self.left_frame = ttk.Frame(self.main_frame, relief="ridge")
-        self.left_frame.grid(row=0, column=0, sticky="nsew", padx=(0, 5))
+        self.left_frame.grid(row=0, column=0, sticky="nsew", padx=(5, 5))
         
         generate_csv_help = (
             "After setting your location and calculation preferences, click 'Generate CSV' to fetch prayer times data.\n"
@@ -332,7 +332,7 @@ class Launcher(tk.Tk):
         display = self.settings["DISPLAY"]
         
         self.right_frame = ttk.Frame(self.main_frame, relief="ridge")
-        self.right_frame.grid(row=0, column=2, sticky="nsew", padx=(5, 0))
+        self.right_frame.grid(row=0, column=2, sticky="nsew", padx=(5, 5))
         
         restore_defaults_help = (
             "Restore initially loaded settings for the masjid information.\n"
