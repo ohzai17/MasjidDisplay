@@ -12,7 +12,7 @@ from announcements import render_announcements
 def main():
     pygame.init()
     
-    screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font = resize_window(window_preset=2)
+    screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font  = resize_window(window_preset=2)
     
     running = True
     show_announcements = False
@@ -24,7 +24,7 @@ def main():
                 subprocess.Popen(["python", "launcher.py"])
             if event.type == pygame.KEYDOWN and event.key in (pygame.K_1, pygame.K_2, pygame.K_3):
                 window_preset = {pygame.K_1: 1, pygame.K_2: 2, pygame.K_3: 3}[event.key]
-                screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font = resize_window(window_preset)
+                screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font = resize_window(window_preset)
             if event.type == pygame.KEYDOWN and event.key == pygame.K_a:
                 show_announcements = not show_announcements
         
@@ -32,7 +32,7 @@ def main():
         
         render_main(screen, scale_x, scale_y, clock_font, title_font, detail_font)
         render_table(screen, scale_x, scale_y, table_font)
-        render_countdown(screen, scale_x, scale_y, title_font, time_font)
+        render_countdown(screen, scale_x, scale_y, clock_font, title_font, table_font, countdown_font, show_announcements=show_announcements)
         
         if show_announcements:
             render_announcements(screen, scale_x, scale_y, title_font, detail_font)
