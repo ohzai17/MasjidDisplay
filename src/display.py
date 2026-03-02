@@ -6,7 +6,7 @@ from config import load_settings, HIJRI_MONTH_NAMES
 from table import load_prayer_times
 from utils import render_text, get_text_colors
 
-def render_main(screen, scale_x, scale_y, time_font, title_font, detail_font):
+def render_main(screen, scale_x, scale_y, clock_font, title_font, detail_font):
     """Render main display."""
     
     settings = load_settings()
@@ -68,7 +68,7 @@ def render_main(screen, scale_x, scale_y, time_font, title_font, detail_font):
     
     # Render time
     render_text(
-        screen, time_str, time_font, primary,
+        screen, time_str, clock_font, primary,
         (int(363 * scale_x), int(174 * scale_y)), 
         align="center", shadow_color=tertiary
     )

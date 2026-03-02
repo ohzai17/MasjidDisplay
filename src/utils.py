@@ -19,12 +19,12 @@ def resize_window(window_preset):
     scale_x = width / 1600
     scale_y = height / 900
     
-    time_font = pygame.font.Font(FONT, int(130 * scale_y))
+    clock_font = pygame.font.Font(FONT, int(130 * scale_y))
     title_font = pygame.font.Font(FONT, int(85 * scale_y))
     detail_font = pygame.font.Font(FONT, int(40 * scale_y))
     table_font = pygame.font.Font(FONT, int(63 * scale_y))
     
-    return screen, scale_x, scale_y, time_font, title_font, detail_font, table_font
+    return screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font
 
 def get_text_colors():
     """Return text colors."""
