@@ -99,8 +99,8 @@ def render_table(screen, scale_x, scale_y, table_font, arabic_font):
     
     # Column definitions: (width, align, header)
     columns = [
-        (int(220 * scale_x), "left", "Prayer"),
-        (int(190 * scale_x), "right", ""),
+        (int(225 * scale_x), "left", "Prayer"),
+        (int(185 * scale_x), "right", ""),
         (int(72 * scale_x), "center", "Adhan"),
         (int(385 * scale_x), "center", "Iqamah"),
     ]
@@ -116,10 +116,16 @@ def render_table(screen, scale_x, scale_y, table_font, arabic_font):
         if align == "center":
             x += width // 2
         
-        render_text(
-            screen, header_text, table_font, primary,
-            (x, table_start_y), align=align, shadow_color=tertiary
-        )
+        if header_text == "Prayer":
+            render_text(
+                screen, header_text, table_font, primary,
+                (x + 74, table_start_y), align=align, shadow_color=tertiary
+            )
+        else:
+            render_text(
+                screen, header_text, table_font, primary,
+                (x, table_start_y), align=align, shadow_color=tertiary
+            )
     
     # Render prayer rows
     for i, (prayer_name, adhan, iqamah) in enumerate(formatted_prayer_times):

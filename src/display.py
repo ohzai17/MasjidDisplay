@@ -55,27 +55,27 @@ def render_main(screen, scale_x, scale_y, clock_font, title_font, detail_font):
     # Render name
     render_text(
         screen, NAME, title_font, primary,
-        (int(1218 * scale_x), int(86 * scale_y)), 
+        (int(1204 * scale_x), int(86 * scale_y)), 
         align="center", shadow_color=tertiary
     )
     
     # Render address
     render_text(
         screen, ADDRESS, detail_font, secondary,
-        (int(1218 * scale_x), int(159 * scale_y)),
+        (int(1204 * scale_x), int(159 * scale_y)),
         align="center", shadow_color=tertiary
     )
     
-    # Render time
+    # Render clock
     render_text(
         screen, time_str, clock_font, primary,
-        (int(363 * scale_x), int(174 * scale_y)), 
+        (int(443 * scale_x), int(174 * scale_y)), 
         align="center", shadow_color=tertiary
     )
     
     # Render dates
     render_text(
         screen, dates, detail_font, secondary,
-        (int(363 * scale_x), int(68 * scale_y)),
+        (int(443 * scale_x), int(68 * scale_y)),
         align="center", shadow_color=tertiary
     )

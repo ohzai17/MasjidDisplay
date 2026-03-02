@@ -162,31 +162,31 @@ def render_countdown(screen, scale_x, scale_y, clock_font, title_font, table_fon
             if prayer == "Sunrise":
                 header = "Time Until Sunrise"
             else:
-                header = f"Time Until {prayer}" if event == "Adhan" else "Time Until Iqamah"
+                header = f"Time Until {prayer}:" if event == "Adhan" else "Time Until Iqamah"
             
             if show_announcements:
                 render_text(
-                    screen, header, table_font, primary,
-                    (int(1204 * scale_x), int(619 * scale_y)),
+                    screen, header, title_font, primary,
+                    (int(1205 * scale_x), int(558 * scale_y)),
                     align="center", shadow_color=tertiary
                 )
                 
                 render_text(
                     screen, countdown, clock_font, secondary,
-                    (int(1206 * scale_x), int(735 * scale_y)),
+                    (int(1206 * scale_x), int(687 * scale_y)),
                     align="center", shadow_color=tertiary
                 )
                 
                 render_text(
-                    screen, label, table_font, primary,
-                    (int(1205 * scale_x), int(847 * scale_y)),
+                    screen, label, title_font, primary,
+                    (int(1205 * scale_x), int(814 * scale_y)),
                     align="center", shadow_color=tertiary
                 )
             
             else:
                 render_text(
                     screen, header, title_font, primary,
-                    (int(1204 * scale_x), int(359 * scale_y)),
+                    (int(1204 * scale_x), int(357 * scale_y)),
                     align="center", shadow_color=tertiary
                 )
                 
