@@ -81,7 +81,8 @@ def render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown
         
         # Calculate countdown to next event
         delta = event_time - now
-        hours, remainder = divmod(max(0, math.ceil(delta.total_seconds())), 3600)
+        total_seconds = max(0, math.ceil(delta.total_seconds()))
+        hours, remainder = divmod(total_seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
         
         # Define unit labels
