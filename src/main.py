@@ -38,7 +38,7 @@ def main():
             render_announcements(screen, scale_x, scale_y, title_font, detail_font)
         
         pygame.display.flip()
-        pygame.time.Clock().tick(30)
+        pygame.time.Clock().tick(15)
     
     pygame.quit()
 
