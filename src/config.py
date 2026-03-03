@@ -5,7 +5,7 @@ import json
 # File paths
 CSV = 'data/data.csv'
 SETTINGS = 'data/settings.json'
-FONT = 'assets/fonts/BebasNeue-Regular.ttf' # Obtained from https://fonts.google.com/specimen/Bebas+Neue
+FONT = 'assets/fonts/Bebas_Neue/BebasNeue-Regular.ttf' # Obtained from https://fonts.google.com/specimen/Bebas+Neue
 
 def load_settings():
     """Load settings from JSON file."""
