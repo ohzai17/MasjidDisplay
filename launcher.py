@@ -378,7 +378,7 @@ class Launcher(tk.Tk):
         )
         
         announcement_help = (
-            "Set up to 5 custom announcements to display on the screen.\n\n"
+            "Set up to 3 custom announcements to display on the screen.\n\n"
             "Press the 'A' key in the main display to toggle announcements on/off.\n"
             "There are pre-formatted options for Eid prayer times.\n\n"
             "Leave fields blank if you do not want to use all announcement slots.\n"
@@ -395,7 +395,7 @@ class Launcher(tk.Tk):
         
         # Masjid Address
         address_label = ttk.Label(display_frame, text="Address", anchor="center", font=("TkDefaultFont", 12, "bold"))
-        address_label.grid(row=2, column=0, padx=4, pady=2, sticky="ew")
+        address_label.grid(row=2, column=0, padx=4, pady=(8, 2), sticky="ew")
         ToolTip(address_label, address_help)
         
         self.address_entry = ttk.Entry(display_frame, width=30, justify="center")
@@ -404,11 +404,11 @@ class Launcher(tk.Tk):
         
         # Announcements
         announcement_label = ttk.Label(display_frame, text="Announcements", anchor="center", font=("TkDefaultFont", 12, "bold"))
-        announcement_label.grid(row=4, column=0, padx=4, pady=2, sticky="ew")
+        announcement_label.grid(row=4, column=0, padx=4, pady=(8, 2), sticky="ew")
         ToolTip(announcement_label, announcement_help)
         
         self.announcement_entries = []
-        for i in range(5):
+        for i in range(3):
             announcement_entry = ttk.Combobox(display_frame, values=announcement_options, width=30, justify="center")
             if i < len(announcements):
                 announcement_entry.set(announcements[i])
