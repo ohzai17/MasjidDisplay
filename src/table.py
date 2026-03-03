@@ -1,8 +1,10 @@
 # table.py
 
 import csv
+from arabic_reshaper import reshape
 from datetime import datetime, timedelta
 from config import CSV, load_settings
+from bidi.algorithm import get_display
 from utils import render_text, get_text_colors
 
 def load_prayer_times():
@@ -72,10 +74,14 @@ def format_table(prayer_times):
     return formatted_prayer_times
 
 
-def render_table(screen, scale_x, scale_y, table_font):
+def render_table(screen, scale_x, scale_y, table_font, arabic_font):
     """Render the prayer times table."""
     
     from countdown import get_next_event
+    
+    arabic_prayers = [
+        "فجر", "شروق", "ظهر", "عصر", "مغرب", "عشاء", "جمعة"
+    ]
     
     primary, secondary, tertiary = get_text_colors()
     
@@ -87,23 +93,32 @@ def render_table(screen, scale_x, scale_y, table_font):
     # Determine the next event/prayer
     _, next_prayer, _, _ = get_next_event(now, formatted_prayer_times)
     
-    table_start_x, table_start_y = int(47 * scale_x), int(298 * scale_y)
+    # Table positioning
+    table_start_x, table_start_y = int(58 * scale_x), int(298 * scale_y)
     vertical_spacing = int(table_font.get_height() * 1.0)
-    col_widths = [int(170 * scale_x), int(275 * scale_x), int(186 * scale_x)]
     
-    # Calculate starting x-positions for each column
-    col_positions = [table_start_x,
-            table_start_x + col_widths[0],
-            table_start_x + col_widths[0] + col_widths[1]]
+    # Column definitions: (width, align, header)
+    columns = [
+        (int(220 * scale_x), "left", "Prayer"),
+        (int(190 * scale_x), "right", ""),
+        (int(72 * scale_x), "center", "Adhan"),
+        (int(385 * scale_x), "center", "Iqamah"),
+    ]
+    
+    # Calculate x positions for each column
+    col_x = [table_start_x]
+    for width, _, _ in columns[:-1]:
+        col_x.append(col_x[-1] + width)
     
     # Render header
-    for col_idx, header_text in enumerate(["", "Adhan", "Iqamah"]):
-        x = col_positions[col_idx] + col_widths[col_idx] // 2
-        y = table_start_y
+    for idx, (width, align, header_text) in enumerate(columns):
+        x = col_x[idx]
+        if align == "center":
+            x += width // 2
         
         render_text(
             screen, header_text, table_font, primary,
-            (x, y), align="center", shadow_color=tertiary
+            (x, table_start_y), align=align, shadow_color=tertiary
         )
     
     # Render prayer rows
@@ -118,22 +133,33 @@ def render_table(screen, scale_x, scale_y, table_font):
         # Render prayer name
         render_text(
             screen, prayer_name, table_font, primary,
-            (col_positions[0], y), align="left",
+            (col_x[0], y), align=columns[0][1],
             shadow_color=tertiary
         )
         
+        # Reshape and apply bidi algorithm for proper Arabic rendering
+        arabic_prayer_name = get_display(reshape(arabic_prayers[i]))
+        
+        # Render prayer name (Arabic)
+        x = col_x[1] + columns[1][0] // 2
+        render_text(
+            screen, arabic_prayer_name, arabic_font, primary,
+            (x, y - 4), align=columns[1][1],
+            shadow_color=tertiary # Slight vertical adjustment
+        )
+        
         # Render Adhan
-        x_adhan = col_positions[1] + col_widths[1] // 2
+        x = col_x[2] + columns[2][0] // 2
         render_text(
             screen, adhan, table_font, font_color,
-            (x_adhan, y), align="center",
+            (x, y), align=columns[2][1],
             shadow_color=tertiary
         )
         
         # Render Iqamah
-        x_iqamah = col_positions[2] + col_widths[2] // 2
+        x = col_x[3] + columns[3][0] // 2
         render_text(
             screen, iqamah, table_font, font_color,
-            (x_iqamah, y), align="center",
+            (x, y), align=columns[3][1], 
             shadow_color=tertiary
         )
