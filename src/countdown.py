@@ -156,7 +156,7 @@ def render_countdown(screen, scale_x, scale_y, clock_font, title_font, table_fon
                 value = seconds
                 label = "Second" if value == 1 else "Seconds"
             
-            countdown = f"{value}"
+            countdown = f"{value:02d}"
             
             # Set header text based on event and prayer type
             if prayer == "Sunrise":
