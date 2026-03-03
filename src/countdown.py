@@ -167,7 +167,7 @@ def render_countdown(screen, scale_x, scale_y, clock_font, title_font, table_fon
             if show_announcements:
                 render_text(
                     screen, header, title_font, primary,
-                    (int(1205 * scale_x), int(558 * scale_y)),
+                    (int(1204 * scale_x), int(558 * scale_y)),
                     align="center", shadow_color=tertiary
                 )
                 

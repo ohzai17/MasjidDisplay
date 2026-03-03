@@ -2,7 +2,7 @@
 
 import pygame
 from datetime import datetime
-from config import GRADIENTS, BLACK, WHITE
+from config import GRADIENT, BLACK, WHITE
 from table import load_prayer_times, format_table
 
 def lerp(color_start, color_end, factor):
@@ -20,18 +20,18 @@ def get_gradient_colors(now_seconds):
     prayers = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"]
     PLACEHOLDER = "––––––––––"
     
-    # Build a sequence of (seconds, gradient) for each prayer and night
+    # Build a sequence of time-color pairs for gradient transitions
     seq = []
-    seq.append((0, GRADIENTS.get("NIGHT", [BLACK, BLACK])))  # Midnight start
+    seq.append((0, GRADIENT.get("NIGHT", [BLACK, BLACK])))  # Midnight start
     for name, adhan, _ in formatted_prayer_times:
         if name in prayers and adhan != PLACEHOLDER:
             try:
                 adhan_dt = datetime.strptime(adhan, "%I:%M %p")
                 seconds = adhan_dt.hour * 3600 + adhan_dt.minute * 60
-                seq.append((seconds, GRADIENTS.get(name.upper(), [BLACK, BLACK])))
+                seq.append((seconds, GRADIENT.get(name.upper(), [BLACK, BLACK])))
             except Exception:
                 continue
-    seq.append((86400, GRADIENTS.get("NIGHT", [BLACK, BLACK])))  # Midnight end
+    seq.append((86400, GRADIENT.get("NIGHT", [BLACK, BLACK])))  # Midnight end
     seq.sort()
     
     # Use white background if there are no valid prayer times

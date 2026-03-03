@@ -119,7 +119,7 @@ def render_table(screen, scale_x, scale_y, table_font, arabic_font):
         if header_text == "Prayer":
             render_text(
                 screen, header_text, table_font, primary,
-                (x + 74, table_start_y), align=align, shadow_color=tertiary
+                (x + 76, table_start_y), align=align, shadow_color=tertiary
             )
         else:
             render_text(

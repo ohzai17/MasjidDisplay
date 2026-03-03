@@ -45,6 +45,6 @@ BLACK = rgb(0, 0, 0)
 WHITE = rgb(255, 255, 255)
 GOLD = rgb(255, 215, 150)
 
-GRADIENTS = {key: [rgb(25, 40, 65), rgb(30, 45, 75)] for key in [
+GRADIENT = {key: [rgb(25, 40, 65), rgb(30, 45, 75)] for key in [
     "FAJR", "SUNRISE", "DHUHR", "ASR", "MAGHRIB", "ISHA", "NIGHT"
 ]}
