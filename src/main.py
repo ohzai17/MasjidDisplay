@@ -21,7 +21,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 running = False
-                subprocess.Popen(["python", "launcher.py"])
+                # subprocess.Popen(["python", "launcher.py"])
             if event.type == pygame.KEYDOWN and event.key in (pygame.K_1, pygame.K_2, pygame.K_3):
                 window_preset = {pygame.K_1: 1, pygame.K_2: 2, pygame.K_3: 3}[event.key]
                 screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font = resize_window(window_preset)
@@ -32,7 +32,7 @@ def main():
         
         render_main(screen, scale_x, scale_y, clock_font, title_font, detail_font)
         render_table(screen, scale_x, scale_y, table_font, arabic_font)
-        render_countdown(screen, scale_x, scale_y, clock_font, title_font, table_font, countdown_font, show_announcements=show_announcements)
+        render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown_font, show_announcements=show_announcements)
         
         if show_announcements:
             render_announcements(screen, scale_x, scale_y, title_font, detail_font)

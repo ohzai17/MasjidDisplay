@@ -84,7 +84,7 @@ def get_next_event(now, formatted_prayer_times):
 # Track last event
 _last_event = None
 
-def render_countdown(screen, scale_x, scale_y, clock_font, title_font, table_font, countdown_font, show_announcements=False):
+def render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown_font, show_announcements=False):
     """Render countdown to next prayer event."""
     
     primary, secondary, tertiary = get_text_colors()
@@ -108,96 +108,64 @@ def render_countdown(screen, scale_x, scale_y, clock_font, title_font, table_fon
     
     if event and prayer and event_time:
         
-        # If prayer is in progress, show status
-        if event == "In Progress":
-            header = f"{prayer}"
-            countdown = "In Progress"
+        # Calculate countdown to next event
+        delta = event_time - now
+        hours, remainder = divmod(max(0, math.ceil(delta.total_seconds())), 3600)
+        minutes, seconds = divmod(remainder, 60)
+        
+        # Define unit labels
+        if hours >= 1:
+            value = hours
+            label = "Hour" if value == 1 else "Hours"
+        elif minutes >= 1:
+            value = minutes
+            label = "Minute" if value == 1 else "Minutes"
+        else:
+            value = seconds
+            label = "Second" if value == 1 else "Seconds"
+        
+        countdown = f"{value:02d}"
+        
+        # Set header text based on event and prayer type
+        if prayer == "Sunrise":
+            header = "Time Until Sunrise"
+        else:
+            header = f"Time Until {prayer}:" if event == "Adhan" else "Time Until Iqamah"
+        
+        if show_announcements:
+            render_text(
+                screen, header, title_font, primary,
+                (int(1204 * scale_x), int(558 * scale_y)),
+                align="center", shadow_color=tertiary
+            )
             
-            if show_announcements:
-                render_text(
-                    screen, header, title_font, primary,
-                    (int(1204 * scale_x), int(669 * scale_y)),
-                    align="center", shadow_color=tertiary
-                )
-                
-                render_text(
-                    screen, countdown, clock_font, secondary,
-                    (int(1206 * scale_x), int(801 * scale_y)),
-                    align="center", shadow_color=tertiary
-                )
-                
-            else:
-                render_text(
-                    screen, header, title_font, primary,
-                    (int(1204 * scale_x), int(487 * scale_y)),
-                    align="center", shadow_color=tertiary
-                )
-                
-                render_text(
-                    screen, countdown, clock_font, secondary,
-                    (int(1206 * scale_x), int(615 * scale_y)),
-                    align="center", shadow_color=tertiary
-                )
+            render_text(
+                screen, countdown, clock_font, secondary,
+                (int(1206 * scale_x), int(687 * scale_y)),
+                align="center", shadow_color=tertiary
+            )
+            
+            render_text(
+                screen, label, title_font, primary,
+                (int(1205 * scale_x), int(814 * scale_y)),
+                align="center", shadow_color=tertiary
+            )
         
         else:
-            # Calculate countdown to next event
-            delta = event_time - now
-            hours, remainder = divmod(max(0, math.ceil(delta.total_seconds())), 3600)
-            minutes, seconds = divmod(remainder, 60)
+            render_text(
+                screen, header, title_font, primary,
+                (int(1204 * scale_x), int(357 * scale_y)),
+                align="center", shadow_color=tertiary
+            )
             
-            # Define unit labels
-            if hours >= 1:
-                value = hours
-                label = "Hour" if value == 1 else "Hours"
-            elif minutes >= 1:
-                value = minutes
-                label = "Minute" if value == 1 else "Minutes"
-            else:
-                value = seconds
-                label = "Second" if value == 1 else "Seconds"
+            render_text(
+                screen, countdown, countdown_font, secondary,
+                (int(1206 * scale_x), int(575 * scale_y)),
+                align="center", shadow_color=tertiary
+            )
             
-            countdown = f"{value:02d}"
-            
-            # Set header text based on event and prayer type
-            if prayer == "Sunrise":
-                header = "Time Until Sunrise"
-            else:
-                header = f"Time Until {prayer}:" if event == "Adhan" else "Time Until Iqamah"
-            
-            if show_announcements:
-                render_text(
-                    screen, header, title_font, primary,
-                    (int(1204 * scale_x), int(558 * scale_y)),
-                    align="center", shadow_color=tertiary
-                )
-                
-                render_text(
-                    screen, countdown, clock_font, secondary,
-                    (int(1206 * scale_x), int(687 * scale_y)),
-                    align="center", shadow_color=tertiary
-                )
-                
-                render_text(
-                    screen, label, title_font, primary,
-                    (int(1205 * scale_x), int(814 * scale_y)),
-                    align="center", shadow_color=tertiary
-                )
-            
-            else:
-                render_text(
-                    screen, header, title_font, primary,
-                    (int(1204 * scale_x), int(357 * scale_y)),
-                    align="center", shadow_color=tertiary
-                )
-                
-                render_text(
-                    screen, countdown, countdown_font, secondary,
-                    (int(1206 * scale_x), int(575 * scale_y)),
-                    align="center", shadow_color=tertiary
-                )
-                
-                render_text(
-                    screen, label, title_font, primary,
-                    (int(1205 * scale_x), int(765 * scale_y)),
-                    align="center", shadow_color=tertiary
-                )
+            render_text(
+                screen, label, title_font, primary,
+                (int(1205 * scale_x), int(765 * scale_y)),
+                align="center", shadow_color=tertiary
+            )
