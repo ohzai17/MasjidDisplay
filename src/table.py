@@ -91,7 +91,7 @@ def render_table(screen, scale_x, scale_y, table_font, arabic_font):
     formatted_prayer_times = format_table(prayer_times)
     
     # Determine the next event/prayer
-    _, next_prayer, _, _ = get_next_event(now, formatted_prayer_times)
+    _, next_prayer, _ = get_next_event(now, formatted_prayer_times)
     
     # Table positioning
     table_start_x, table_start_y = int(58 * scale_x), int(298 * scale_y)

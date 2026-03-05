@@ -26,14 +26,6 @@ def get_next_event(now, formatted_prayer_times):
         if adhan == PLACEHOLDER:
             continue
         
-        # Determine 'In Progress' durations for each prayer
-        if prayer.upper() == "JUMMAH":
-            duration = 30
-        elif prayer.upper() in ["FAJR", "DHUHR", "ASR", "MAGHRIB", "ISHA"]:
-            duration = 15
-        else:
-            duration = 0
-        
         try:
             adhan_dt = datetime.strptime(adhan, "%I:%M %p").replace(
                 year=now.year, month=now.month, day=now.day
@@ -43,9 +35,9 @@ def get_next_event(now, formatted_prayer_times):
         
         # If current time is before Adhan, return countdown to Adhan
         if now < adhan_dt:
-            return ("Adhan", prayer, adhan_dt, duration)
+            return ("Adhan", prayer, adhan_dt)
         
-        # If Iqamah time exists and is valid, check for Iqamah event or 'In Progress'
+        # If Iqamah time exists and is valid, check for Iqamah event
         if iqamah != PLACEHOLDER:
             try:
                 iqamah_dt = datetime.strptime(iqamah, "%I:%M %p").replace(
@@ -54,14 +46,7 @@ def get_next_event(now, formatted_prayer_times):
             except Exception:
                 continue
             if now < iqamah_dt:
-                return ("Iqamah", prayer, iqamah_dt, duration)
-            # If within duration after Iqamah, prayer is 'In Progress'
-            elif 0 < duration and iqamah_dt <= now < iqamah_dt + timedelta(minutes=duration):
-                return ("In Progress", prayer, iqamah_dt + timedelta(minutes=duration), duration)
-        
-        # If within duration after Adhan, prayer is 'In Progress'
-        if 0 < duration and adhan_dt <= now < adhan_dt + timedelta(minutes=duration):
-            return ("In Progress", prayer, adhan_dt + timedelta(minutes=duration), duration)
+                return ("Iqamah", prayer, iqamah_dt)
     
     # If all today's prayers have passed, show next day's Fajr
     tomorrow = now + timedelta(days=1)
@@ -76,10 +61,9 @@ def get_next_event(now, formatted_prayer_times):
                     year=tomorrow.year, month=tomorrow.month, day=tomorrow.day
                 )
             except Exception:
-                return (None, None, None, None)
-            duration = 15 # Fajr duration
-            return ("Adhan", "Fajr", adhan_dt, duration)
-    return (None, None, None, None)
+                return (None, None, None)
+            return ("Adhan", "Fajr", adhan_dt)
+    return (None, None, None)
 
 # Track last event
 _last_event = None
@@ -94,7 +78,7 @@ def render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown
     # Get formatted prayer times for today
     prayer_times = load_prayer_times()
     formatted_prayer_times = format_table(prayer_times)
-    event, prayer, event_time, _ = get_next_event(now, formatted_prayer_times)
+    event, prayer, event_time = get_next_event(now, formatted_prayer_times)
     
     global _last_event
     
@@ -103,7 +87,7 @@ def render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown
     if _last_event != current_event:
         if _last_event and _last_event[0] in ("Adhan", "Iqamah"):
             # generate_beep().play()
-            print(f"Beep for {prayer} {event}")
+            print("Beep!")
     _last_event = current_event
     
     if event and prayer and event_time:
@@ -130,7 +114,7 @@ def render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown
         if prayer == "Sunrise":
             header = "Time Until Sunrise"
         else:
-            header = f"Time Until {prayer}:" if event == "Adhan" else "Time Until Iqamah"
+            header = f"Time Until {prayer}:" if event == "Adhan" else "Time Until Iqamah:"
         
         if show_announcements:
             render_text(
