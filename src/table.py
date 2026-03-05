@@ -119,12 +119,14 @@ def render_table(screen, scale_x, scale_y, table_font, arabic_font):
         if header_text == "Prayer":
             render_text(
                 screen, header_text, table_font, primary,
-                (x + 76, table_start_y), align=align, shadow_color=tertiary
+                (x + int(90 * scale_x), table_start_y), align=align,
+                shadow_color=tertiary
             )
         else:
             render_text(
                 screen, header_text, table_font, primary,
-                (x, table_start_y), align=align, shadow_color=tertiary
+                (x, table_start_y), align=align,
+                shadow_color=tertiary
             )
     
     # Render prayer rows
@@ -150,8 +152,8 @@ def render_table(screen, scale_x, scale_y, table_font, arabic_font):
         x = col_x[1] + columns[1][0] // 2
         render_text(
             screen, arabic_prayer_name, arabic_font, primary,
-            (x, y - 4), align=columns[1][1],
-            shadow_color=tertiary # Slight vertical adjustment
+            (x, y - int(4 * scale_y)), align=columns[1][1],
+            shadow_color=tertiary
         )
         
         # Render Adhan

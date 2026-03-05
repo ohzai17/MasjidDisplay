@@ -119,19 +119,19 @@ def render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown
         if show_announcements:
             render_text(
                 screen, header, title_font, primary,
-                (int(1204 * scale_x), int(558 * scale_y)),
+                (int(1204 * scale_x), int(267 * scale_y)),
                 align="center", shadow_color=tertiary
             )
             
             render_text(
                 screen, countdown, clock_font, secondary,
-                (int(1206 * scale_x), int(687 * scale_y)),
+                (int(1206 * scale_x), int(396 * scale_y)),
                 align="center", shadow_color=tertiary
             )
             
             render_text(
                 screen, label, title_font, primary,
-                (int(1205 * scale_x), int(814 * scale_y)),
+                (int(1205 * scale_x), int(523 * scale_y)),
                 align="center", shadow_color=tertiary
             )
         

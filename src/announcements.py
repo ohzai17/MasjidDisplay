@@ -16,14 +16,14 @@ def render_announcements(screen, scale_x, scale_y, title_font, detail_font):
     # Render header
     render_text(
         screen, "Announcement:", title_font, primary,
-        (int(1206 * scale_x), int(280 * scale_y)),
+        (int(1206 * scale_x), int(659 * scale_y)),
         align="center", shadow_color=tertiary
     )
     
     # Render announcements
     for i, text in enumerate(ANNOUNCEMENTS[:3]):
         x = int(877 * scale_x)
-        y = int((354 + i * 48) * scale_y)
+        y = int((733 + i * 48) * scale_y)
         
         # Render dash
         dash = render_text(
