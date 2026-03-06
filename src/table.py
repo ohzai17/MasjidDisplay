@@ -151,8 +151,8 @@ def render_table(screen, scale_x, scale_y, table_font, arabic_font):
         # Render prayer name (Arabic)
         x = col_x[1] + columns[1][0] // 2
         render_text(
-            screen, arabic_prayer_name, arabic_font, primary,
-            (x, y - int(4 * scale_y)), align=columns[1][1],
+            screen, arabic_prayer_name, arabic_font, secondary,
+            (x + int(4 * scale_x), y - int(12 * scale_y)), align=columns[1][1],
             shadow_color=tertiary
         )
         

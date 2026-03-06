@@ -24,7 +24,7 @@ def resize_window(window_preset):
     detail_font = pygame.font.Font(FONT, int(40 * scale_y))
     table_font = pygame.font.Font(FONT, int(63 * scale_y))
     countdown_font = pygame.font.Font(FONT, int(259 * scale_y))
-    arabic_font = pygame.font.Font(ARABIC_FONT, int(50 * scale_y))
+    arabic_font = pygame.font.Font(ARABIC_FONT, int(55 * scale_y))
     
     return screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font
 
