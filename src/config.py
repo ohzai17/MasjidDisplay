@@ -6,7 +6,7 @@ import json
 CSV = 'data/data.csv'
 SETTINGS = 'data/settings.json'
 FONT = 'assets/fonts/Bebas_Neue/BebasNeue-Regular.ttf' # Obtained from https://fonts.google.com/specimen/Bebas+Neue
-ARABIC_FONT = 'assets/fonts/ukij-tuz-bold.ttf' # Obtained from https://www.fontsaddict.com/font/ukij-tuz-bold.html
+ARABIC_FONT = 'assets/fonts/UKIJTuzKB.ttf' # Obtained from https://fontlibrary.org/en/font/ukij-tuz
 
 def load_settings():
     """Load settings from JSON file."""
