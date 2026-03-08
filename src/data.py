@@ -262,27 +262,14 @@ def fetch_data():
     CALCULATION_METHOD = DATA['CALCULATION']['METHOD']
     JURISTIC_METHOD = DATA['CALCULATION']['JURISTIC_METHOD']
     
-    MINUTE_ADJUSTMENTS = {
-        "FAJR": DATA['PRAYERS']['FAJR']['MINUTE_ADJUSTMENT'],
-        "DHUHR": DATA['PRAYERS']['DHUHR']['MINUTE_ADJUSTMENT'],
-        "ASR": DATA['PRAYERS']['ASR']['MINUTE_ADJUSTMENT'],
-        "MAGHRIB": DATA['PRAYERS']['MAGHRIB']['MINUTE_ADJUSTMENT'],
-        "ISHA": DATA['PRAYERS']['ISHA']['MINUTE_ADJUSTMENT']
-    }
-    
     # Initialize
     prayer_times = PrayerTimes(CALCULATION_METHOD)
     prayer_times.setAsrMethod(JURISTIC_METHOD)
-    prayer_times.fajrMinutes = MINUTE_ADJUSTMENTS["FAJR"]
-    prayer_times.dhuhrMinutes = MINUTE_ADJUSTMENTS["DHUHR"]
-    prayer_times.asrMinutes = MINUTE_ADJUSTMENTS["ASR"]
-    prayer_times.maghribMinutes = MINUTE_ADJUSTMENTS["MAGHRIB"]
-    prayer_times.ishaMinutes = MINUTE_ADJUSTMENTS["ISHA"]
     
     header = ["Date", "Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"]
     rows = []
     
-    for i in range(365):
+    for i in range(365 * 50): # Generate data for 50 years
         current_date = datetime.now() + timedelta(days=i)
         dt_with_tz = datetime(current_date.year, current_date.month, current_date.day, 12, 0, tzinfo=ZoneInfo(TIMEZONE_NAME))
         offset = dt_with_tz.utcoffset()

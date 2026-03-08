@@ -19,7 +19,7 @@ class Launcher(tk.Tk):
         """Initialize the launcher window."""
         
         super().__init__()
-        self.geometry("1400x460")
+        self.geometry("1400x380")
         self.resizable(False, False)
         self.bind("<Escape>", lambda event: self.destroy()) # Temporary: Allow exiting with ESC key
         style = ttk.Style()
@@ -186,41 +186,6 @@ class Launcher(tk.Tk):
                 self.asr_method_entry.set(asr_method)
                 self.asr_method_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
                 ToolTip(settings_label, asr_method_help)
-        
-        # Minutes Adjustments Frame
-        min_adj_frame = ttk.Frame(settings_frame)
-        min_adj_frame.grid(row=8, column=0, columnspan=2, pady=10, sticky="ew")
-        min_adj_frame.columnconfigure(tuple(range(5)), weight=1)
-        
-        min_adj_help = (
-            "Add or subtract a fixed number of minutes to each prayer time.\n\n"
-            "Leave as 0 for no adjustment.\n\n"
-            "Generate CSV after making any changes.\n"
-        )
-        
-        min_adj_header = ttk.Label(min_adj_frame, text="Minutes Adjustment", font=("TkDefaultFont", 12, "bold"))
-        min_adj_header.grid(row=0, column=0, columnspan=5, pady=10, sticky="n")
-        ToolTip(min_adj_header, min_adj_help)
-        
-        min_adj_options = [str(i) for i in range(-10, 11)]
-        
-        min_adj_prayer_labels = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"]
-        
-        self.min_adj_entries = []
-        
-        for row, label in enumerate(min_adj_prayer_labels):
-            
-            # Current settings from JSON (default value in place)
-            min_adjustments = prayers.get(label.upper(), {}).get("MINUTE_ADJUSTMENT", 0)
-            
-            # Label
-            ttk.Label(min_adj_frame, text=label, font=("TkDefaultFont", 12, "bold")).grid(row=1, column=row, padx=10, sticky="n")
-            
-            # Combobox
-            min_adj_entry = ttk.Combobox(min_adj_frame, values=min_adj_options, state="readonly", width=3)
-            min_adj_entry.set(str(min_adjustments))
-            min_adj_entry.grid(row=2, column=row, padx=10, pady=(0, 2))
-            self.min_adj_entries.append(min_adj_entry)
     
     def setup_middle_frame(self):
         """Set up the middle frame with prayer times table."""
@@ -590,7 +555,6 @@ class Launcher(tk.Tk):
             minute = self.adhan_time_minute_entries[i].get()
             ampm = self.adhan_time_ampm_entries[i].get()
             iqamah_offset = int(self.iqamah_offset_entries[i].get())
-            minute_adjustment = int(self.min_adj_entries[i].get()) if i < len(self.min_adj_entries) else 0
             
             # Compose time string if all parts are selected
             time_str = f"{hour}:{minute} {ampm}" if hour and minute and ampm else None
@@ -656,10 +620,6 @@ class Launcher(tk.Tk):
                 "ADHAN_TIME": adhan_time,
                 "IQAMAH_OFFSET": iqamah_offset
             }
-            
-            # Add minute adjustment for all prayers except Jummah
-            if label != "Jummah" and i < len(self.min_adj_entries):
-                prayer_dict["MINUTE_ADJUSTMENT"] = minute_adjustment
             
             # Update settings
             self.settings['DATA']['PRAYERS'][label.upper()] = prayer_dict
