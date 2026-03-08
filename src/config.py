@@ -36,18 +36,18 @@ PRESET_MAP = {
 }
 
 # Color settings
-def rgb(r, g, b):
+def rgb(r,g,b):
     """Return RGB color as a list."""
     
-    return [r, g, b]
+    return [r,g,b]
 
-BLACK = rgb(0, 0, 0)
-WHITE = rgb(255, 255, 255)
+BLACK = rgb(0,0,0)
+WHITE = rgb(255,255,255)
 
 THEMES = [
-    {"BACKGROUND": rgb(5, 15, 25), "TEXT": rgb(0, 180, 255)},
-    {"BACKGROUND": rgb(5, 25, 15), "TEXT": rgb(0, 255, 120)},
-    {"BACKGROUND": rgb(25, 10, 5), "TEXT": rgb(255, 120, 0)},
-    {"BACKGROUND": rgb(30, 10, 30), "TEXT": rgb(220, 0, 220)},
-    {"BACKGROUND": rgb(10, 30, 30), "TEXT": rgb(0, 220, 220)},
+    {"BACKGROUND": rgb(21,24,27), "TEXT": rgb(139,152,164)},
+    {"BACKGROUND": rgb(8,42,25), "TEXT": rgb(84,221,153)},
+    {"BACKGROUND": rgb(42,8,25), "TEXT": rgb(221,84,153)},
+    {"BACKGROUND": rgb(42,25,8), "TEXT": rgb(221,153,84)},
+    {"BACKGROUND": rgb(8,25,42), "TEXT": rgb(84,153,221)}
 ]
