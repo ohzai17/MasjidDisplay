@@ -65,10 +65,10 @@ def get_next_event(now, formatted_prayer_times):
             return ("Adhan", "Fajr", adhan_dt)
     return (None, None, None)
 
-def render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown_font, show_announcements=False):
+def render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown_font, show_announcements, theme_index):
     """Render countdown to next prayer event."""
     
-    primary, secondary, tertiary = get_text_colors()
+    primary, secondary, tertiary = get_text_colors(theme_index)
     
     now = datetime.now()
     

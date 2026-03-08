@@ -43,8 +43,11 @@ def rgb(r, g, b):
 
 BLACK = rgb(0, 0, 0)
 WHITE = rgb(255, 255, 255)
-GOLD = rgb(255, 215, 150)
 
-GRADIENT = {key: [rgb(25, 40, 65), rgb(30, 45, 75)] for key in [
-    "FAJR", "SUNRISE", "DHUHR", "ASR", "MAGHRIB", "ISHA", "NIGHT"
-]}
+THEMES = [
+    {"BACKGROUND": rgb(5, 15, 25), "TEXT": rgb(0, 180, 255)},
+    {"BACKGROUND": rgb(5, 25, 15), "TEXT": rgb(0, 255, 120)},
+    {"BACKGROUND": rgb(25, 10, 5), "TEXT": rgb(255, 120, 0)},
+    {"BACKGROUND": rgb(30, 10, 30), "TEXT": rgb(220, 0, 220)},
+    {"BACKGROUND": rgb(10, 30, 30), "TEXT": rgb(0, 220, 220)},
+]

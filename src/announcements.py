@@ -3,7 +3,7 @@
 from config import load_settings
 from utils import render_text, get_text_colors
 
-def render_announcements(screen, scale_x, scale_y, title_font, detail_font):
+def render_announcements(screen, scale_x, scale_y, title_font, detail_font, theme_index):
     """Render announcements."""
     
     settings = load_settings()
@@ -11,7 +11,7 @@ def render_announcements(screen, scale_x, scale_y, title_font, detail_font):
     DISPLAY = settings['DISPLAY']
     ANNOUNCEMENTS = DISPLAY['ANNOUNCEMENTS']
     
-    primary, secondary, tertiary = get_text_colors()
+    primary, secondary, tertiary = get_text_colors(theme_index)
     
     # Render header
     render_text(

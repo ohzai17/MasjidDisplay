@@ -74,7 +74,7 @@ def format_table(prayer_times):
     return formatted_prayer_times
 
 
-def render_table(screen, scale_x, scale_y, table_font, arabic_font):
+def render_table(screen, scale_x, scale_y, table_font, arabic_font, theme_index):
     """Render the prayer times table."""
     
     from countdown import get_next_event
@@ -83,7 +83,7 @@ def render_table(screen, scale_x, scale_y, table_font, arabic_font):
         "فجر", "شروق", "ظهر", "عصر", "مغرب", "عشاء", "جمعة"
     ]
     
-    primary, secondary, tertiary = get_text_colors()
+    primary, secondary, tertiary = get_text_colors(theme_index)
     
     now = datetime.now()
     
@@ -112,7 +112,9 @@ def render_table(screen, scale_x, scale_y, table_font, arabic_font):
     
     # Render header
     for idx, (width, align, header_text) in enumerate(columns):
+        
         x = col_x[idx]
+        
         if align == "center":
             x += width // 2
         

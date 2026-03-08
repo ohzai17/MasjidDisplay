@@ -1,7 +1,7 @@
 # utils.py
 
 import pygame
-from config import PRESET_MAP, FONT, ARABIC_FONT, BLACK, GOLD, WHITE
+from config import PRESET_MAP, FONT, ARABIC_FONT, BLACK, WHITE, THEMES
 
 def resize_window(window_preset):
     """Resize the window based on the selected preset and return screen and fonts."""
@@ -28,12 +28,12 @@ def resize_window(window_preset):
     
     return screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font
 
-def get_text_colors():
+def get_text_colors(theme_index):
     """Return text colors."""
     
     from table import load_prayer_times
     
-    return (GOLD, WHITE, BLACK) if load_prayer_times() else (BLACK, BLACK, None)
+    return (THEMES[theme_index]["TEXT"], WHITE, BLACK) if load_prayer_times() else (BLACK, BLACK, None)
 
 def render_text(
     surface, text, font, color, pos,

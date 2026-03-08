@@ -6,7 +6,7 @@ from config import load_settings, HIJRI_MONTH_NAMES
 from table import load_prayer_times
 from utils import render_text, get_text_colors
 
-def render_main(screen, scale_x, scale_y, clock_font, title_font, detail_font):
+def render_main(screen, scale_x, scale_y, clock_font, title_font, detail_font, theme_index):
     """Render main display."""
     
     settings = load_settings()
@@ -50,7 +50,7 @@ def render_main(screen, scale_x, scale_y, clock_font, title_font, detail_font):
     
     dates = date_str + " · " + hijri_str # Combine Gregorian and Hijri dates
     
-    primary, secondary, tertiary = get_text_colors()
+    primary, secondary, tertiary = get_text_colors(theme_index)
     
     # Render name
     render_text(
