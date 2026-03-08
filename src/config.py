@@ -1,17 +1,10 @@
 # config.py
 
-import json
-
 # File paths
 CSV = 'data/data.csv'
 SETTINGS = 'data/settings.json'
 FONT = 'assets/fonts/Bebas_Neue/BebasNeue-Regular.ttf' # Obtained from https://fonts.google.com/specimen/Bebas+Neue
 ARABIC_FONT = 'assets/fonts/UKIJTuzKB.ttf' # Obtained from https://fontlibrary.org/en/font/ukij-tuz
-
-def load_settings():
-    """Load settings from JSON file."""
-    with open(SETTINGS, 'r') as file:
-        return json.load(file)
 
 HIJRI_MONTH_NAMES = {
     1: "Muharram",

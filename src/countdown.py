@@ -1,10 +1,9 @@
 # countdown.py
 
-import math
-from datetime import datetime, timedelta
+from table import format_table
 from audio import generate_beep
-from utils import render_text, get_text_colors
-from table import load_prayer_times, format_table
+from datetime import datetime, timedelta
+from utils import load_prayer_times, get_text_colors, render_text
 
 def get_next_event(now, formatted_prayer_times):
     """Return the next prayer event and its time."""

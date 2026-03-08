@@ -12,6 +12,7 @@ from announcements import render_announcements
 
 def main():
     pygame.init()
+    pygame.mouse.set_visible(False)
     
     window_preset = 2
     theme_index = 0

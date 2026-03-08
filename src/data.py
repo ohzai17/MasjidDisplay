@@ -5,9 +5,10 @@
 
 import csv
 import math
+from .config import CSV
 from zoneinfo import ZoneInfo
+from utils import load_settings
 from datetime import datetime, timedelta
-from .config import CSV, load_settings
 
 class PrayerTimes:
     """

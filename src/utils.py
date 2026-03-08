@@ -1,7 +1,10 @@
 # utils.py
 
+import csv
+import json
 import pygame
-from config import PRESET_MAP, FONT, ARABIC_FONT, BLACK, WHITE, THEMES
+from datetime import datetime
+from config import CSV, SETTINGS, FONT, ARABIC_FONT, PRESET_MAP, BLACK, WHITE, THEMES
 
 def resize_window(window_preset):
     """Resize the window based on the selected preset and return screen and fonts."""
@@ -28,10 +31,29 @@ def resize_window(window_preset):
     
     return screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font
 
+def load_settings():
+    """Load settings from JSON file."""
+    
+    with open(SETTINGS, 'r') as file:
+        return json.load(file)
+
+def load_prayer_times():
+    """Load today's prayer times from CSV."""
+    
+    today_str = datetime.now().strftime('%d %b %Y')
+    
+    try:
+        with open(CSV, 'r') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row['Date'].strip() == today_str:
+                    return {k: v for k, v in row.items() if k != 'Date'}
+    except FileNotFoundError:
+        pass
+    return {}
+
 def get_text_colors(theme_index):
     """Return text colors."""
-    
-    from table import load_prayer_times
     
     return (THEMES[theme_index]["TEXT"], WHITE, BLACK) if load_prayer_times() else (BLACK, BLACK, None)
 

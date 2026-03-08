@@ -1,10 +1,9 @@
 # display.py
 
-from datetime import datetime, timedelta
 from hijridate import Gregorian
-from config import load_settings, HIJRI_MONTH_NAMES
-from table import load_prayer_times
-from utils import render_text, get_text_colors
+from config import HIJRI_MONTH_NAMES
+from datetime import datetime, timedelta
+from utils import load_settings, load_prayer_times, get_text_colors, render_text
 
 def render_main(screen, scale_x, scale_y, clock_font, title_font, detail_font, theme_index):
     """Render main display."""

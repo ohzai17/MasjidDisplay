@@ -46,7 +46,6 @@ class Launcher(tk.Tk):
         # Load settings
         location = self.settings['DATA']['LOCATION']
         calculation = self.settings['DATA']['CALCULATION']
-        prayers = self.settings['DATA']['PRAYERS']
         
         self.left_frame = ttk.Frame(self.main_frame, relief="ridge")
         self.left_frame.grid(row=0, column=0, sticky="nsew", padx=(5, 5))

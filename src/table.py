@@ -1,26 +1,9 @@
 # table.py
 
-import csv
 from arabic_reshaper import reshape
-from datetime import datetime, timedelta
-from config import CSV, load_settings
 from bidi.algorithm import get_display
-from utils import render_text, get_text_colors
-
-def load_prayer_times():
-    """Load today's prayer times from CSV."""
-    
-    today_str = datetime.now().strftime('%d %b %Y')
-    
-    try:
-        with open(CSV, 'r') as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                if row['Date'].strip() == today_str:
-                    return {k: v for k, v in row.items() if k != 'Date'}
-    except FileNotFoundError:
-        pass
-    return {}
+from datetime import datetime, timedelta
+from utils import load_settings, load_prayer_times, get_text_colors, render_text
 
 def format_table(prayer_times):
     """Format prayer times into a table."""
