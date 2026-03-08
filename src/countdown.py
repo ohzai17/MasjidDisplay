@@ -65,8 +65,13 @@ def get_next_event(now, formatted_prayer_times):
             return ("Adhan", "Fajr", adhan_dt)
     return (None, None, None)
 
+initial_frame = True
+previous_event = None
+
 def render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown_font, show_announcements, theme_index):
     """Render countdown to next prayer event."""
+    
+    global initial_frame, previous_event
     
     primary, secondary, tertiary = get_text_colors(theme_index)
     
@@ -77,11 +82,21 @@ def render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown
     formatted_prayer_times = format_table(prayer_times)
     event, prayer, event_time = get_next_event(now, formatted_prayer_times)
     
+    current_event = (event, prayer) if event and prayer else (None, None)
+    
+    # Check if event has changed and trigger beep
+    if not initial_frame and current_event != previous_event and current_event != (None, None):
+        generate_beep().play()
+    
+    # Reset initial frame and update previous event
+    initial_frame = False
+    previous_event = current_event
+    
     if event and prayer and event_time:
         
         # Calculate countdown to next event
         delta = event_time - now
-        total_seconds = max(0, math.ceil(delta.total_seconds()))
+        total_seconds = max(0, int(delta.total_seconds())) + 1
         hours, remainder = divmod(total_seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
         
