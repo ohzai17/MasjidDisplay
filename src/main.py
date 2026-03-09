@@ -2,13 +2,13 @@
 
 import pygame
 import subprocess
-from config import THEMES
-from table import render_table
-from display import render_main
-from utils import resize_window
-from countdown import render_countdown
-from background import render_background
-from announcements import render_announcements
+from src.config import THEMES
+from src.utils import resize_window
+from src.features.table import render_table
+from src.features.display import render_display
+from src.features.countdown import render_countdown
+from src.features.background import render_background
+from src.features.announcements import render_announcements
 
 def main():
     pygame.init()
@@ -27,7 +27,7 @@ def main():
             # Quit on close or escape key
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 running = False
-                # subprocess.Popen(["python", "launcher.py"])
+                # subprocess.Popen(["python", "-m", "src.launcher"])
             elif event.type == pygame.KEYDOWN:
                 # Handle window resizing
                 if event.key in (pygame.K_1, pygame.K_2, pygame.K_3):
@@ -43,7 +43,7 @@ def main():
                     theme_index = (theme_index + 1) % len(THEMES)
         
         render_background(screen, theme_index)
-        render_main(screen, scale_x, scale_y, clock_font, title_font, detail_font, theme_index)
+        render_display(screen, scale_x, scale_y, clock_font, title_font, detail_font, theme_index)
         render_table(screen, scale_x, scale_y, table_font, arabic_font, theme_index)
         render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown_font, show_announcements, theme_index)
         if show_announcements:

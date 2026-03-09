@@ -1,9 +1,8 @@
 # countdown.py
 
-from table import format_table
-from audio import generate_beep
+from src.audio import generate_beep
 from datetime import datetime, timedelta
-from utils import load_prayer_times, get_text_colors, render_text
+from src.utils import load_prayer_times, get_prayer_times, get_text_colors, render_text
 
 def get_next_event(now, formatted_prayer_times):
     """Return the next prayer event and its time."""
@@ -50,7 +49,7 @@ def get_next_event(now, formatted_prayer_times):
     # If all today's prayers have passed, show next day's Fajr
     tomorrow = now + timedelta(days=1)
     prayer_times = load_prayer_times()
-    formatted_prayer_times = format_table(prayer_times)
+    formatted_prayer_times = get_prayer_times(prayer_times)
     prayer_map = {name: (name, adhan, iqamah) for name, adhan, iqamah in formatted_prayer_times}
     if "Fajr" in prayer_map:
         _, adhan, _ = prayer_map["Fajr"]
@@ -78,7 +77,7 @@ def render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown
     
     # Get formatted prayer times for today
     prayer_times = load_prayer_times()
-    formatted_prayer_times = format_table(prayer_times)
+    formatted_prayer_times = get_prayer_times(prayer_times)
     event, prayer, event_time = get_next_event(now, formatted_prayer_times)
     
     current_event = (event, prayer) if event and prayer else (None, None)

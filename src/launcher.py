@@ -404,7 +404,7 @@ class Launcher(tk.Tk):
         
         if self.save_settings():
             self.destroy()
-            subprocess.Popen(["python", "src/main.py"])
+            subprocess.Popen(["python", "-m", "src.main"])
     
     def update_status(self):
         """Update the status label."""

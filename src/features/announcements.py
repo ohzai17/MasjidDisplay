@@ -1,6 +1,6 @@
 # announcements.py
 
-from utils import load_settings, get_text_colors, render_text
+from src.utils import load_settings, get_text_colors, render_text
 
 def render_announcements(screen, scale_x, scale_y, title_font, detail_font, theme_index):
     """Render announcements."""

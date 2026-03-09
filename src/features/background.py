@@ -1,7 +1,7 @@
 # background.py
 
-from config import WHITE, THEMES
-from utils import load_prayer_times
+from src.config import WHITE, THEMES
+from src.utils import load_prayer_times
 
 def render_background(screen, theme_index):
     """Render the background."""

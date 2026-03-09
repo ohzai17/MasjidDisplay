@@ -3,8 +3,8 @@
 import csv
 import json
 import pygame
-from datetime import datetime
-from .config import CSV, SETTINGS, FONT, ARABIC_FONT, PRESET_MAP, BLACK, WHITE, THEMES
+from datetime import datetime, timedelta
+from src.config import CSV, SETTINGS, FONT, ARABIC_FONT, PRESET_MAP, BLACK, WHITE, THEMES
 
 def resize_window(window_preset):
     """Resize the window based on the selected preset and return screen and fonts."""
@@ -51,6 +51,57 @@ def load_prayer_times():
     except FileNotFoundError:
         pass
     return {}
+
+def get_prayer_times(prayer_times):
+    """Return formatted prayer times."""
+    
+    settings = load_settings()
+    
+    DATA = settings['DATA']
+    
+    prayers = [
+        "Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"
+    ]
+    
+    PLACEHOLDER = "––––––––––"
+    formatted_prayer_times = []
+    
+    # If no CSV data for today, show placeholders for all prayers
+    if not prayer_times:
+        for prayer_name in prayers:
+            formatted_prayer_times.append((prayer_name, PLACEHOLDER, PLACEHOLDER))
+        return formatted_prayer_times
+    
+    for prayer_name in prayers:
+        # Get the base time from CSV
+        base_time = prayer_times.get(prayer_name, "")
+        
+        # Manual override from config
+        manual_time = DATA["PRAYERS"].get(prayer_name.upper(), {}).get("ADHAN_TIME", "").strip()
+        
+        # No CSV column for Jummah
+        if prayer_name == "Jummah":
+            adhan_time = manual_time
+        else:
+            adhan_time = manual_time if manual_time else base_time
+        
+        # Format adhan time
+        adhan_time = adhan_time.strip() if adhan_time and adhan_time.strip() else PLACEHOLDER
+        
+        # Calculate Iqamah time
+        iqamah_time = PLACEHOLDER
+        if adhan_time != PLACEHOLDER:
+            iqamah_offset = DATA["PRAYERS"].get(prayer_name.upper(), {}).get("IQAMAH_OFFSET")
+            try:
+                adhan_dt = datetime.strptime(adhan_time, "%I:%M %p")
+                iqamah_dt = adhan_dt + timedelta(minutes=iqamah_offset)
+                iqamah_time = iqamah_dt.strftime("%I:%M %p")
+            except Exception:
+                pass
+        
+        formatted_prayer_times.append((prayer_name, adhan_time, iqamah_time))
+    
+    return formatted_prayer_times
 
 def get_text_colors(theme_index):
     """Return text colors."""
