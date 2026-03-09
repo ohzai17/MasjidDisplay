@@ -4,7 +4,7 @@ import csv
 import json
 import pygame
 from datetime import datetime
-from config import CSV, SETTINGS, FONT, ARABIC_FONT, PRESET_MAP, BLACK, WHITE, THEMES
+from .config import CSV, SETTINGS, FONT, ARABIC_FONT, PRESET_MAP, BLACK, WHITE, THEMES
 
 def resize_window(window_preset):
     """Resize the window based on the selected preset and return screen and fonts."""

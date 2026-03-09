@@ -270,7 +270,7 @@ def fetch_data():
     header = ["Date", "Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"]
     rows = []
     
-    for i in range(365 * 50): # Generate data for 50 years
+    for i in range(365 * 50): # 50 years
         current_date = datetime.now() + timedelta(days=i)
         dt_with_tz = datetime(current_date.year, current_date.month, current_date.day, 12, 0, tzinfo=ZoneInfo(TIMEZONE_NAME))
         offset = dt_with_tz.utcoffset()
@@ -311,10 +311,5 @@ def fetch_data():
         writer.writerows(rows)
         print(f"Prayer times data saved to {CSV}")
 
-def main():
-    """Fetch prayer time data and save to CSV."""
-    
-    fetch_data()
-
 if __name__ == "__main__":
-    main()
+    fetch_data()

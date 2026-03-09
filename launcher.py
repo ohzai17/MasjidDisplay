@@ -8,11 +8,10 @@ import tkinter as tk
 from tkinter import ttk
 from datetime import datetime
 from tkinter import messagebox
+from src.utils import load_settings
+from src.config import CSV, SETTINGS
 from tzlocal import get_localzone_name
 from zoneinfo import available_timezones
-
-SETTINGS = 'data/settings.json'
-CSV = 'data/data.csv'
 
 class Launcher(tk.Tk):
     def __init__(self):
@@ -635,12 +634,6 @@ class Launcher(tk.Tk):
             json.dump(self.settings, f, indent=4)
         
         return True
-
-def load_settings():
-    """Load settings from JSON file."""
-    
-    with open(SETTINGS, "r") as f:
-        return json.load(f)
 
 def ToolTip(widget, text):
     """Create a tooltip for a given widget."""
