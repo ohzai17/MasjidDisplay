@@ -4,7 +4,7 @@ import csv
 import json
 import pygame
 from datetime import datetime, timedelta
-from src.config import CSV, SETTINGS, FONT, ARABIC_FONT, PRESET_MAP, BLACK, WHITE, THEMES
+from src.config import CSV, SETTINGS, FONT, ARABIC_FONT, PRESET_MAP, BLACK, WHITE, GOLD
 
 def resize_window(window_preset):
     """Resize the window based on the selected preset and return screen and fonts."""
@@ -103,10 +103,10 @@ def get_prayer_times(prayer_times):
     
     return formatted_prayer_times
 
-def get_text_colors(theme_index):
+def get_text_colors():
     """Return text colors."""
     
-    return (THEMES[theme_index]["TEXT"], WHITE, BLACK) if load_prayer_times() else (BLACK, BLACK, None)
+    return (GOLD, WHITE, BLACK) if load_prayer_times() else (BLACK, BLACK, None)
 
 def render_text(
     surface, text, font, color, pos,

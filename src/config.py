@@ -5,6 +5,7 @@ CSV = 'data/data.csv'
 SETTINGS = 'data/settings.json'
 FONT = 'assets/fonts/Bebas_Neue/BebasNeue-Regular.ttf' # Obtained from https://fonts.google.com/specimen/Bebas+Neue
 ARABIC_FONT = 'assets/fonts/UKIJTuzKB.ttf' # Obtained from https://fontlibrary.org/en/font/ukij-tuz
+TEXTURE = 'assets/texture.png' # Obtained from https://www.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_297349472.htm
 
 HIJRI_MONTH_NAMES = {
     1: "Muharram",
@@ -36,11 +37,4 @@ def rgb(r,g,b):
 
 BLACK = rgb(0,0,0)
 WHITE = rgb(255,255,255)
-
-THEMES = [
-    {"BACKGROUND": rgb(21,24,27), "TEXT": rgb(139,152,164)},
-    {"BACKGROUND": rgb(8,42,25), "TEXT": rgb(84,221,153)},
-    {"BACKGROUND": rgb(42,8,25), "TEXT": rgb(221,84,153)},
-    {"BACKGROUND": rgb(42,25,8), "TEXT": rgb(221,153,84)},
-    {"BACKGROUND": rgb(8,25,42), "TEXT": rgb(84,153,221)}
-]
+GOLD = rgb(240,204,123)

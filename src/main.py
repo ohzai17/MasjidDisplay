@@ -2,7 +2,6 @@
 
 import pygame
 import subprocess
-from src.config import THEMES
 from src.utils import resize_window
 from src.features.table import render_table
 from src.features.display import render_display
@@ -15,7 +14,6 @@ def main():
     pygame.mouse.set_visible(False)
     
     window_preset = 2
-    theme_index = 0
     
     screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font = resize_window(window_preset)
     
@@ -36,18 +34,14 @@ def main():
                 # Toggle announcements
                 elif event.key == pygame.K_a:
                     show_announcements = not show_announcements
-                # Change themes
-                elif event.key == pygame.K_LEFT:
-                    theme_index = (theme_index - 1) % len(THEMES)
-                elif event.key == pygame.K_RIGHT:
-                    theme_index = (theme_index + 1) % len(THEMES)
         
-        render_background(screen, theme_index)
-        render_display(screen, scale_x, scale_y, clock_font, title_font, detail_font, theme_index)
-        render_table(screen, scale_x, scale_y, table_font, arabic_font, theme_index)
-        render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown_font, show_announcements, theme_index)
+        render_background(screen)
+        render_display(screen, scale_x, scale_y, clock_font, title_font, detail_font)
+        render_table(screen, scale_x, scale_y, table_font, arabic_font)
+        render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown_font, show_announcements)
+        
         if show_announcements:
-            render_announcements(screen, scale_x, scale_y, title_font, detail_font, theme_index)
+            render_announcements(screen, scale_x, scale_y, title_font, detail_font)
         
         pygame.display.flip()
         pygame.time.Clock().tick(15)

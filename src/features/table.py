@@ -6,14 +6,14 @@ from bidi.algorithm import get_display
 from src.features.countdown import get_next_event
 from src.utils import load_prayer_times, get_prayer_times, get_text_colors, render_text
 
-def render_table(screen, scale_x, scale_y, table_font, arabic_font, theme_index):
+def render_table(screen, scale_x, scale_y, table_font, arabic_font):
     """Render the prayer times table."""
     
     arabic_prayers = [
         "فجر", "شروق", "ظهر", "عصر", "مغرب", "عشاء", "جمعة"
     ]
     
-    primary, secondary, tertiary = get_text_colors(theme_index)
+    primary, secondary, tertiary = get_text_colors()
     
     now = datetime.now()
     
