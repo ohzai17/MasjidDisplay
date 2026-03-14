@@ -8,7 +8,7 @@ import tkinter as tk
 from tkinter import ttk
 from datetime import datetime
 from tkinter import messagebox
-from src.utils import load_settings
+from src.data import fetch_data
 from src.config import CSV, SETTINGS
 from tzlocal import get_localzone_name
 from zoneinfo import available_timezones
@@ -20,12 +20,11 @@ class Launcher(tk.Tk):
         super().__init__()
         self.geometry("1400x380")
         self.resizable(False, False)
-        self.bind("<Escape>", lambda event: self.destroy()) # Temporary: Allow exiting with ESC key
         style = ttk.Style()
         style.configure("Button.TButton", font=("TkDefaultFont", 12, "bold"))
         style.configure("Launch.TButton", font=("TkDefaultFont", 12, "bold"), foreground="red")
         
-        self.focus_force() # Temporary: Focus on launcher window
+        self.focus_force()
         
         # Main container for frames
         self.main_frame = ttk.Frame(self)
@@ -420,8 +419,6 @@ class Launcher(tk.Tk):
     
     def generate_csv(self):
         """Generate the CSV file."""
-        
-        from src.data import fetch_data
         
         if self.save_settings():
             try:
