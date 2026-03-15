@@ -31,8 +31,8 @@ def render_table(screen, scale_x, scale_y, table_font, arabic_font):
     columns = [
         (int(225 * scale_x), "left", "Prayer"),
         (int(185 * scale_x), "right", ""),
-        (int(72 * scale_x), "center", "Adhan"),
-        (int(385 * scale_x), "center", "Iqamah"),
+        (int(85 * scale_x), "center", "Adhan"),
+        (int(345 * scale_x), "center", "Iqamah"),
     ]
     
     # Calculate x positions for each column
