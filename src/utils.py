@@ -4,7 +4,9 @@ import csv
 import json
 import pygame
 from datetime import datetime, timedelta
-from src.config import CSV, SETTINGS, FONT, ARABIC_FONT, PRESET_MAP, BLACK, WHITE, GOLD
+from src.config import (
+    CSV, SETTINGS, FONT, ARABIC_FONT, 
+    PLACEHOLDER, PRESET_MAP, BLACK, WHITE, GOLD)
 
 def resize_window(window_preset):
     """Resize the window based on the selected preset and return screen and fonts."""
@@ -63,7 +65,6 @@ def get_prayer_times(prayer_times):
         "Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha", "Jummah"
     ]
     
-    PLACEHOLDER = "––––––––––"
     formatted_prayer_times = []
     
     # If no CSV data for today, show placeholders for all prayers
@@ -92,12 +93,10 @@ def get_prayer_times(prayer_times):
         iqamah_time = PLACEHOLDER
         if adhan_time != PLACEHOLDER:
             iqamah_offset = DATA["PRAYERS"].get(prayer_name.upper(), {}).get("IQAMAH_OFFSET")
-            try:
+            if iqamah_offset is not None:
                 adhan_dt = datetime.strptime(adhan_time, "%I:%M %p")
                 iqamah_dt = adhan_dt + timedelta(minutes=iqamah_offset)
                 iqamah_time = iqamah_dt.strftime("%I:%M %p")
-            except Exception:
-                pass
         
         formatted_prayer_times.append((prayer_name, adhan_time, iqamah_time))
     

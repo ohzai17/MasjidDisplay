@@ -7,6 +7,8 @@ FONT = 'assets/fonts/Bebas_Neue/BebasNeue-Regular.ttf' # Obtained from https://f
 ARABIC_FONT = 'assets/fonts/UKIJTuzKB.ttf' # Obtained from https://fontlibrary.org/en/font/ukij-tuz
 TEXTURE = 'assets/texture.png' # Obtained from https://www.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_297349472.htm
 
+PLACEHOLDER = "––––––––––"
+
 HIJRI_MONTH_NAMES = {
     1: "Muharram",
     2: "Safar",

@@ -309,7 +309,7 @@ def fetch_data():
         writer = csv.writer(f)
         writer.writerow(header)
         writer.writerows(rows)
-        print(f"Prayer times data saved to {CSV}")
+        print("CSV file generated.")
 
 if __name__ == "__main__":
     fetch_data()

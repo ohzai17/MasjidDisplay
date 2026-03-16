@@ -27,17 +27,15 @@ def render_display(screen, scale_x, scale_y, clock_font, title_font, detail_font
     
     # Advance Hijri date if past Maghrib
     hijri_date_dt = now
-    try:
-        maghrib_str = prayer_times.get("Maghrib") if prayer_times else None
-        if maghrib_str:
-            maghrib_time = datetime.strptime(maghrib_str, "%I:%M %p")
-            maghrib_dt = now.replace(
-                hour=maghrib_time.hour, minute=maghrib_time.minute
-            )
-            if now >= maghrib_dt:
-                hijri_date_dt += timedelta(days=1)
-    except Exception:
-        pass
+    
+    maghrib_str = prayer_times.get("Maghrib") if prayer_times else None
+    if maghrib_str:
+        maghrib_time = datetime.strptime(maghrib_str, "%I:%M %p")
+        maghrib_dt = now.replace(
+            hour=maghrib_time.hour, minute=maghrib_time.minute
+        )
+        if now >= maghrib_dt:
+            hijri_date_dt += timedelta(days=1)
     
     # Apply Hijri date adjustment
     hijri_date_dt += timedelta(days=HIJRI_DATE_ADJUSTMENT)

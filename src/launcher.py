@@ -235,7 +235,6 @@ class Launcher(tk.Tk):
                 ttk.Label(table_frame, text=label, anchor="w", font=("TkDefaultFont", 12, "bold")).grid(
                     row=0, column=row, padx=4, pady=2, sticky="nsew"
                 )
-            
             else:
                 ttk.Label(table_frame, text=label, anchor="center", font=("TkDefaultFont", 12, "bold")).grid(
                     row=0, column=row, padx=4, pady=2, sticky="nsew"
@@ -413,7 +412,6 @@ class Launcher(tk.Tk):
                 rows = list(csv.reader(f))[1:]  # Skip header
                 last_date = rows and rows[-1] and rows[-1][0] # Get last date from first column
                 self.status_var.set(f"Last date on file: {last_date}")
-        
         else:
             self.status_var.set("CSV file does not exist.")
     
@@ -550,9 +548,18 @@ class Launcher(tk.Tk):
             time_str = f"{hour}:{minute} {ampm}" if hour and minute and ampm else None
             
             # Ensure Jummah time is selected before saving
-            if label == "Jummah" and not (hour and minute and ampm):
-                messagebox.showerror("Error", "Select hour, minute, and AM/PM for Jummah.")
-                return False
+            if label == "Jummah":
+                if not (hour and minute and ampm):
+                    messagebox.showerror("Error", "Select hour, minute, and AM/PM for Jummah.")
+                    return False
+                
+                # Ensure that Jummah time is between 11:00 AM and 3:00 PM
+                hour_int = int(hour)
+                if ampm == "PM" and hour_int != 12:
+                    hour_int += 12
+                if not (11 <= hour_int <= 15):
+                    messagebox.showerror("Error", "Jummah must be between 11:00 AM and 3:00 PM.")
+                    return False
             
             # Ensure all parts of time are selected before saving
             if (hour and not minute) or (minute and not hour) or ((hour or minute) and not ampm) or (ampm and not (hour and minute)):
