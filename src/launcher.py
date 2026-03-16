@@ -9,6 +9,7 @@ from tkinter import ttk
 from datetime import datetime
 from tkinter import messagebox
 from src.data import fetch_data
+from src.utils import load_settings
 from src.config import CSV, SETTINGS
 from tzlocal import get_localzone_name
 from zoneinfo import available_timezones
@@ -22,7 +23,6 @@ class Launcher(tk.Tk):
         self.resizable(False, False)
         style = ttk.Style()
         style.configure("Button.TButton", font=("TkDefaultFont", 12, "bold"))
-        style.configure("Launch.TButton", font=("TkDefaultFont", 12, "bold"), foreground="red")
         
         self.focus_force()
         
@@ -390,7 +390,7 @@ class Launcher(tk.Tk):
         )
         
         # Launch button at the bottom
-        launch_btn = ttk.Button(self, text="Launch", style="Launch.TButton", command=self.launch)
+        launch_btn = ttk.Button(self, text="Launch", style="Button.TButton", command=self.launch)
         launch_btn.pack(pady=(0, 10))
         ToolTip(launch_btn, launch_info)
     
@@ -523,14 +523,9 @@ class Launcher(tk.Tk):
             return False
         
         for i, announcement in enumerate(announcements):
-            if ':' in announcement:
-                if len(announcement.strip()) > 45:
-                    messagebox.showerror("Error", f"Announcement {i+1} exceeds character limit.")
-                    return False
-            else:
-                if len(announcement.strip()) > 38:
-                    messagebox.showerror("Error", f"Announcement {i+1} exceeds character limit.")
-                    return False
+            if len(announcement.strip()) > 45:
+                messagebox.showerror("Error", f"Announcement {i+1} exceeds character limit.")
+                return False
         
         # Update settings dictionary
         self.settings['DATA']['LOCATION']['LATITUDE'] = latitude

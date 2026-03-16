@@ -25,7 +25,7 @@ def main():
             # Quit on close or escape key
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 running = False
-                # subprocess.Popen(["python", "-m", "src.launcher"])
+                subprocess.Popen(["python", "-m", "src.launcher"])
             elif event.type == pygame.KEYDOWN:
                 # Handle window resizing
                 if event.key in (pygame.K_1, pygame.K_2, pygame.K_3):
