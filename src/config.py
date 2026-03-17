@@ -44,6 +44,6 @@ def alpha(rgb, a):
 
 BLACK = rgb(0,0,0)
 WHITE = rgb(255,255,255)
-GOLD = rgb(240,204,123)
+GOLD = rgb(238,198,105)
 MIDNIGHT_BLUE = rgb(0,0,39)
 ROYAL_BLUE = rgb(0,0,78)

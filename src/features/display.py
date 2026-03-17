@@ -29,6 +29,7 @@ def render_display(screen, scale_x, scale_y, clock_font, title_font, detail_font
     hijri_date_dt = now
     
     maghrib_str = prayer_times.get("Maghrib") if prayer_times else None
+    
     if maghrib_str:
         maghrib_time = datetime.strptime(maghrib_str, "%I:%M %p")
         maghrib_dt = now.replace(
