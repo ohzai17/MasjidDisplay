@@ -13,9 +13,7 @@ def main():
     pygame.init()
     pygame.mouse.set_visible(False)
     
-    window_preset = 2
-    
-    screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font = resize_window(window_preset)
+    screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font = resize_window(window_preset = 2)
     
     running = True
     show_announcements = False
@@ -29,8 +27,8 @@ def main():
             elif event.type == pygame.KEYDOWN:
                 # Handle window resizing
                 if event.key in (pygame.K_1, pygame.K_2, pygame.K_3):
-                    window_preset = {pygame.K_1: 1, pygame.K_2: 2, pygame.K_3: 3}[event.key]
-                    screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font = resize_window(window_preset)
+                    preset = {pygame.K_1: 1, pygame.K_2: 2, pygame.K_3: 3}[event.key]
+                    screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font = resize_window(preset)
                 # Toggle announcements
                 elif event.key == pygame.K_a:
                     show_announcements = not show_announcements
