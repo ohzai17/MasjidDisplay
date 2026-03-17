@@ -37,6 +37,13 @@ def rgb(r,g,b):
     
     return [r,g,b]
 
+def alpha(rgb, a):
+    """Add alpha to RGB color."""
+    
+    return rgb + [a]
+
 BLACK = rgb(0,0,0)
 WHITE = rgb(255,255,255)
 GOLD = rgb(240,204,123)
+MIDNIGHT_BLUE = rgb(0,0,39)
+ROYAL_BLUE = rgb(0,0,78)
