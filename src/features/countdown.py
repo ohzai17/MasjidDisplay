@@ -18,11 +18,10 @@ def get_next_event(now, formatted_prayer_times):
     prayer_map = {name: (name, adhan, iqamah) for name, adhan, iqamah in formatted_prayer_times}
     
     for prayer in prayers:
-        if prayer not in prayer_map:
-            continue
         
         _, adhan, iqamah = prayer_map[prayer]
         
+        # If no Adhan time, skip this prayer
         if adhan == PLACEHOLDER:
             continue
         
@@ -39,6 +38,8 @@ def get_next_event(now, formatted_prayer_times):
             iqamah_dt = datetime.strptime(iqamah, "%I:%M %p").replace(
                 year=now.year, month=now.month, day=now.day
             )
+            
+            # If current time is before Iqamah, return countdown to Iqamah
             if now < iqamah_dt:
                 return ("Iqamah", prayer, iqamah_dt)
     

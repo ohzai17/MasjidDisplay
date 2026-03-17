@@ -15,8 +15,7 @@ def render_background(screen):
         background = pygame.image.load(TEXTURE).convert_alpha()
         background = pygame.transform.smoothscale(background, (screen.get_width(), screen.get_height()))
         background.fill(alpha(ROYAL_BLUE, 0), special_flags=pygame.BLEND_RGBA_ADD)
-        
         screen.blit(background, (0, 0))
-        
+    
     else:
         screen.fill(WHITE)

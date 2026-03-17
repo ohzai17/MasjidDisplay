@@ -80,7 +80,7 @@ def get_prayer_times(prayer_times):
         # Manual override from config
         manual_time = DATA["PRAYERS"].get(prayer_name.upper(), {}).get("ADHAN_TIME", "").strip()
         
-        # No CSV column for Jummah
+        # Use manual time if provided, otherwise use CSV time
         if prayer_name == "Jummah":
             adhan_time = manual_time
         else:
