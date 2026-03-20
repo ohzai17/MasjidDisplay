@@ -1,6 +1,7 @@
 # launcher.py
 
 import os
+import sys
 import csv
 import json
 import subprocess
@@ -391,7 +392,7 @@ class Launcher(tk.Tk):
         
         if self.save_settings():
             self.destroy()
-            subprocess.Popen(["python", "-m", "src.main"])
+            subprocess.Popen([sys.executable, "-m", "src.main"])
     
     def update_status(self):
         """Update the status label."""

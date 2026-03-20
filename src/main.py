@@ -1,5 +1,6 @@
 # main.py
 
+import sys
 import pygame
 import subprocess
 from src.utils import resize_window
@@ -20,15 +21,19 @@ def main():
     
     while running:
         for event in pygame.event.get():
+            
             # Quit on close or escape key
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 running = False
-                subprocess.Popen(["python", "-m", "src.launcher"])
+                subprocess.Popen([sys.executable, "-m", "src.launcher"])
+            
             elif event.type == pygame.KEYDOWN:
+                
                 # Handle window resizing
                 if event.key in (pygame.K_1, pygame.K_2, pygame.K_3):
                     preset = {pygame.K_1: 1, pygame.K_2: 2, pygame.K_3: 3}[event.key]
                     screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font = resize_window(preset)
+                
                 # Toggle announcements
                 elif event.key == pygame.K_a:
                     show_announcements = not show_announcements
