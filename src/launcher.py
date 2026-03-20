@@ -193,17 +193,6 @@ class Launcher(tk.Tk):
         self.middle_frame = ttk.Frame(self.main_frame, relief="ridge")
         self.middle_frame.grid(row=0, column=1, sticky="nsew", padx=(5, 5))
         
-        restore_defaults_help = (
-            "Restore initially loaded settings for the prayer times table.\n"
-        )
-        
-        # Button row in middle frame
-        self.middle_button_frame = ttk.Frame(self.middle_frame)
-        self.middle_button_frame.pack(side="bottom", pady=10)
-        restore_btn = ttk.Button(self.middle_button_frame, text="Restore Defaults", command=self.restore_prayer_defaults, style="Button.TButton")
-        restore_btn.pack(side="left")
-        ToolTip(restore_btn, restore_defaults_help)
-        
         table_help = (
             "Set the fixed Adhan time and Iqamah offset for each prayer.\n\n"
             "Adhan Time: Choose the hour, minute, and AM/PM for the adhan.\n"
@@ -433,27 +422,6 @@ class Launcher(tk.Tk):
         self.adhan_time_hour_entries[i].set("")
         self.adhan_time_minute_entries[i].set("")
         self.adhan_time_ampm_entries[i].set("")
-    
-    def restore_prayer_defaults(self):
-        """Restore the prayer table fields to initial values."""
-        
-        prayers = load_settings()['DATA']['PRAYERS']
-        
-        for i, label in enumerate(self.prayer_labels):
-            
-            prayer = prayers.get(label.upper(), {})
-            adhan_time = prayer.get("ADHAN_TIME", "")
-            iqamah_offset = prayer.get("IQAMAH_OFFSET", 0)
-            
-            hours, minutes, ampm = "", "", ""
-            if adhan_time:
-                hhmm, ampm = adhan_time.split()
-                hours, minutes = hhmm.split(":")
-            
-            self.adhan_time_hour_entries[i].set(hours)
-            self.adhan_time_minute_entries[i].set(minutes)
-            self.adhan_time_ampm_entries[i].set(ampm)
-            self.iqamah_offset_entries[i].set(iqamah_offset)
     
     def restore_display_defaults(self):
         """Restore the display fields to initial values."""
