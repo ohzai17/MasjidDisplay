@@ -390,6 +390,10 @@ class Launcher(tk.Tk):
             messagebox.showerror("Error", "CSV file does not exist. \n\nGenerate before launching.")
             return
         
+        if self.csv_outdated:
+            messagebox.showerror("Error", "CSV file is outdated. \n\nGenerate before launching.")
+            return
+        
         if self.save_settings():
             self.destroy()
             subprocess.Popen([sys.executable, "-m", "src.main"])
@@ -399,9 +403,15 @@ class Launcher(tk.Tk):
         
         if os.path.exists(CSV):
             with open(CSV, newline='') as f:
-                rows = list(csv.reader(f))[1:]  # Skip header
-                last_date = rows and rows[-1] and rows[-1][0] # Get last date from first column
-                self.status_var.set(f"Last date on file: {last_date}")
+                reader = csv.reader(f)
+                rows = [row for row in reader if row]
+                if rows:
+                    last_date = rows[-1][0]
+                    self.status_var.set(f"Last date on file: {last_date}")
+                    self.csv_outdated = False
+                else:
+                    self.status_var.set("CSV file is outdated.")
+                    self.csv_outdated = True
         else:
             self.status_var.set("CSV file does not exist.")
     
