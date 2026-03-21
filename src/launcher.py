@@ -405,13 +405,19 @@ class Launcher(tk.Tk):
             with open(CSV, newline='') as f:
                 reader = csv.reader(f)
                 rows = [row for row in reader if row]
-                if rows:
+                
+                if len(rows) > 1:
                     last_date = rows[-1][0]
-                    self.status_var.set(f"Last date on file: {last_date}")
-                    self.csv_outdated = False
-                else:
-                    self.status_var.set("CSV file is outdated.")
-                    self.csv_outdated = True
+                    
+                    last_date_obj = datetime.strptime(last_date, "%d %b %Y").date()
+                    current_date_obj = datetime.now().date()
+                    
+                    if last_date_obj < current_date_obj:
+                        self.status_var.set("CSV file is outdated.")
+                        self.csv_outdated = True
+                    else:
+                        self.status_var.set(f"Last date on file: {last_date}")
+                        self.csv_outdated = False
         else:
             self.status_var.set("CSV file does not exist.")
     

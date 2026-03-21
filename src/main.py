@@ -18,6 +18,7 @@ def main():
     
     running = True
     show_announcements = False
+    clock = pygame.time.Clock()
     
     while running:
         for event in pygame.event.get():
@@ -47,7 +48,7 @@ def main():
             render_announcements(screen, scale_x, scale_y, title_font, detail_font)
         
         pygame.display.flip()
-        pygame.time.Clock().tick(15)
+        clock.tick(15)
     
     pygame.quit()
 
