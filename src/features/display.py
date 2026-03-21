@@ -66,14 +66,14 @@ def render_display(screen, scale_x, scale_y, clock_font, title_font, detail_font
     
     # Render clock
     render_text(
-        screen, time_str, clock_font, primary,
+        screen, time_str, clock_font, secondary,
         (int(443 * scale_x), int(174 * scale_y)), 
         align="center", shadow_color=tertiary
     )
     
     # Render dates
     render_text(
-        screen, dates, detail_font, secondary,
+        screen, dates, detail_font, primary,
         (int(443 * scale_x), int(68 * scale_y)),
         align="center", shadow_color=tertiary
     )
