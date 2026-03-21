@@ -1,64 +1,9 @@
 # countdown.py
 
-from src.config import PLACEHOLDER
+from datetime import datetime
 from src.audio import generate_beep
-from datetime import datetime, timedelta
-from src.utils import load_prayer_times, get_prayer_times, get_text_colors, render_text
-
-def get_next_event(now, formatted_prayer_times):
-    """Return the next prayer event and its time."""
-    
-    # List of prayers for the day; replace Dhuhr with Jummah on Fridays
-    prayers = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"]
-    
-    if now.weekday() == 4:
-        prayers = ["Fajr", "Sunrise", "Jummah", "Asr", "Maghrib", "Isha"]
-    
-    # Map prayer names to their formatted times for quick lookup
-    prayer_map = {name: (name, adhan, iqamah) for name, adhan, iqamah in formatted_prayer_times}
-    
-    for prayer in prayers:
-        
-        _, adhan, iqamah = prayer_map[prayer]
-        
-        # If no Adhan time, skip this prayer
-        if adhan == PLACEHOLDER:
-            continue
-        
-        adhan_dt = datetime.strptime(adhan, "%I:%M %p").replace(
-            year=now.year, month=now.month, day=now.day
-        )
-        
-        # If current time is before Adhan, return countdown to Adhan
-        if now < adhan_dt:
-            return ("Adhan", prayer, adhan_dt)
-        
-        # If Iqamah time exists and is valid, check for Iqamah event
-        if iqamah != PLACEHOLDER:
-            iqamah_dt = datetime.strptime(iqamah, "%I:%M %p").replace(
-                year=now.year, month=now.month, day=now.day
-            )
-            
-            # If current time is before Iqamah, return countdown to Iqamah
-            if now < iqamah_dt:
-                return ("Iqamah", prayer, iqamah_dt)
-    
-    # If all today's prayers have passed, show next day's Fajr
-    tomorrow = now + timedelta(days=1)
-    
-    # Map prayer names to their formatted times for quick lookup
-    prayer_times = load_prayer_times()
-    formatted_prayer_times = get_prayer_times(prayer_times)
-    prayer_map = {name: (name, adhan, iqamah) for name, adhan, iqamah in formatted_prayer_times}
-    
-    # Get tomorrow's Fajr time
-    _, adhan, _ = prayer_map["Fajr"]
-    if adhan != PLACEHOLDER:
-        adhan_dt = datetime.strptime(adhan, "%I:%M %p").replace(
-            year=tomorrow.year, month=tomorrow.month, day=tomorrow.day
-        )
-        return ("Adhan", "Fajr", adhan_dt)
-    return (None, None, None)
+from src.utils import (
+    load_prayer_times, get_prayer_times, get_next_event, get_text_colors, render_text)
 
 initial_frame = True
 previous_event = None
