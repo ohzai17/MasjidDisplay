@@ -78,7 +78,7 @@ def get_prayer_times(prayer_times):
         base_time = prayer_times.get(prayer_name, "")
         
         # Manual override from config
-        manual_time = DATA["PRAYERS"].get(prayer_name.upper(), {}).get("ADHAN_TIME", "").strip()
+        manual_time = DATA["PRAYERS"][prayer_name.upper()]["ADHAN_TIME"].strip()
         
         # Use manual time if provided, otherwise use CSV time
         if prayer_name == "Jummah":
@@ -92,11 +92,10 @@ def get_prayer_times(prayer_times):
         # Calculate Iqamah time
         iqamah_time = PLACEHOLDER
         if adhan_time != PLACEHOLDER:
-            iqamah_offset = DATA["PRAYERS"].get(prayer_name.upper(), {}).get("IQAMAH_OFFSET")
-            if iqamah_offset is not None:
-                adhan_dt = datetime.strptime(adhan_time, "%I:%M %p")
-                iqamah_dt = adhan_dt + timedelta(minutes=iqamah_offset)
-                iqamah_time = iqamah_dt.strftime("%I:%M %p")
+            iqamah_offset = DATA["PRAYERS"][prayer_name.upper()]["IQAMAH_OFFSET"]
+            adhan_dt = datetime.strptime(adhan_time, "%I:%M %p")
+            iqamah_dt = adhan_dt + timedelta(minutes=iqamah_offset)
+            iqamah_time = iqamah_dt.strftime("%I:%M %p")
         
         formatted_prayer_times.append((prayer_name, adhan_time, iqamah_time))
     
