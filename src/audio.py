@@ -3,7 +3,7 @@
 import pygame
 import numpy as np
 
-def generate_beep(frequency=500, duration=1.5, volume=0.8):
+def generate_beep(frequency=500, duration=1.5, volume=0.1):
     """Generate a beep sound using a sine wave."""
     
     sample_rate = 22050

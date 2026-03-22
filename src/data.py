@@ -270,8 +270,15 @@ def fetch_data():
     header = ["Date", "Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"]
     rows = []
     
-    for i in range(365 * 10): # 10 years
-        current_date = datetime.now() + timedelta(days=i)
+    current_date = datetime.now().date()
+    
+    # Calculate end date 10 years from now, handling leap years.
+    try:
+        end_date = current_date.replace(year=current_date.year + 10)
+    except ValueError:
+        end_date = current_date.replace(year=current_date.year + 10, day=28)
+    
+    while current_date <= end_date:
         dt_with_tz = datetime(current_date.year, current_date.month, current_date.day, 12, 0, tzinfo=ZoneInfo(TIMEZONE_NAME))
         offset = dt_with_tz.utcoffset()
         tz_offset = offset.total_seconds() / 3600 if offset is not None else 0
@@ -303,6 +310,7 @@ def fetch_data():
             float_to_time(times['Isha'])
         ]
         rows.append([date_str] + time_list)
+        current_date += timedelta(days=1)
     
     # Write to CSV file
     with open(CSV, 'w', newline='') as f:
