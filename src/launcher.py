@@ -482,6 +482,18 @@ class Launcher(tk.Tk):
             messagebox.showerror("Error", "Latitude and Longitude must be valid numbers.\n\n(e.g., 43.1548, -75.1426)")
             return False
         
+        if not timezone.strip():
+            messagebox.showerror("Error", "Timezone cannot be empty.")
+            return False
+        
+        if not calculation_method.strip():
+            messagebox.showerror("Error", "Calculation method cannot be empty.")
+            return False
+        
+        if not asr_method.strip():
+            messagebox.showerror("Error", "Asr method cannot be empty.")
+            return False
+        
         # Right frame
         
         name = self.name_entry.get()

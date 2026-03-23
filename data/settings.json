@@ -1,36 +1,32 @@
 {
     "DISPLAY": {
-        "NAME": "Masjid Nurul Islam",
-        "ADDRESS": "615 Rutger St, Utica, NY 13501",
-        "ANNOUNCEMENTS": [
-            "Eid Al-Fitr Salah: Month DD, YYYY @ HH:MM AM",
-            "Eid Al-Adha Salah: Month DD, YYYY @ HH:MM AM",
-            "Zakat Al-Fitr: $XX Per Person"
-        ]
+        "NAME": "",
+        "ADDRESS": "",
+        "ANNOUNCEMENTS": []
     },
     "DATA": {
         "LOCATION": {
-            "LATITUDE": 43.1548,
-            "LONGITUDE": -75.1426,
-            "TIMEZONE_NAME": "America/New_York",
+            "LATITUDE": 0,
+            "LONGITUDE": 0,
+            "TIMEZONE_NAME": "",
             "HIJRI_DATE_ADJUSTMENT": 0
         },
         "CALCULATION": {
-            "METHOD": "ISNA",
-            "JURISTIC_METHOD": "Hanafi"
+            "METHOD": "",
+            "JURISTIC_METHOD": ""
         },
         "PRAYERS": {
             "FAJR": {
                 "ADHAN_TIME": "",
-                "IQAMAH_OFFSET": 15
+                "IQAMAH_OFFSET": 0
             },
             "DHUHR": {
                 "ADHAN_TIME": "",
-                "IQAMAH_OFFSET": 15
+                "IQAMAH_OFFSET": 0
             },
             "ASR": {
                 "ADHAN_TIME": "",
-                "IQAMAH_OFFSET": 15
+                "IQAMAH_OFFSET": 0
             },
             "MAGHRIB": {
                 "ADHAN_TIME": "",
@@ -38,11 +34,11 @@
             },
             "ISHA": {
                 "ADHAN_TIME": "",
-                "IQAMAH_OFFSET": 15
+                "IQAMAH_OFFSET": 0
             },
             "JUMMAH": {
-                "ADHAN_TIME": "12:30 PM",
-                "IQAMAH_OFFSET": 30
+                "ADHAN_TIME": "",
+                "IQAMAH_OFFSET": 0
             }
         }
     }
