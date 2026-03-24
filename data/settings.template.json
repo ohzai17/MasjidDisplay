@@ -1,0 +1,45 @@
+{
+    "DISPLAY": {
+        "NAME": "",
+        "ADDRESS": "",
+        "ANNOUNCEMENTS": []
+    },
+    "DATA": {
+        "LOCATION": {
+            "LATITUDE": 0,
+            "LONGITUDE": 0,
+            "TIMEZONE_NAME": "",
+            "HIJRI_DATE_ADJUSTMENT": 0
+        },
+        "CALCULATION": {
+            "METHOD": "",
+            "JURISTIC_METHOD": ""
+        },
+        "PRAYERS": {
+            "FAJR": {
+                "ADHAN_TIME": "",
+                "IQAMAH_OFFSET": 0
+            },
+            "DHUHR": {
+                "ADHAN_TIME": "",
+                "IQAMAH_OFFSET": 0
+            },
+            "ASR": {
+                "ADHAN_TIME": "",
+                "IQAMAH_OFFSET": 0
+            },
+            "MAGHRIB": {
+                "ADHAN_TIME": "",
+                "IQAMAH_OFFSET": 0
+            },
+            "ISHA": {
+                "ADHAN_TIME": "",
+                "IQAMAH_OFFSET": 0
+            },
+            "JUMMAH": {
+                "ADHAN_TIME": "",
+                "IQAMAH_OFFSET": 0
+            }
+        }
+    }
+}

@@ -3,6 +3,7 @@
 # File paths
 CSV = 'data/data.csv'
 SETTINGS = 'data/settings.json'
+SETTINGS_TEMPLATE = 'data/settings.template.json'
 FONT = 'assets/fonts/Bebas_Neue/BebasNeue-Regular.ttf' # Obtained from https://fonts.google.com/specimen/Bebas+Neue
 ARABIC_FONT = 'assets/fonts/UKIJTuzKB.ttf' # Obtained from https://fontlibrary.org/en/font/ukij-tuz
 TEXTURE = 'assets/texture.png' # Obtained from https://www.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_297349472.htm

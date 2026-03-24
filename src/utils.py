@@ -1,11 +1,13 @@
 # utils.py
 
+import os
 import csv
 import json
+import shutil
 import pygame
 from datetime import datetime, timedelta
 from src.config import (
-    CSV, SETTINGS, FONT, ARABIC_FONT, 
+    CSV, SETTINGS, SETTINGS_TEMPLATE, FONT, ARABIC_FONT, 
     PLACEHOLDER, PRESET_MAP, BLACK, WHITE, GOLD)
 
 def resize_window(window_preset):
@@ -33,11 +35,28 @@ def resize_window(window_preset):
     
     return screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font
 
+
+def get_settings():
+    """Load settings, restoring from template if needed."""
+    
+    # Create settings file from template if file not found
+    if not os.path.exists(SETTINGS):
+        shutil.copyfile(SETTINGS_TEMPLATE, SETTINGS)
+    
+    try:
+        # Load settings from file
+        with open(SETTINGS, "r") as file:
+            return json.load(file)
+    except (json.JSONDecodeError, OSError):
+        # If file is corrupted or unreadable, restore from template
+        shutil.copyfile(SETTINGS_TEMPLATE, SETTINGS)
+        with open(SETTINGS, "r") as file:
+            return json.load(file)
+
 def load_settings():
     """Load settings from JSON file."""
-    
-    with open(SETTINGS, 'r') as file:
-        return json.load(file)
+
+    return get_settings()
 
 def load_prayer_times():
     """Load today's prayer times from CSV."""
