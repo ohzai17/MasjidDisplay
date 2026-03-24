@@ -140,15 +140,9 @@ def get_next_event(now, formatted_prayer_times):
             if now < iqamah_dt:
                 return ("Iqamah", prayer, iqamah_dt)
     
-    # If all today's prayers have passed, show next day's Fajr
+    # If all today's prayers have passed, return countdown to next day's Fajr
     tomorrow = now + timedelta(days=1)
     
-    # Map prayer names to their formatted times for quick lookup
-    prayer_times = load_prayer_times()
-    formatted_prayer_times = get_prayer_times(prayer_times)
-    prayer_map = {name: (name, adhan, iqamah) for name, adhan, iqamah in formatted_prayer_times}
-    
-    # Get tomorrow's Fajr time
     _, adhan, _ = prayer_map["Fajr"]
     if adhan != PLACEHOLDER:
         adhan_dt = datetime.strptime(adhan, "%I:%M %p").replace(
