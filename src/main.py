@@ -15,7 +15,7 @@ def main():
     pygame.display.set_caption("Masjid Display")
     pygame.mouse.set_visible(False)
     
-    screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font = resize_window(window_preset = 2)
+    screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font = resize_window(window_preset=2)
     
     running = True
     show_announcements = False

@@ -386,7 +386,7 @@ class Launcher(tk.Tk):
         """Launch the main application."""
         
         if not os.path.exists(CSV):
-            messagebox.showerror("Error", "CSV file does not exist. \n\nGenerate before launching.")
+            messagebox.showerror("Error", "CSV file not found. \n\nGenerate before launching.")
             return
         
         if self.csv_outdated:
@@ -418,7 +418,7 @@ class Launcher(tk.Tk):
                         self.status_var.set(f"Last date on file: {last_date}")
                         self.csv_outdated = False
         else:
-            self.status_var.set("CSV file does not exist.")
+            self.status_var.set("CSV file not found.")
     
     def generate_csv(self):
         """Generate the CSV file."""
