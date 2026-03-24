@@ -15,6 +15,8 @@ def render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown
     
     primary, secondary, tertiary = get_text_colors()
     
+    beep = generate_beep()
+    
     now = datetime.now()
     
     # Get formatted prayer times for today
@@ -26,7 +28,8 @@ def render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown
     
     # Check if event has changed and trigger beep
     if not initial_frame and current_event != previous_event and current_event != (None, None):
-        generate_beep().play()
+        if beep:
+            beep.play()
     
     # Reset initial frame and update previous event
     initial_frame = False
