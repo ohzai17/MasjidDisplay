@@ -4,7 +4,6 @@ import os
 import sys
 import csv
 import json
-import subprocess
 import tkinter as tk
 from tkinter import ttk
 from datetime import datetime
@@ -396,7 +395,7 @@ class Launcher(tk.Tk):
         
         if self.save_settings():
             self.destroy()
-            subprocess.Popen([sys.executable, "-m", "src.main"])
+            os.execv(sys.executable, [sys.executable, "-m", "src.main"])
     
     def update_status(self):
         """Update the status label."""

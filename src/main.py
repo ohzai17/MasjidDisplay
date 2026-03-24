@@ -1,8 +1,8 @@
 # main.py
 
+import os
 import sys
 import pygame
-import subprocess
 from src.utils import resize_window
 from src.features.table import render_table
 from src.features.display import render_display
@@ -12,6 +12,7 @@ from src.features.announcements import render_announcements
 
 def main():
     pygame.init()
+    pygame.display.set_caption("Masjid Display")
     pygame.mouse.set_visible(False)
     
     screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font = resize_window(window_preset = 2)
@@ -26,7 +27,7 @@ def main():
             # Quit on close or escape key
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 running = False
-                subprocess.Popen([sys.executable, "-m", "src.launcher"])
+                os.execv(sys.executable, [sys.executable, "-m", "src.launcher"])
             
             elif event.type == pygame.KEYDOWN:
                 
