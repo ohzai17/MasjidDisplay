@@ -146,7 +146,7 @@ MasjidDisplay/
 
 ## Future Plans
 
-The next phase is an attendee-focused web page for viewing Masjid adhan times on mobile and desktop.
+The next phase is an attendee-focused web page (mobile and desktop) that displays the current date and Hijri date, a live clock, all five daily prayers plus Jummah with Adhan and Iqamah times, and a countdown to the next event.
 
 ## Setup
 
