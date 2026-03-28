@@ -212,7 +212,7 @@ class Launcher(tk.Tk):
         minutes_options = [""] + [f"{i:02d}" for i in range(0, 60, 5)]
         ampm_options = [""] + ["AM", "PM"]
         
-        offset_options = [f"{i}" for i in [0, 5, 10, 15, 30]]
+        offset_options = [f"{i}" for i in [0, 5, 10, 15, 20, 30]]
         
         # Table frame
         table_frame = ttk.Frame(self.middle_frame)

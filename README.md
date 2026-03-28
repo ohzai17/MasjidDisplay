@@ -303,7 +303,7 @@ Set how many minutes after Adhan the Iqamah will be announced.
 
 - **Restore Defaults:** Only restores initially loaded Masjid Information fields (Name, Address, Announcements). It does **not** reset location, calculation, or timetables.
 - **Clearing Rows:** Each prayer row has an **X** button that clears Hour, Minute, and AM/PM together.
-- **Iqamah Offsets:** Fixed options only (`0`, `5`, `10`, `15`, `30` minutes).
+- **Iqamah Offsets:** Fixed options only (`0`, `5`, `10`, `15`, `20`, `30` minutes).
 - **CSV Generation:** Validates and saves current settings before generating. Applies the selected IANA timezone with per-day UTC offset handling (DST changes are reflected).
 - **Status Indicators:** Shows either the CSV last date on file or an outdated/missing CSV message. The file is outdated when the final date is earlier than today.
 
