@@ -1,21 +1,21 @@
 # countdown.py
 
+import pygame
+from src.config import BEEP
 from datetime import datetime
-from src.audio import generate_beep
 from src.utils import (
     load_prayer_times, get_prayer_times, get_next_event, get_text_colors, render_text)
 
-initial_frame = True
-previous_event = None
+# Track if beep has been played for current countdown
+beep_played = False
+last_event_time = None
 
 def render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown_font, show_announcements):
     """Render countdown to next prayer event."""
     
-    global initial_frame, previous_event
+    global beep_played, last_event_time
     
     primary, secondary, tertiary = get_text_colors()
-    
-    beep = generate_beep()
     
     now = datetime.now()
     
@@ -24,22 +24,22 @@ def render_countdown(screen, scale_x, scale_y, clock_font, title_font, countdown
     formatted_prayer_times = get_prayer_times(prayer_times)
     event, prayer, event_time = get_next_event(now, formatted_prayer_times)
     
-    current_event = (event, prayer) if event and prayer else (None, None)
-    
-    # Check if event has changed and trigger beep
-    if not initial_frame and current_event != previous_event and current_event != (None, None):
-        if beep:
-            beep.play()
-    
-    # Reset initial frame and update previous event
-    initial_frame = False
-    previous_event = current_event
-    
     if event and prayer and event_time:
+        
+        # Reset beep flag if event time has changed
+        if event_time != last_event_time:
+            beep_played = False
+            last_event_time = event_time
         
         # Calculate countdown to next event
         delta = event_time - now
-        total_seconds = max(0, int(delta.total_seconds())) + 1
+        total_seconds = max(0, int(delta.total_seconds()))
+        
+        # Play beep when timer reaches zero
+        if total_seconds <= 0 and not beep_played:
+            pygame.mixer.Sound(BEEP).play()
+            beep_played = True
+        
         hours, remainder = divmod(total_seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
         
