@@ -4,6 +4,7 @@ import os
 import sys
 import csv
 import json
+import sv_ttk
 import tkinter as tk
 from tkinter import ttk
 from datetime import datetime
@@ -19,9 +20,10 @@ class Launcher(tk.Tk):
         """Initialize the launcher window."""
         
         super().__init__()
-        self.geometry("1400x380")
+        self.geometry("1500x380")
         self.resizable(False, False)
         style = ttk.Style()
+        sv_ttk.set_theme("dark")
         style.configure("Button.TButton", font=("TkDefaultFont", 12, "bold"))
         
         self.focus_force()
@@ -292,8 +294,8 @@ class Launcher(tk.Tk):
         self.right_button_frame = ttk.Frame(self.right_frame)
         self.right_button_frame.pack(side="bottom", pady=10)
         restore_btn = ttk.Button(self.right_button_frame, text="Restore Defaults", command=self.restore_display_defaults, style="Button.TButton")
-        ToolTip(restore_btn, restore_defaults_help)
         restore_btn.pack(side="left")
+        ToolTip(restore_btn, restore_defaults_help)
         
         masjid_info_help = (
             "Set the display information for your masjid.\n"
@@ -378,8 +380,10 @@ class Launcher(tk.Tk):
         )
         
         # Launch button at the bottom
-        launch_btn = ttk.Button(self, text="Launch", style="Button.TButton", command=self.launch)
-        launch_btn.pack(pady=(0, 10))
+        self.middle_button_frame = ttk.Frame(self.middle_frame)
+        self.middle_button_frame.pack(side="bottom", pady=10)
+        launch_btn = ttk.Button(self.middle_button_frame, text="Launch", style="Button.TButton", command=self.launch)
+        launch_btn.pack(side="left")
         ToolTip(launch_btn, launch_info)
     
     def launch(self):

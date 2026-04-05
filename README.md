@@ -90,8 +90,7 @@ The Pygame display renders:
 
 - If no valid prayer data exists for today, placeholders are shown.
 - Text color scheme changes based on data availability.
-- A beep sound is played when the current upcoming event changes.
-  - If the audio device is unavailable or mixer initialization fails, the beep is silently skipped (app continues running without audio).
+- A beep sound is played when the countdown reaches zero.
 - On Fridays, countdown logic uses `Jummah` instead of `Dhuhr`.
 - After all today's prayers have passed, the display shows a countdown to tomorrow's Fajr using today's prayer schedule.
 
@@ -107,6 +106,7 @@ MasjidDisplay/
 │   │   ├── UKIJTuzKB.ttf
 │   │   └── Bebas_Neue/
 │   │       └── BebasNeue-Regular.ttf
+│   ├── beep.wav
 │   └── texture.png
 ├── data/
 │   ├── data.csv
@@ -315,7 +315,7 @@ Set how many minutes after Adhan the Iqamah will be announced.
 
 - **Fallback View:** Switches to a fallback view (white background) if no valid prayer data exists for today.
 
-- **Audio Beep:** Triggered when the upcoming event changes, but not on the initial frame after startup.
+- **Audio Beep:** Triggered when the countdown reaches zero.
 
 - **Countdown:** Shows one dominant unit at a time (`Hours`, `Minutes`, or `Seconds`). Targets next day's Fajr if all daily events pass.
 
@@ -423,9 +423,9 @@ Per prayer (`FAJR`, `DHUHR`, `ASR`, `MAGHRIB`, `ISHA`, `JUMMAH`):
   - Confirm today's date is present in `data/data.csv`.
   - Regenerate CSV from launcher.
 
-- **No Beep on Event Change:**
+- **No Beep at Zero Seconds:**
   - Check system volume and output device.
-  - Ensure audio is available on the machine running Pygame (if unavailable, beep silently falls back).
+  - Confirm `assets/beep.wav` exists.
 
 - **Reset Settings to Defaults:**
   - Delete `data/settings.json`.
@@ -441,6 +441,7 @@ The project currently uses:
 - `tzlocal`
 - `arabic_reshaper`
 - `python-bidi`
+- `sv_ttk`
 
 See [requirements.txt](requirements.txt) for pinned versions.
 
@@ -449,6 +450,7 @@ See [requirements.txt](requirements.txt) for pinned versions.
 This project uses the following external assets:
 
 - **Texture Background:** Used for `assets/texture.png`. Sourced from [Freepik](https://www.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_297349472.htm) and licensed under the **Freepik License**.
+- **Beep Sound:** Used for `assets/beep.wav`. Generated locally using [src/audio.py](src/audio.py).
 - **Bebas Neue Font:** Used for `assets/fonts/Bebas_Neue/BebasNeue-Regular.ttf`. Sourced from [Google Fonts](https://fonts.google.com/specimen/Bebas+Neue) and licensed under the **SIL Open Font License 1.1 (OFL)**.
 - **Arabic Font (UKIJ Tuz):** Used for `assets/fonts/UKIJTuzKB.ttf`. Sourced from [Font Library](https://fontlibrary.org/en/font/ukij-tuz) and licensed under the **SIL Open Font License 1.1 (OFL)**.
 
