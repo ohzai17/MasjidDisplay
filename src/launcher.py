@@ -66,7 +66,7 @@ class Launcher(tk.Tk):
             "After entering your settings, click 'Generate CSV' to fetch prayer times data.\n"
         )
         
-        title = ttk.Label(self.left_frame, text="Location & Calculation", font=("TkDefaultFont", 12, "bold", "underline"))
+        title = ttk.Label(self.left_frame, text="Location & Calculation", font=("TkDefaultFont", 12, "bold"))
         title.pack(side="top", pady=10)
         ToolTip(title, loccal_help)
         
@@ -203,7 +203,7 @@ class Launcher(tk.Tk):
             "Leave fields blank to use calculated times instead of fixed times.\n"
         )
         
-        title = ttk.Label(self.middle_frame, text="Prayer Times Table", font=("TkDefaultFont", 12, "bold", "underline"))
+        title = ttk.Label(self.middle_frame, text="Prayer Times Table", font=("TkDefaultFont", 12, "bold"))
         title.pack(side="top", pady=10)
         ToolTip(title, table_help)
         
@@ -301,7 +301,7 @@ class Launcher(tk.Tk):
             "Set the display information for your masjid.\n"
         )
         
-        title = ttk.Label(self.right_frame, text="Masjid Information", font=("TkDefaultFont", 12, "bold", "underline"))
+        title = ttk.Label(self.right_frame, text="Masjid Information", font=("TkDefaultFont", 12, "bold"))
         title.pack(side="top", pady=10)
         ToolTip(title, masjid_info_help)
         
@@ -427,7 +427,7 @@ class Launcher(tk.Tk):
     def generate_csv(self):
         """Generate the CSV file."""
         
-        if self.save_settings():
+        if self.save_csv_settings():
             try:
                 fetch_data()
                 self.status_var.set("CSV file generated.")
@@ -458,8 +458,8 @@ class Launcher(tk.Tk):
         for i, entry in enumerate(self.announcement_entries):
             entry.set(announcements[i] if i < len(announcements) else "")
     
-    def validate_settings(self):
-        """Validate settings before saving."""
+    def validate_left_frame_settings(self):
+        """Validate the left frame settings before saving."""
         
         # Left frame
         
@@ -497,33 +497,6 @@ class Launcher(tk.Tk):
             messagebox.showerror("Error", "Asr method cannot be empty.")
             return False
         
-        # Right frame
-        
-        name = self.name_entry.get()
-        address = self.address_entry.get()
-        announcements = [i.get() for i in self.announcement_entries if i.get()]
-        
-        # Input validation
-        if not name.strip():
-            messagebox.showerror("Error", "Masjid Name cannot be empty.")
-            return False
-        
-        if len(name) > 20:
-            messagebox.showerror("Error", "Masjid Name exceeds character limit.")
-            return False
-        
-        if not address.strip():
-            messagebox.showerror("Error", "Masjid Address cannot be empty.")
-            return False
-        
-        if len(address) > 35:
-            messagebox.showerror("Error", "Masjid Address exceeds character limit.")
-            return False
-        
-        for i, announcement in enumerate(announcements):
-            if len(announcement.strip()) > 45:
-                messagebox.showerror("Error", f"Announcement {i+1} exceeds character limit.")
-                return False
         
         # Update settings dictionary
         self.settings['DATA']['LOCATION']['LATITUDE'] = latitude
@@ -532,9 +505,11 @@ class Launcher(tk.Tk):
         self.settings['DATA']['LOCATION']['HIJRI_DATE_ADJUSTMENT'] = hijri_date_adjustment
         self.settings['DATA']['CALCULATION']['METHOD'] = calculation_method
         self.settings['DATA']['CALCULATION']['JURISTIC_METHOD'] = asr_method
-        self.settings['DISPLAY']['NAME'] = name
-        self.settings['DISPLAY']['ADDRESS'] = address
-        self.settings['DISPLAY']['ANNOUNCEMENTS'] = announcements
+        
+        return True
+    
+    def validate_middle_frame_settings(self):
+        """Validate the middle frame settings before saving."""
         
         # Middle frame
         
@@ -620,6 +595,69 @@ class Launcher(tk.Tk):
             
             # Update settings
             self.settings['DATA']['PRAYERS'][label.upper()] = prayer_dict
+        
+        return True
+    
+    def validate_right_frame_settings(self):
+        """Validate the right frame settings before saving."""
+        
+        # Right frame
+        
+        name = self.name_entry.get()
+        address = self.address_entry.get()
+        announcements = [i.get() for i in self.announcement_entries if i.get()]
+        
+        # Input validation
+        if not name.strip():
+            messagebox.showerror("Error", "Masjid Name cannot be empty.")
+            return False
+        
+        if len(name) > 20:
+            messagebox.showerror("Error", "Masjid Name exceeds character limit.")
+            return False
+        
+        if not address.strip():
+            messagebox.showerror("Error", "Masjid Address cannot be empty.")
+            return False
+        
+        if len(address) > 35:
+            messagebox.showerror("Error", "Masjid Address exceeds character limit.")
+            return False
+        
+        for i, announcement in enumerate(announcements):
+            if len(announcement.strip()) > 45:
+                messagebox.showerror("Error", f"Announcement {i+1} exceeds character limit.")
+                return False
+        
+        # Update settings dictionary
+        self.settings['DISPLAY']['NAME'] = name
+        self.settings['DISPLAY']['ADDRESS'] = address
+        self.settings['DISPLAY']['ANNOUNCEMENTS'] = announcements
+        
+        return True
+    
+    def validate_settings(self):
+        """Validate all settings before saving."""
+        
+        if not self.validate_left_frame_settings():
+            return False
+        
+        if not self.validate_middle_frame_settings():
+            return False
+        
+        if not self.validate_right_frame_settings():
+            return False
+        
+        return True
+    
+    def save_csv_settings(self):
+        """Save CSV settings to JSON file."""
+        
+        if not self.validate_left_frame_settings():
+            return False
+        
+        with open(SETTINGS, "w") as f:
+            json.dump(self.settings, f, indent=4)
         
         return True
     
