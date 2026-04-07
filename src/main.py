@@ -1,11 +1,9 @@
 # main.py
 
-import os
-import sys
 import pygame
-from src.utils import resize_window
 from src.features.table import render_table
 from src.features.display import render_display
+from src.utils import resize_window, launch_module
 from src.features.countdown import render_countdown
 from src.features.background import render_background
 from src.features.announcements import render_announcements
@@ -27,7 +25,7 @@ def main():
             # Quit on close or escape key
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 running = False
-                os.execv(sys.executable, [sys.executable, "-m", "src.launcher"])
+                launch_module("src.launcher")
             
             elif event.type == pygame.KEYDOWN:
                 

@@ -10,17 +10,18 @@ from tkinter import ttk
 from datetime import datetime
 from tkinter import messagebox
 from src.data import fetch_data
-from src.utils import load_settings
 from src.config import CSV, SETTINGS
 from tzlocal import get_localzone_name
 from zoneinfo import available_timezones
+from src.utils import load_settings, launch_module
 
 class Launcher(tk.Tk):
     def __init__(self):
         """Initialize the launcher window."""
         
         super().__init__()
-        self.geometry("1500x380")
+        self.title("Masjid Display Launcher")
+        self.geometry("1660x380")
         self.resizable(False, False)
         style = ttk.Style()
         sv_ttk.set_theme("dark")
@@ -399,7 +400,7 @@ class Launcher(tk.Tk):
         
         if self.save_settings():
             self.destroy()
-            os.execv(sys.executable, [sys.executable, "-m", "src.main"])
+            launch_module("src.main")
     
     def update_status(self):
         """Update the status label."""

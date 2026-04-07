@@ -152,11 +152,11 @@ The next phase is an attendee-focused web page (mobile and desktop) that display
 
 ### 1. Create and Activate Virtual Environment
 
-Using `venv` is recommended to isolate project dependencies. *Note: If `python3` is not available on your system, try `python` instead (ensure it points to Python 3.12.x).*
+Using `venv` is recommended to isolate project dependencies.
 
 ```bash
 # Create virtual environment
-python3 -m venv .venv
+python -m venv .venv
 
 # Activate (macOS)
 source .venv/bin/activate
