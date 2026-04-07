@@ -25,7 +25,19 @@ class Launcher(tk.Tk):
         self.resizable(False, False)
         style = ttk.Style()
         sv_ttk.set_theme("dark")
-        style.configure("Button.TButton", font=("TkDefaultFont", 12, "bold"))
+        
+        # Font options
+        if sys.platform == "win32":
+            self.font = ("Arial", 12)
+        else:
+            self.font = ("Arial", 16)
+        
+        family, size = self.font
+        self.bold_font = (family, size, "bold")
+        self.italic_font = (family, size, "italic")
+        
+        style.configure("TButton", font=self.bold_font)
+        self.option_add("*TCombobox*Listbox.font", self.font)
         
         self.focus_force()
         
@@ -58,7 +70,7 @@ class Launcher(tk.Tk):
         # Button row in left frame
         self.left_button_frame = ttk.Frame(self.left_frame)
         self.left_button_frame.pack(side="bottom", pady=10)
-        generate_csv_btn = ttk.Button(self.left_button_frame, text="Generate CSV", command=self.generate_csv, style="Button.TButton")
+        generate_csv_btn = ttk.Button(self.left_button_frame, text="Generate CSV", command=self.generate_csv)
         generate_csv_btn.pack(side="left")
         ToolTip(generate_csv_btn, generate_csv_help)
         
@@ -67,13 +79,13 @@ class Launcher(tk.Tk):
             "After entering your settings, click 'Generate CSV' to fetch prayer times data.\n"
         )
         
-        title = ttk.Label(self.left_frame, text="Location & Calculation", font=("TkDefaultFont", 12, "bold"))
+        title = ttk.Label(self.left_frame, text="Location & Calculation", font=self.bold_font)
         title.pack(side="top", pady=10)
         ToolTip(title, loccal_help)
         
         # Status label
         self.status_var = tk.StringVar()
-        self.status_entry = ttk.Entry(self.left_frame, textvariable=self.status_var, state="readonly", justify="center")
+        self.status_entry = ttk.Label(self.left_frame, textvariable=self.status_var, anchor="center", font=self.italic_font)
         self.status_entry.pack(side="bottom", fill="x", padx=10)
         self.update_status()
         
@@ -107,7 +119,7 @@ class Launcher(tk.Tk):
         for row, label in enumerate(setting_labels):
             
             # Labels
-            settings_label = ttk.Label(settings_frame, text=label, anchor="w", font=("TkDefaultFont", 12, "bold"))
+            settings_label = ttk.Label(settings_frame, text=label, anchor="w", font=self.bold_font)
             settings_label.grid(row=row, column=0, padx=4, pady=2, sticky="w")
             
             latlon_help = (
@@ -147,42 +159,42 @@ class Launcher(tk.Tk):
             
             # Latitude
             if row == 0:
-                self.latitude_entry = ttk.Entry(settings_frame, width=25)
+                self.latitude_entry = ttk.Entry(settings_frame, width=25, font=self.font)
                 self.latitude_entry.insert(0, latitude)
                 self.latitude_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
                 ToolTip(settings_label, latlon_help)
             
             # Longitude
             elif row == 1:
-                self.longitude_entry = ttk.Entry(settings_frame, width=25)
+                self.longitude_entry = ttk.Entry(settings_frame, width=25, font=self.font)
                 self.longitude_entry.insert(0, longitude)
                 self.longitude_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
                 ToolTip(settings_label, latlon_help)
             
             # Timezone
             elif row == 2:
-                self.timezone_entry = ttk.Combobox(settings_frame, values=timezone_options, state="readonly", width=25)
+                self.timezone_entry = ttk.Combobox(settings_frame, values=timezone_options, state="readonly", width=25, font=self.font)
                 self.timezone_entry.set(timezone)
                 self.timezone_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
                 ToolTip(settings_label, timezone_help)
                 
             # Hijri Date Adjustment
             elif row == 3:
-                self.hijri_date_adjustment_entry = ttk.Combobox(settings_frame, values=hijri_date_adjustment_options, state="readonly", width=25)
+                self.hijri_date_adjustment_entry = ttk.Combobox(settings_frame, values=hijri_date_adjustment_options, state="readonly", width=25, font=self.font)
                 self.hijri_date_adjustment_entry.set(str(hijri_date_adjustment))
                 self.hijri_date_adjustment_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
                 ToolTip(settings_label, hijri_adj_help)
             
             # Calculation Method
             elif row == 4:
-                self.calculation_method_entry = ttk.Combobox(settings_frame, values=calculation_method_options, state="readonly", width=25)
+                self.calculation_method_entry = ttk.Combobox(settings_frame, values=calculation_method_options, state="readonly", width=25, font=self.font)
                 self.calculation_method_entry.set(calculation_method)
                 self.calculation_method_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
                 ToolTip(settings_label, calc_method_help)
             
             # Asr Method
             elif row == 5:
-                self.asr_method_entry = ttk.Combobox(settings_frame, values=asr_method_options, state="readonly", width=25)
+                self.asr_method_entry = ttk.Combobox(settings_frame, values=asr_method_options, state="readonly", width=25, font=self.font)
                 self.asr_method_entry.set(asr_method)
                 self.asr_method_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
                 ToolTip(settings_label, asr_method_help)
@@ -204,7 +216,7 @@ class Launcher(tk.Tk):
             "Leave fields blank to use calculated times instead of fixed times.\n"
         )
         
-        title = ttk.Label(self.middle_frame, text="Prayer Times Table", font=("TkDefaultFont", 12, "bold"))
+        title = ttk.Label(self.middle_frame, text="Prayer Times Table", font=self.bold_font)
         title.pack(side="top", pady=10)
         ToolTip(title, table_help)
         
@@ -224,11 +236,11 @@ class Launcher(tk.Tk):
         # Header row
         for row, label in enumerate(header):
             if label == "Prayer":
-                ttk.Label(table_frame, text=label, anchor="w", font=("TkDefaultFont", 12, "bold")).grid(
+                ttk.Label(table_frame, text=label, anchor="w", font=self.bold_font).grid(
                     row=0, column=row, padx=4, pady=2, sticky="nsew"
                 )
             else:
-                ttk.Label(table_frame, text=label, anchor="center", font=("TkDefaultFont", 12, "bold")).grid(
+                ttk.Label(table_frame, text=label, anchor="center", font=self.bold_font).grid(
                     row=0, column=row, padx=4, pady=2, sticky="nsew"
                 )
         
@@ -251,20 +263,20 @@ class Launcher(tk.Tk):
                 hours, minutes = hhmm.split(":")
             
             # Prayer Names
-            ttk.Label(table_frame, text=label, anchor="w", font=("TkDefaultFont", 12, "bold")).grid(
+            ttk.Label(table_frame, text=label, anchor="w", font=self.bold_font).grid(
                 row=row, column=0, padx=4, pady=2, sticky="nsew"
             )
             
             # Adhan Time
-            hour_entry = ttk.Combobox(table_frame, values=hours_options, state="readonly", width=5)
+            hour_entry = ttk.Combobox(table_frame, values=hours_options, state="readonly", width=5, font=self.font)
             hour_entry.set(hours)
             hour_entry.grid(row=row, column=1, padx=4, pady=2, sticky="nsew")
             self.adhan_time_hour_entries.append(hour_entry)
-            minute_entry = ttk.Combobox(table_frame, values=minutes_options, state="readonly", width=5)
+            minute_entry = ttk.Combobox(table_frame, values=minutes_options, state="readonly", width=5, font=self.font)
             minute_entry.set(minutes)
             minute_entry.grid(row=row, column=2, padx=4, pady=2, sticky="nsew")
             self.adhan_time_minute_entries.append(minute_entry)
-            ampm_entry = ttk.Combobox(table_frame, values=ampm_options, state="readonly", width=5)
+            ampm_entry = ttk.Combobox(table_frame, values=ampm_options, state="readonly", width=5, font=self.font)
             ampm_entry.set(ampm)
             ampm_entry.grid(row=row, column=3, padx=4, pady=2, sticky="nsew")
             self.adhan_time_ampm_entries.append(ampm_entry)
@@ -273,7 +285,7 @@ class Launcher(tk.Tk):
                 ).grid(row=row, column=4, padx=4, pady=2, sticky="nsew")
             
             # Iqamah Offset
-            iqamah_offset_entry = ttk.Combobox(table_frame, values=offset_options, state="readonly", width=5)
+            iqamah_offset_entry = ttk.Combobox(table_frame, values=offset_options, state="readonly", width=5, font=self.font)
             iqamah_offset_entry.set(iqamah_offset)
             iqamah_offset_entry.grid(row=row, column=5, padx=4, pady=2, sticky="nsew")
             self.iqamah_offset_entries.append(iqamah_offset_entry)
@@ -294,7 +306,7 @@ class Launcher(tk.Tk):
         # Button row in right frame
         self.right_button_frame = ttk.Frame(self.right_frame)
         self.right_button_frame.pack(side="bottom", pady=10)
-        restore_btn = ttk.Button(self.right_button_frame, text="Restore Defaults", command=self.restore_display_defaults, style="Button.TButton")
+        restore_btn = ttk.Button(self.right_button_frame, text="Restore Defaults", command=self.restore_display_defaults)
         restore_btn.pack(side="left")
         ToolTip(restore_btn, restore_defaults_help)
         
@@ -302,7 +314,7 @@ class Launcher(tk.Tk):
             "Set the display information for your masjid.\n"
         )
         
-        title = ttk.Label(self.right_frame, text="Masjid Information", font=("TkDefaultFont", 12, "bold"))
+        title = ttk.Label(self.right_frame, text="Masjid Information", font=self.bold_font)
         title.pack(side="top", pady=10)
         ToolTip(title, masjid_info_help)
         
@@ -338,31 +350,31 @@ class Launcher(tk.Tk):
         )
         
         # Masjid Name
-        name_label = ttk.Label(display_frame, text="Name", anchor="center", font=("TkDefaultFont", 12, "bold"))
+        name_label = ttk.Label(display_frame, text="Name", anchor="center", font=self.bold_font)
         name_label.grid(row=0, column=0, padx=4, pady=2, sticky="ew")
         ToolTip(name_label, name_help)
         
-        self.name_entry = ttk.Entry(display_frame, width=30, justify="center")
+        self.name_entry = ttk.Entry(display_frame, width=30, justify="center", font=self.font)
         self.name_entry.insert(0, name)
         self.name_entry.grid(row=1, column=0, padx=4, pady=2, sticky="ew")
         
         # Masjid Address
-        address_label = ttk.Label(display_frame, text="Address", anchor="center", font=("TkDefaultFont", 12, "bold"))
+        address_label = ttk.Label(display_frame, text="Address", anchor="center", font=self.bold_font)
         address_label.grid(row=2, column=0, padx=4, pady=(8, 2), sticky="ew")
         ToolTip(address_label, address_help)
         
-        self.address_entry = ttk.Entry(display_frame, width=30, justify="center")
+        self.address_entry = ttk.Entry(display_frame, width=30, justify="center", font=self.font)
         self.address_entry.insert(0, address)
         self.address_entry.grid(row=3, column=0, padx=4, pady=2, sticky="ew")
         
         # Announcements
-        announcement_label = ttk.Label(display_frame, text="Announcements", anchor="center", font=("TkDefaultFont", 12, "bold"))
+        announcement_label = ttk.Label(display_frame, text="Announcements", anchor="center", font=self.bold_font)
         announcement_label.grid(row=4, column=0, padx=4, pady=(8, 2), sticky="ew")
         ToolTip(announcement_label, announcement_help)
         
         self.announcement_entries = []
         for i in range(3):
-            announcement_entry = ttk.Combobox(display_frame, values=announcement_options, width=30, justify="center")
+            announcement_entry = ttk.Combobox(display_frame, values=announcement_options, width=30, justify="center", font=self.font)
             if i < len(announcements):
                 announcement_entry.set(announcements[i])
             announcement_entry.grid(row=5 + i, column=0, padx=4, pady=2, sticky="ew")
@@ -383,7 +395,7 @@ class Launcher(tk.Tk):
         # Launch button at the bottom
         self.middle_button_frame = ttk.Frame(self.middle_frame)
         self.middle_button_frame.pack(side="bottom", pady=10)
-        launch_btn = ttk.Button(self.middle_button_frame, text="Launch", style="Button.TButton", command=self.launch)
+        launch_btn = ttk.Button(self.middle_button_frame, text="Launch", command=self.launch)
         launch_btn.pack(side="left")
         ToolTip(launch_btn, launch_info)
     
