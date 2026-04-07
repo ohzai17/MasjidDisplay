@@ -31,22 +31,27 @@ def render_announcements(screen, scale_x, scale_y, title_font, detail_font):
             shadow_color=tertiary
         )
         
+        # Character limit and formatting
+        announcement_text = text.strip()[:45]
+        before, seperator, after = announcement_text.partition(":")
+        
         # Render announcement text
-        if ':' in text:
-            before, after = text.split(':', 1)
-            before = render_text(
-                screen, f"      {before.strip()}", detail_font,
+        if seperator: # If there's a colon, split into two parts
+            
+            before_rect = render_text(
+                screen, f"      {before.strip()}:", detail_font,
                 primary, (dash.right, y), align="left",
                 shadow_color=tertiary
             )
             render_text(
-                screen, f": {after.strip()[:26]}", detail_font,
-                secondary, (before.right, y), align="left",
+                screen, f" {after.strip()}", detail_font,
+                secondary, (before_rect.right, y), align="left",
                 shadow_color=tertiary
             )
+        
         else:
             render_text(
-                screen, f"      {text.strip()[:38]}", detail_font,
+                screen, f"      {announcement_text}", detail_font,
                 secondary, (dash.right, y), align="left",
                 shadow_color=tertiary
             )

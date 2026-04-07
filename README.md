@@ -196,8 +196,8 @@ python -m src.launcher
 
 1. Enter Masjid information (**Name** and **Address**).
 2. Enter valid **Latitude/Longitude** and select **Timezone**, **Calculation Method**, and **Asr Method**.
-3. Set the **Jummah** time (hour, minute, and AM/PM).
-4. Click **Generate CSV**.
+3. Click **Generate CSV**.
+4. Set the **Jummah** time (hour, minute, and AM/PM).
 5. Click **Launch**.
 
 *Note: If `data/data.csv` is not found, launch is blocked and you must generate CSV first.*
@@ -276,7 +276,7 @@ Set how many minutes after Adhan the Iqamah will be announced.
 
 - **Name:** Enter the name of your Masjid (20 characters max).
 
-- **Address:** Enter the address of your Masjid (35 characters max).
+- **Address:** Enter the address of your Masjid (35 characters max). Leave blank if unused.
 
 - **Announcements:** Set up to 3 custom announcements to display on the screen (45 characters max). Press `A` in the display to toggle the announcement panel. Leave blank if unused.
 
@@ -366,19 +366,19 @@ Per prayer (`FAJR`, `DHUHR`, `ASR`, `MAGHRIB`, `ISHA`, `JUMMAH`):
 
 - **Launch Prerequisite:** Launch is blocked if `data/data.csv` is not found.
 
-- **Location Rules:**
+- **Location:**
   - **Latitude:** Must be between `-90` and `90`.
   - **Longitude:** Must be between `-180` and `180`.
   - **Latitude** and **longitude** must be valid numbers (for example, `43.1548, -75.1426`).
 
 - **Required Selections:** **Timezone**, **calculation method**, and **Asr method** cannot be empty.
 
-- **Masjid Information Limits:**
+- **Masjid Information:**
   - **Name:** Cannot be empty and is capped at 20 characters.
-  - **Address:** Cannot be empty and is capped at 35 characters.
+  - **Address:** Capped at 35 characters.
   - **Announcement:** Capped at 45 characters.
 
-- **Prayer Time Entry Rules:**
+- **Prayer Time Entry:**
   - Partial manual time input is rejected (**hour**/**minute**/**AM/PM** must all be present).
   - Manual prayer times are checked against calculated values to avoid invalid ordering.
   - **Jummah:** 

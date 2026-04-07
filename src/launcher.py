@@ -616,10 +616,6 @@ class Launcher(tk.Tk):
             messagebox.showerror("Error", "Masjid Name exceeds character limit.")
             return False
         
-        if not address.strip():
-            messagebox.showerror("Error", "Masjid Address cannot be empty.")
-            return False
-        
         if len(address) > 35:
             messagebox.showerror("Error", "Masjid Address exceeds character limit.")
             return False
