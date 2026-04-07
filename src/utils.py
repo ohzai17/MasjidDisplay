@@ -1,14 +1,38 @@
 # utils.py
 
 import os
+import sys
 import csv
 import json
-import shutil
 import pygame
+import shutil
+import subprocess
 from datetime import datetime, timedelta
 from src.config import (
     CSV, SETTINGS, SETTINGS_TEMPLATE, FONT, ARABIC_FONT, 
     PLACEHOLDER, PRESET_MAP, BLACK, WHITE, GOLD)
+
+
+def launch_module(module_name):
+    """Launch a module in a detached Python process."""
+    
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    
+    kwargs = {
+        "cwd": root,
+        "stdin": subprocess.DEVNULL,
+        "stdout": subprocess.DEVNULL,
+        "stderr": subprocess.DEVNULL,
+        "close_fds": True,
+    }
+    
+    # Detach process
+    if os.name == "nt":
+        kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.DETACHED_PROCESS
+    else:
+        kwargs["start_new_session"] = True
+    
+    subprocess.Popen([sys.executable, "-m", module_name], **kwargs)
 
 def resize_window(window_preset):
     """Resize the window based on the selected preset and return screen and fonts."""
