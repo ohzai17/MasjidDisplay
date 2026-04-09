@@ -10,6 +10,7 @@ from src.features.announcements import render_announcements
 
 def main():
     pygame.init()
+    pygame.mixer.init()
     pygame.display.set_caption("Masjid Display")
     pygame.mouse.set_visible(False)
     
