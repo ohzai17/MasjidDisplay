@@ -20,27 +20,19 @@ A local prayer timetable application for masjids, built with Python. It combines
 
 ## Start Guide
 
-### 0. Open the Project Root
-
-Open a terminal in the project root folder — the folder containing `README.md`, `requirements.txt`, and `src/`.
-
-If you're setting this up on a new machine:
-
-1. Install Python `3.12.x`.
-2. Download, clone, or extract the project folder.
-3. Open a terminal in that folder, or `cd` into it:
+### 1. Open the Project Root
 
 ```bash
 cd /path/to/MasjidDisplay
 ```
 
-### 1. Create a Virtual Environment
+### 2. Create a Virtual Environment
 
 ```bash
 python -m venv .venv
 ```
 
-### 2. Activate the Virtual Environment
+### 3. Activate the Virtual Environment
 
 ```bash
 # macOS / Linux
@@ -53,41 +45,39 @@ source .venv/bin/activate
 .venv\Scripts\activate.bat
 ```
 
-### 3. Install Dependencies
+### 4. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Run the Launcher
+### 5. Run the Launcher
 
 ```bash
 python -m src.launcher
 ```
 
-On first run, the app auto-creates [data/settings.json](data/settings.json) from [data/settings.template.json](data/settings.template.json), and recreates it if missing or invalid.
+**First-Time Setup:**
 
-**Recommended first-time workflow:**
-
-1. Enter Masjid **Name** and **Address**.
-2. Enter valid **Latitude/Longitude** and select **Timezone**, **Calculation Method**, and **Asr Method**.
-3. Click **Generate CSV**.
+1. Enter valid **Latitude/Longitude** and select **Timezone**, **Calculation Method**, and **Asr Method**.
+2. Click **Generate CSV**.
+3. Enter Masjid **Name** and **Address**.
 4. Set the **Jummah** time (hour, minute, and AM/PM).
 5. Click **Launch**.
 
-> **Note:** If you change location or calculation settings, generate the CSV again before launching.
+> **Note:** If you change location, timezone, calculation method, or Asr method, regenerate the CSV before clicking **Launch**.
 
-**Closing the display:**
+**Close the Display:**
 
 Press `ESC` or close the window (`X`) to return to the launcher.
 
-**Run the display directly (optional):**
+**Launch the Display Directly (Optional):**
 
 ```bash
 python -m src.main
 ```
 
-> Direct launch is supported, but launcher-first is the intended workflow. Without a valid CSV, prayer data falls back to placeholders.
+> Direct launch is supported, but launcher-first is recommended. Without a valid CSV, prayer data falls back to placeholders.
 
 ---
 
@@ -118,19 +108,18 @@ Prayer times are calculated using astronomical formulas derived from [PrayTimes.
 
 ### 2. Launcher (Configuration UI)
 
-The launcher is the control center for all settings:
+The launcher manages configuration, validation, and CSV generation:
 
-- Location, timezone, and calculation settings
 - Per-prayer Adhan manual override times
 - Per-prayer Iqamah offsets
 - Masjid display identity (name and address)
 - Up to 3 announcement messages
 
-It auto-detects the local timezone, validates all input before saving, and detects whether the CSV is missing or outdated.
+It auto-detects the local timezone and validates all input before saving.
 
 ### 3. Live Display
 
-The Pygame display renders a digital clock, Gregorian and Hijri dates, the full prayer table with English/Arabic labels, and a next-event countdown.
+The Pygame display renders the live clock, Gregorian and Hijri dates, the prayer table, and the next-event countdown.
 
 **Notable behaviors:**
 
@@ -188,10 +177,10 @@ Set how many minutes after Adhan the Iqamah is announced. Options: `0`, `5`, `10
 ### Masjid Information
 
 - **Name:** Up to 20 characters (required).
-- **Address:** Up to 35 characters (optional).
+- **Address:** Up to 35 characters. Leave blank if unused.
 - **Announcements:** Up to 3 messages, 45 characters each. Toggle display with `A`. Leave blank if unused.
 
-  Pre-formatted Eid templates are available:
+  Pre-formatted templates are available:
   - `Eid Al-Fitr Salah: Month DD, YYYY @ HH:MM AM`
   - `Eid Al-Adha Salah: Month DD, YYYY @ HH:MM AM`
 
@@ -236,6 +225,7 @@ MasjidDisplay/
 │   │   ├── UKIJTuzKB.ttf
 │   │   └── Bebas_Neue/
 │   │       └── BebasNeue-Regular.ttf
+│   ├── demo.gif
 │   ├── beep.wav
 │   └── texture.png
 ├── data/
@@ -295,8 +285,6 @@ Per-prayer keys apply to: `FAJR`, `DHUHR`, `ASR`, `MAGHRIB`, `ISHA`, `JUMMAH`.
 - Confirm both coordinates are numeric and formatted correctly.
 - Verify the timezone selection is valid.
 
-> **Regenerate CSV after changing:** latitude/longitude, timezone, calculation method, or Asr juristic method.
-
 **Display shows placeholders**
 - Confirm today's date is present in `data/data.csv` and regenerate if needed.
 
@@ -305,7 +293,7 @@ Per-prayer keys apply to: `FAJR`, `DHUHR`, `ASR`, `MAGHRIB`, `ISHA`, `JUMMAH`.
 - Confirm `assets/beep.wav` exists.
 
 **Reset settings to defaults**
-- Delete `data/settings.json` and relaunch — defaults are recreated automatically from the template.
+- Delete `data/settings.json` and relaunch — defaults are recreated automatically.
 
 ---
 
@@ -340,8 +328,6 @@ See [requirements.txt](requirements.txt) for pinned versions.
 | `assets/beep.wav` | Generated locally via [src/audio.py](src/audio.py) | — |
 | `assets/fonts/Bebas_Neue/BebasNeue-Regular.ttf` | [Google Fonts](https://fonts.google.com/specimen/Bebas+Neue) | SIL OFL 1.1 |
 | `assets/fonts/UKIJTuzKB.ttf` | [Font Library](https://fontlibrary.org/en/font/ukij-tuz) | SIL OFL 1.1 |
-
-Source links are also documented inline in `src/config.py` for quick code-level reference.
 
 ---
 
