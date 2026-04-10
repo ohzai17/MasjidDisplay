@@ -1,14 +1,8 @@
 # Masjid Display
 
-A local prayer timetable application for masjids, built with Python. It combines a **launcher UI** (Tkinter) for configuration and validation, a **long-range dataset** (CSV) for prayer timetable generation, and a **live display UI** (Pygame) for daily operation.
+A local prayer timetable application for masjids, built with Python. It includes a launcher for setup and a live display for daily prayer times.
 
-**The screen shows:**
-
-- Current time and Gregorian/Hijri dates
-- Masjid name and address
-- Prayer table (Adhan and Iqamah) in English and Arabic
-- Countdown to the next event
-- Optional announcement panel
+The screen shows the current time, Gregorian and Hijri dates, masjid name and address, a full prayer table (Adhan and Iqamah) in English and Arabic, a countdown to the next event, and an optional announcement panel.
 
 ---
 
@@ -18,204 +12,207 @@ A local prayer timetable application for masjids, built with Python. It combines
 
 ---
 
-## Start Guide
+## Requirements
 
-### 1. Open the Project Root
+| Requirement | Details |
+|-------------|---------|
+| **Python** | `3.12.x` (tested on `3.12.3`) |
+| **OS** | macOS or Windows with display and audio support |
+
+> Linux is untested and not officially supported.
+
+---
+
+## Installation
 
 ```bash
+# 1. Open the project root
 cd /path/to/MasjidDisplay
-```
 
-### 2. Create a Virtual Environment
-
-```bash
+# 2. Create a virtual environment
 python -m venv .venv
-```
 
-### 3. Activate the Virtual Environment
+# 3. Activate it
+source .venv/bin/activate        # macOS / Linux
+.venv\Scripts\Activate.ps1       # Windows PowerShell
+.venv\Scripts\activate.bat       # Windows Command Prompt
 
-```bash
-# macOS / Linux
-source .venv/bin/activate
-
-# Windows PowerShell
-.venv\Scripts\Activate.ps1
-
-# Windows Command Prompt
-.venv\Scripts\activate.bat
-```
-
-### 4. Install Dependencies
-
-```bash
+# 4. Install dependencies
 pip install -r requirements.txt
 ```
 
-### 5. Run the Launcher
+---
+
+## First-Time Setup
 
 ```bash
 python -m src.launcher
 ```
 
-**First-Time Setup:**
+Complete the following steps in order:
 
-1. Enter valid **Latitude/Longitude** and select **Timezone**, **Calculation Method**, and **Asr Method**.
-2. Click **Generate CSV**.
-3. Enter Masjid **Name** and **Address**.
-4. Set the **Jummah** time (hour, minute, and AM/PM).
-5. Click **Launch**.
+| Step | Action |
+|------|--------|
+| 1 | Enter **Latitude** and **Longitude** for your masjid |
+| 2 | Select your **Timezone**, **Calculation Method**, and **Asr Method** |
+| 3 | Click **Generate CSV** — creates `data/data.csv` covering ~10 years |
+| 4 | Enter the **Masjid Name** and **Address** |
+| 5 | Set the **Jummah** time (hour, minute, AM/PM) |
+| 6 | Click **Launch** |
 
-> **Note:** If you change location, timezone, calculation method, or Asr method, regenerate the CSV before clicking **Launch**.
-
-**Close the Display:**
-
-Press `ESC` or close the window (`X`) to return to the launcher.
-
-**Launch the Display Directly (Optional):**
-
-```bash
-python -m src.main
-```
-
-> Direct launch is supported, but launcher-first is recommended. Without a valid CSV, prayer data falls back to placeholders.
+> See the [Launcher Configuration Guide](#launcher-configuration-guide) for detailed guidance on each field.
 
 ---
 
-## How It Works
+## Daily Use
 
-### 1. Prayer Time Calculation and CSV Generation
 
-Prayer times are calculated using astronomical formulas derived from [PrayTimes.org](https://praytimes.org/docs/calculation), and saved to `data/data.csv` covering approximately 10 years from the current date.
+### Launch
 
-**Calculation Engine (`src/data.py`)**
+| Command | Description |
+|---------|-------------|
+| `python -m src.launcher` | Open the launcher (recommended) |
+| `python -m src.main` | Launch the display directly, skipping the launcher |
 
-| Prayer | Method |
-|--------|--------|
-| Fajr / Isha | Sun angle below the horizon (method-specific) |
-| Sunrise / Sunset | Atmospheric refraction adjustment (0.833°) |
-| Dhuhr | Solar noon (equation of time) |
-| Asr | Sun angle — Standard or Hanafi (see below) |
-| Maghrib | Sunset time (solar noon + declination adjustment) |
+> Without a valid CSV, the display falls back to placeholder values.
 
-**Asr Juristic Methods:**
 
-- **Standard (Shafi, Maliki, Hanbali):** Shadow length = object height
-- **Hanafi:** Shadow length = 2 × object height
+### Update Settings While the Display is Running
 
-**Implementation details:** Julian date conversion, solar declination and equation of time, trigonometric sun angle computations, and timezone/longitude adjustments for local accuracy.
+1. Press `ESC` or close the window (`X`) to return to the launcher
+2. Make your changes
+3. Click **Generate CSV** if you changed the location, timezone, calculation method, or Asr method
+4. Click **Launch** to restart the display
 
-**Supported Calculation Methods:** `MWL`, `ISNA`, `Egypt`, `Makkah`, `Karachi`, `Tehran`, `Jafari`, `France`, `Russia`, `Singapore`
+> Skipping **Generate CSV** after a location or method change will cause the display to use outdated prayer times.
 
-### 2. Launcher (Configuration UI)
 
-The launcher manages configuration, validation, and CSV generation:
+### Regenerate the CSV
 
-- Per-prayer Adhan manual override times
-- Per-prayer Iqamah offsets
-- Masjid display identity (name and address)
-- Up to 3 announcement messages
+Regenerate whenever you change any of the following:
 
-It auto-detects the local timezone and validates all input before saving.
+- Location (latitude or longitude)
+- Timezone
+- Calculation method
+- Asr method
 
-### 3. Live Display
 
-The Pygame display renders the live clock, Gregorian and Hijri dates, the prayer table, and the next-event countdown.
+### Close the Display
 
-**Notable behaviors:**
-
-- Next upcoming prayer/event is highlighted in the table.
-- On Fridays, Dhuhr is replaced with Jummah.
-- The Hijri date advances after Maghrib.
-- A beep plays when the countdown hits zero.
-- After all daily events pass, the countdown targets tomorrow's Fajr.
-- If no valid CSV data exists for today, a fallback view is shown with placeholder values.
+Press `ESC` or click the window's close button (`X`) to exit and return to the launcher.
 
 ---
 
 ## Launcher Configuration Guide
 
+
 ### Location and Timezone
 
-**Latitude and Longitude**
+**Finding your coordinates:**
 
 1. Open [Google Maps](https://maps.google.com)
-2. Search for your Masjid or city (e.g., "Utica, NY")
-3. Right-click on your location
-4. Click the coordinates at the top of the menu — they copy automatically
-5. Paste each value into its respective field
+2. Search for your masjid or city (e.g., "Utica, NY")
+3. Right-click your exact location
+4. Click the coordinates at the top of the context menu — they copy automatically
+5. Paste each value into the Latitude and Longitude fields
 
-> **Tip:** Use your Masjid's exact coordinates for the most accurate times. Small differences within the same city have minimal impact.
+> Using the masjid's exact coordinates gives the most accurate prayer times. Small differences within the same city have minimal impact.
 
-**Timezone**
+**Timezone:** Select from the dropdown in IANA format (e.g., `America/New_York`, `Europe/London`). Your system timezone is auto-detected when available — verify it before proceeding.
 
-Select your timezone from the dropdown (IANA format, e.g., `America/New_York`, `Europe/London`). Your system timezone is auto-detected when available — verify it before proceeding.
+**Hijri Date Adjustment:** If your local moon sighting differs from the calculated date, offset by `-1`, `0`, or `+1` days.
 
-### Adjustments & Methods
 
-- **Hijri Date Adjustment:** Adjust if your local moon sighting differs from the calculated date (`-1`, `0`, or `+1` days).
-- **Calculation Method:** Choose the method used by your local masjid (e.g., **ISNA** or **MWL** in North America).
-- **Asr Juristic Method:** Standard (Shafi, Maliki, Hanbali) or Hanafi — select the one your masjid follows.
+### Calculation and Asr Methods
+
+**Calculation Method:** Choose the method your masjid follows. Common choices for North America are **ISNA** and **MWL**.
+
+Supported methods: `MWL` `ISNA` `Egypt` `Makkah` `Karachi` `Tehran` `Jafari` `France` `Russia` `Singapore`
+
+**Asr Juristic Method:**
+
+| Method | Rule |
+|--------|------|
+| Standard (Shafi, Maliki, Hanbali) | Shadow length = object height |
+| Hanafi | Shadow length = 2× object height |
+
 
 ### Prayer Time Overrides
 
-**Adhan Time**
+**Adhan Time:** Optionally set a fixed adhan time per prayer. Leave blank to use calculated times from the CSV. Select hour (1–12), minute (5-minute increments), and AM/PM — all three fields must be set together. For non-Jummah prayers, the override cannot be earlier than the calculated time.
 
-Optionally set a fixed adhan time per prayer. Leave blank to use calculated times from the CSV.
+**Iqamah Offset:** Minutes after Adhan the Iqamah is announced — `0`, `5`, `10`, `15`, `20`, or `30`.
 
-- Select **hour** (1–12), **minute** (5-minute increments), and **AM/PM**.
-- All three fields must be filled together.
-- For non-Jummah prayers, the override cannot be earlier than the calculated time.
+**Jummah:** A fixed adhan time is required and must fall between `11:00 AM` and `3:00 PM`.
 
-**Iqamah Offset**
-
-Set how many minutes after Adhan the Iqamah is announced. Options: `0`, `5`, `10`, `15`, `20`, `30` minutes.
-
-**Jummah**
-
-- Adhan time is **required** and must be between `11:00 AM` and `3:00 PM`.
 
 ### Masjid Information
 
-- **Name:** Up to 20 characters (required).
-- **Address:** Up to 35 characters. Leave blank if unused.
-- **Announcements:** Up to 3 messages, 45 characters each. Toggle display with `A`. Leave blank if unused.
+| Field | Limit | Notes |
+|-------|-------|-------|
+| Name | 20 characters | Required |
+| Address | 35 characters | Leave blank if unused |
+| Announcements | 45 characters each | Up to 3 messages; toggle with `A` |
 
-  Pre-formatted templates are available:
-  - `Eid Al-Fitr Salah: Month DD, YYYY @ HH:MM AM`
-  - `Eid Al-Adha Salah: Month DD, YYYY @ HH:MM AM`
+Pre-formatted announcement templates are available:
+- `Eid Al-Fitr Salah: Month DD, YYYY @ HH:MM AM`
+- `Eid Al-Adha Salah: Month DD, YYYY @ HH:MM AM`
 
 ---
 
-## Keyboard Controls (Display)
+## Keyboard Controls
 
 | Key | Action |
 |-----|--------|
 | `ESC` | Exit display and reopen launcher |
-| `X` (window close) | Exit display and reopen launcher |
-| `1` | Fullscreen preset (startup default) |
-| `2` | 1280×720 window |
-| `3` | 1600×900 window |
+| `X` | Exit display and reopen launcher |
+| `1` | Fullscreen (startup default) |
+| `2` | 1280×720 windowed |
+| `3` | 1600×900 windowed |
 | `A` | Toggle announcements panel |
 
 ---
 
-## Validation Rules
+## How It Works
 
-- **Latitude:** Must be between `-90` and `90`.
-- **Longitude:** Must be between `-180` and `180`.
-- **Timezone**, **calculation method**, and **Asr method** cannot be empty.
-- **Masjid Name:** Required, max 20 characters.
-- **Address:** Max 35 characters.
-- **Announcements:** Max 45 characters each.
-- **Prayer Time Entry:** Hour, minute, and AM/PM must all be set together — partial input is rejected.
-- **Jummah:** Must be between `11:00 AM` and `3:00 PM`; all three fields required.
-- **Launch:** Blocked if `data/data.csv` is not found or is outdated.
+
+### Prayer Time Calculation
+
+Prayer times are calculated using astronomical formulas derived from [PrayTimes.org](https://praytimes.org/docs/calculation) and saved to `data/data.csv` covering approximately 10 years from the current date.
+
+| Prayer | Calculation Method |
+|--------|--------------------|
+| Fajr / Isha | Sun angle below the horizon (method-specific) |
+| Sunrise / Sunset | Atmospheric refraction adjustment (0.833°) |
+| Dhuhr | Solar noon (equation of time) |
+| Asr | Sun angle — Standard or Hanafi |
+| Maghrib | Sunset (solar noon + declination adjustment) |
+
+The engine handles Julian date conversion, solar declination and equation of time, trigonometric sun angle computations, and timezone/longitude adjustments for local accuracy.
+
+
+### Launcher
+
+The launcher manages configuration, validation, and CSV generation. It handles per-prayer Adhan overrides, Iqamah offsets, masjid identity, and announcement messages. It auto-detects the local timezone and validates all input before saving to `data/settings.json`.
+
+
+### Live Display
+
+The Pygame display renders the live clock, Gregorian and Hijri dates, the prayer table, and the next-event countdown.
+
+Notable behaviors:
+- The next upcoming prayer or event is highlighted in the table
+- On Fridays, Dhuhr is replaced with Jummah
+- The Hijri date advances after Maghrib
+- A beep plays when the countdown reaches zero
+- After all daily events pass, the countdown targets tomorrow's Fajr
+- If no valid CSV data exists for today, a fallback view is shown with placeholder values
 
 ---
 
 ## Project Structure
 
-```text
+```
 MasjidDisplay/
 ├── LICENSE
 ├── requirements.txt
@@ -248,7 +245,9 @@ MasjidDisplay/
 
 ---
 
-## Settings Reference (`data/settings.json`)
+## Settings Reference
+
+All settings are stored in `data/settings.json`.
 
 | Section | Key | Description |
 |---------|-----|-------------|
@@ -264,57 +263,71 @@ MasjidDisplay/
 | `DATA.PRAYERS` | `ADHAN_TIME` | Optional manual time (`HH:MM AM/PM`); required for Jummah |
 | `DATA.PRAYERS` | `IQAMAH_OFFSET` | Minutes after adhan |
 
-Per-prayer keys apply to: `FAJR`, `DHUHR`, `ASR`, `MAGHRIB`, `ISHA`, `JUMMAH`.
+Per-prayer keys apply to: `FAJR` `DHUHR` `ASR` `MAGHRIB` `ISHA` `JUMMAH`
+
+> To reset all settings to defaults, delete `data/settings.json` and relaunch — defaults are recreated automatically.
+
+---
+
+## Validation Rules
+
+| Field | Rule |
+|-------|------|
+| Latitude | Between `-90` and `90` |
+| Longitude | Between `-180` and `180` |
+| Timezone / Calculation / Asr Method | Cannot be empty |
+| Masjid Name | Required, max 20 characters |
+| Address | Max 35 characters |
+| Announcements | Max 45 characters each |
+| Prayer Time Entry | Hour, minute, and AM/PM must all be set together |
+| Jummah | Between `11:00 AM` and `3:00 PM`; all three fields required |
+| Launch | Blocked if `data/data.csv` is missing or outdated |
 
 ---
 
 ## Troubleshooting
 
 **Display fails to start**
-- Confirm required assets exist: `assets/texture.png`, `assets/fonts/Bebas_Neue/BebasNeue-Regular.ttf`, `assets/fonts/UKIJTuzKB.ttf`.
-- Relaunch `python -m src.launcher` and verify settings/paths.
+- Confirm these files exist: `assets/texture.png`, `assets/fonts/Bebas_Neue/BebasNeue-Regular.ttf`, `assets/fonts/UKIJTuzKB.ttf`
+- Relaunch `python -m src.launcher` and verify all settings
 
-**CSV missing**
-- Open the launcher and click **Generate CSV**.
+**CSV is missing**
+- The CSV has never been generated for your current configuration
+- Open the launcher and click **Generate CSV**
 
-**CSV outdated**
-- Click **Generate CSV** again to refresh future dates.
+**CSV is outdated**
+- The CSV no longer covers today's date, or settings have changed since it was last generated
+- Click **Generate CSV** again to refresh
 
-**CSV generation failed**
-- Most commonly caused by incorrect latitude/longitude values (including edge cases like ±90 or ±180).
-- Confirm both coordinates are numeric and formatted correctly.
-- Verify the timezone selection is valid.
+**CSV generation fails**
+- Most commonly caused by invalid coordinates (including edge cases like exactly ±90 or ±180), a non-numeric value in either field, or an unrecognized timezone
+- Verify all three before retrying
 
-**Display shows placeholders**
-- Confirm today's date is present in `data/data.csv` and regenerate if needed.
+**Display shows placeholder values**
+- Today's date is not present in `data/data.csv`
+- Regenerate the CSV from the launcher
 
 **No beep at zero seconds**
-- Check system volume and output device.
-- Confirm `assets/beep.wav` exists.
+- Check your system volume and audio output device
+- Confirm `assets/beep.wav` exists
 
-**Reset settings to defaults**
-- Delete `data/settings.json` and relaunch — defaults are recreated automatically.
-
----
-
-## Requirements
-
-- Python `3.12.x` (tested on `3.12.3`)
-- macOS or Windows with display and audio support
-
-*Linux may work but is not officially tested.*
+**Settings appear incorrect after an update**
+- The settings schema may have changed — your existing `data/settings.json` could be stale
+- Delete it and reconfigure from the launcher; defaults are recreated automatically
 
 ---
 
 ## Dependencies
 
-- `pygame`
-- `numpy`
-- `hijridate`
-- `tzlocal`
-- `arabic_reshaper`
-- `python-bidi`
-- `sv_ttk`
+| Package | Purpose |
+|---------|---------|
+| `pygame` | Live display rendering and audio |
+| `numpy` | Beep generation (`src/audio.py`) |
+| `hijridate` | Hijri calendar conversion |
+| `tzlocal` | Local timezone detection |
+| `arabic_reshaper` | Arabic text shaping |
+| `python-bidi` | Right-to-left text rendering |
+| `sv_ttk` | Launcher UI theming |
 
 See [requirements.txt](requirements.txt) for pinned versions.
 
