@@ -32,7 +32,7 @@ cd /path/to/MasjidDisplay
 # 2. Create a virtual environment
 python -m venv .venv
 
-# 3. Activate it
+# 3. Activate the virtual environment
 source .venv/bin/activate        # macOS / Linux
 .venv\Scripts\Activate.ps1       # Windows PowerShell
 .venv\Scripts\activate.bat       # Windows Command Prompt
@@ -81,10 +81,8 @@ Complete the following steps in order:
 
 1. Press `ESC` or close the window (`X`) to return to the launcher
 2. Make your changes
-3. Click **Generate CSV** if you changed the location, timezone, calculation method, or Asr method
+3. If needed, click **Generate CSV** (see [Regenerate the CSV](#regenerate-the-csv))
 4. Click **Launch** to restart the display
-
-> Skipping **Generate CSV** after a location or method change will cause the display to use outdated prayer times.
 
 
 ### Regenerate the CSV
@@ -127,7 +125,7 @@ Press `ESC` or click the window's close button (`X`) to exit and return to the l
 
 **Calculation Method:** Choose the method your masjid follows. Common choices for North America are **ISNA** and **MWL**.
 
-Supported methods: `MWL` `ISNA` `Egypt` `Makkah` `Karachi` `Tehran` `Jafari` `France` `Russia` `Singapore`
+Supported methods: `MWL`, `ISNA`, `Egypt`, `Makkah`, `Karachi`, `Tehran`, `Jafari`, `France`, `Russia`, `Singapore`
 
 **Asr Juristic Method:**
 
@@ -227,7 +225,7 @@ MasjidDisplay/
 │   └── texture.png
 ├── data/
 │   ├── data.csv
-│   └── settings.json
+│   └── settings.template.json
 └── src/
     ├── launcher.py
     ├── main.py
@@ -242,6 +240,8 @@ MasjidDisplay/
         ├── countdown.py
         └── announcements.py
 ```
+
+> `data/settings.json` is generated automatically from `data/settings.template.json` on first run.
 
 ---
 
@@ -288,32 +288,22 @@ Per-prayer keys apply to: `FAJR` `DHUHR` `ASR` `MAGHRIB` `ISHA` `JUMMAH`
 ## Troubleshooting
 
 **Display fails to start**
-- Confirm these files exist: `assets/texture.png`, `assets/fonts/Bebas_Neue/BebasNeue-Regular.ttf`, `assets/fonts/UKIJTuzKB.ttf`
-- Relaunch `python -m src.launcher` and verify all settings
+- Confirm required assets exist: `assets/texture.png`, `assets/fonts/Bebas_Neue/BebasNeue-Regular.ttf`, `assets/fonts/UKIJTuzKB.ttf`
+- Relaunch `python -m src.launcher` and verify settings
 
-**CSV is missing**
-- The CSV has never been generated for your current configuration
-- Open the launcher and click **Generate CSV**
-
-**CSV is outdated**
-- The CSV no longer covers today's date, or settings have changed since it was last generated
-- Click **Generate CSV** again to refresh
+**CSV is missing, outdated, or placeholders appear**
+- Generate CSV from the launcher (verify latitude/longitude are numeric and in range, and timezone is valid)
 
 **CSV generation fails**
-- Most commonly caused by invalid coordinates (including edge cases like exactly ±90 or ±180), a non-numeric value in either field, or an unrecognized timezone
-- Verify all three before retrying
-
-**Display shows placeholder values**
-- Today's date is not present in `data/data.csv`
-- Regenerate the CSV from the launcher
+- Verify latitude and longitude are numeric and within range
+- Verify timezone is valid
 
 **No beep at zero seconds**
-- Check your system volume and audio output device
+- Check system volume and audio output device
 - Confirm `assets/beep.wav` exists
 
 **Settings appear incorrect after an update**
-- The settings schema may have changed — your existing `data/settings.json` could be stale
-- Delete it and reconfigure from the launcher; defaults are recreated automatically
+- Delete `data/settings.json` and reconfigure from the launcher; defaults are recreated automatically
 
 ---
 
