@@ -33,7 +33,7 @@ cd /path/to/MasjidDisplay
 python -m venv .venv
 
 # 3. Activate the virtual environment
-source .venv/bin/activate        # macOS / Linux
+source .venv/bin/activate        # macOS (Linux may also work, untested)
 .venv\Scripts\Activate.ps1       # Windows PowerShell
 .venv\Scripts\activate.bat       # Windows Command Prompt
 
@@ -219,12 +219,12 @@ MasjidDisplay/
 │   ├── fonts/
 │   │   ├── UKIJTuzKB.ttf
 │   │   └── Bebas_Neue/
+│   │       ├── OFL.txt
 │   │       └── BebasNeue-Regular.ttf
 │   ├── demo.gif
 │   ├── beep.wav
 │   └── texture.png
 ├── data/
-│   ├── data.csv
 │   └── settings.template.json
 └── src/
     ├── launcher.py
@@ -241,7 +241,9 @@ MasjidDisplay/
         └── announcements.py
 ```
 
-> `data/settings.json` is generated automatically from `data/settings.template.json` on first run.
+> Generated at runtime:
+> - `data/settings.json` is created on first run.
+> - `data/data.csv` is created when you click **Generate CSV** in the launcher.
 
 ---
 
