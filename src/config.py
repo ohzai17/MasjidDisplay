@@ -26,13 +26,6 @@ HIJRI_MONTH_NAMES = {
     12: "Dhul-Hijjah"
 }
 
-# Window settings
-PRESET_MAP = {
-    1: (0, 0, True), # Fullscreen
-    2: (1280, 720, False),
-    3: (1600, 900, False),
-}
-
 # Color settings
 def rgb(r,g,b):
     """Return RGB color as a list."""

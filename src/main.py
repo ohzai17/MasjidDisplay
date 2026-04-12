@@ -3,7 +3,7 @@
 import pygame
 from src.features.table import render_table
 from src.features.display import render_display
-from src.utils import resize_window, launch_module
+from src.utils import launch_module, setup_window
 from src.features.countdown import render_countdown
 from src.features.background import render_background
 from src.features.announcements import render_announcements
@@ -14,7 +14,7 @@ def main():
     pygame.display.set_caption("Masjid Display")
     pygame.mouse.set_visible(False)
     
-    screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font = resize_window(window_preset=1)
+    screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font = setup_window()
     
     running = True
     show_announcements = False
@@ -23,17 +23,12 @@ def main():
     while running:
         for event in pygame.event.get():
             
-            # Quit on close or escape key
-            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-                running = False
-                launch_module("src.launcher")
-            
-            elif event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN:
                 
-                # Handle window resizing
-                if event.key in (pygame.K_1, pygame.K_2, pygame.K_3):
-                    preset = {pygame.K_1: 1, pygame.K_2: 2, pygame.K_3: 3}[event.key]
-                    screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font = resize_window(preset)
+                # Quit on escape key and return to launcher
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+                    launch_module("src.launcher")
                 
                 # Toggle announcements
                 elif event.key == pygame.K_a:

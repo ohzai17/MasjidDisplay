@@ -77,9 +77,14 @@ Complete the following steps in order:
 > Without a valid CSV, the display falls back to placeholder values.
 
 
+### Close the Display
+
+Press `ESC` to exit and return to the launcher.
+
+
 ### Update Settings While the Display is Running
 
-1. Press `ESC` or close the window (`X`) to return to the launcher
+1. Press `ESC` to return to the launcher
 2. Make your changes
 3. If needed, click **Generate CSV** (see [Regenerate the CSV](#regenerate-the-csv))
 4. Click **Launch** to restart the display
@@ -93,11 +98,6 @@ Regenerate whenever you change any of the following:
 - Timezone
 - Calculation method
 - Asr method
-
-
-### Close the Display
-
-Press `ESC` or click the window's close button (`X`) to exit and return to the launcher.
 
 ---
 
@@ -163,10 +163,6 @@ Pre-formatted announcement templates are available:
 | Key | Action |
 |-----|--------|
 | `ESC` | Exit display and reopen launcher |
-| `X` | Exit display and reopen launcher |
-| `1` | Fullscreen (startup default) |
-| `2` | 1280×720 windowed |
-| `3` | 1600×900 windowed |
 | `A` | Toggle announcements panel |
 
 ---

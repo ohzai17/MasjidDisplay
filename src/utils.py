@@ -10,7 +10,7 @@ import subprocess
 from datetime import datetime, timedelta
 from src.config import (
     CSV, SETTINGS, SETTINGS_TEMPLATE, FONT, ARABIC_FONT, 
-    PLACEHOLDER, PRESET_MAP, BLACK, WHITE, GOLD)
+    PLACEHOLDER, BLACK, WHITE, GOLD)
 
 
 def launch_module(module_name):
@@ -34,17 +34,12 @@ def launch_module(module_name):
     
     subprocess.Popen([sys.executable, "-m", module_name], **kwargs)
 
-def resize_window(window_preset):
-    """Resize the window based on the selected preset and return screen and fonts."""
+def setup_window():
+    """Setup window and return fonts."""
     
-    width, height, fullscreen = PRESET_MAP[window_preset]
-    
-    if fullscreen:
-        screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
-        width = screen.get_width()
-        height = screen.get_height()
-    else:
-        screen = pygame.display.set_mode((width, height))
+    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+    width = screen.get_width()
+    height = screen.get_height()
     
     # Scaling factors of 1600x900 design resolution
     scale_x = width / 1600
@@ -58,7 +53,6 @@ def resize_window(window_preset):
     arabic_font = pygame.font.Font(ARABIC_FONT, int(55 * scale_y))
     
     return screen, scale_x, scale_y, clock_font, title_font, detail_font, table_font, countdown_font, arabic_font
-
 
 def get_settings():
     """Load settings, restoring from template if needed."""
@@ -79,7 +73,7 @@ def get_settings():
 
 def load_settings():
     """Load settings from JSON file."""
-
+    
     return get_settings()
 
 def load_prayer_times():
