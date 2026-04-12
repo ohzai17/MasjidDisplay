@@ -39,7 +39,7 @@ def rgb(r,g,b):
     
     return [r,g,b]
 
-def alpha(rgb, a):
+def rgba(rgb, a):
     """Add alpha to RGB color."""
     
     return rgb + [a]
