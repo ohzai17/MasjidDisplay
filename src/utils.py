@@ -14,7 +14,7 @@ from src.config import (
 
 
 def launch_module(module_name):
-    """Launch a module in a detached Python process."""
+    """Launch a module in a new Python process."""
     
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     
@@ -25,12 +25,6 @@ def launch_module(module_name):
         "stderr": subprocess.DEVNULL,
         "close_fds": True,
     }
-    
-    # Detach process
-    if os.name == "nt":
-        kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.DETACHED_PROCESS
-    else:
-        kwargs["start_new_session"] = True
     
     subprocess.Popen([sys.executable, "-m", module_name], **kwargs)
 
