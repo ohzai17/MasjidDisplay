@@ -21,7 +21,7 @@ class Launcher(tk.Tk):
         
         super().__init__()
         self.title("Masjid Display Launcher")
-        self.geometry("1660x380")
+        self.focus_force()
         self.resizable(False, False)
         style = ttk.Style()
         sv_ttk.set_theme("dark")
@@ -38,8 +38,6 @@ class Launcher(tk.Tk):
         
         style.configure("TButton", font=self.bold_font)
         self.option_add("*TCombobox*Listbox.font", self.font)
-        
-        self.focus_force()
         
         # Main container for frames
         self.main_frame = ttk.Frame(self)
@@ -354,7 +352,7 @@ class Launcher(tk.Tk):
         name_label.grid(row=0, column=0, padx=4, pady=2, sticky="ew")
         ToolTip(name_label, name_help)
         
-        self.name_entry = ttk.Entry(display_frame, width=30, justify="center", font=self.font)
+        self.name_entry = ttk.Entry(display_frame, width=42, justify="center", font=self.font)
         self.name_entry.insert(0, name)
         self.name_entry.grid(row=1, column=0, padx=4, pady=2, sticky="ew")
         
@@ -363,7 +361,7 @@ class Launcher(tk.Tk):
         address_label.grid(row=2, column=0, padx=4, pady=(8, 2), sticky="ew")
         ToolTip(address_label, address_help)
         
-        self.address_entry = ttk.Entry(display_frame, width=30, justify="center", font=self.font)
+        self.address_entry = ttk.Entry(display_frame, width=42, justify="center", font=self.font)
         self.address_entry.insert(0, address)
         self.address_entry.grid(row=3, column=0, padx=4, pady=2, sticky="ew")
         
@@ -374,7 +372,7 @@ class Launcher(tk.Tk):
         
         self.announcement_entries = []
         for i in range(3):
-            announcement_entry = ttk.Combobox(display_frame, values=announcement_options, width=30, justify="center", font=self.font)
+            announcement_entry = ttk.Combobox(display_frame, values=announcement_options, width=42, justify="center", font=self.font)
             if i < len(announcements):
                 announcement_entry.set(announcements[i])
             announcement_entry.grid(row=5 + i, column=0, padx=4, pady=2, sticky="ew")
