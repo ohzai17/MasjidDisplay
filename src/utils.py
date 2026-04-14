@@ -9,8 +9,8 @@ import shutil
 import subprocess
 from datetime import datetime, timedelta
 from src.config import (
-    CSV, SETTINGS, SETTINGS_TEMPLATE, FONT, ARABIC_FONT, 
-    PLACEHOLDER, BLACK, WHITE, GOLD)
+    CSV, SETTINGS, SETTINGS_TEMPLATE, FONT, ARABIC_FONT,
+    APP_ICON, PLACEHOLDER, BLACK, WHITE, GOLD)
 
 
 def launch_module(module_name):
@@ -30,6 +30,8 @@ def launch_module(module_name):
 
 def setup_window():
     """Setup window and return fonts."""
+    
+    pygame.display.set_icon(pygame.image.load(APP_ICON))
     
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     width = screen.get_width()

@@ -10,9 +10,9 @@ from tkinter import ttk
 from datetime import datetime
 from tkinter import messagebox
 from src.data import fetch_data
-from src.config import CSV, SETTINGS
 from tzlocal import get_localzone_name
 from zoneinfo import available_timezones
+from src.config import CSV, SETTINGS, APP_ICON
 from src.utils import load_settings, launch_module
 
 class Launcher(tk.Tk):
@@ -21,6 +21,8 @@ class Launcher(tk.Tk):
         
         super().__init__()
         self.title("Masjid Display Launcher")
+        self.app_icon = tk.PhotoImage(file=APP_ICON)
+        self.iconphoto(True, self.app_icon)
         self.focus_force()
         self.resizable(False, False)
         style = ttk.Style()
@@ -31,6 +33,10 @@ class Launcher(tk.Tk):
         self.screen_height = self.winfo_screenheight()
         
         # Font options
+        
+        if sys.platform == "win32":
+            font_size -= 2
+        
         if self.screen_width >= 2560:
             font_size = 18
         elif self.screen_width >= 1920:
@@ -41,9 +47,6 @@ class Launcher(tk.Tk):
             font_size = 12
         else:
             font_size = 10
-        
-        if sys.platform == "win32":
-            font_size -= 2
         
         # Font family and styles
         self.font = ("Arial", font_size)
