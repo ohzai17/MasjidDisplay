@@ -33,10 +33,6 @@ class Launcher(tk.Tk):
         self.screen_height = self.winfo_screenheight()
         
         # Font options
-        
-        if sys.platform == "win32":
-            font_size -= 2
-        
         if self.screen_width >= 2560:
             font_size = 18
         elif self.screen_width >= 1920:
@@ -47,6 +43,9 @@ class Launcher(tk.Tk):
             font_size = 12
         else:
             font_size = 10
+        
+        if sys.platform == "win32":
+            font_size -= 2
         
         # Font family and styles
         self.font = ("Arial", font_size)
@@ -423,7 +422,7 @@ class Launcher(tk.Tk):
         
         launch_info = (
             "Review your settings and click 'Launch' to open the main display.\n\n"
-            "If you update any calculation settings, click 'Generate CSV' again to refresh the data before launching.\n"
+            "Click 'Generate CSV' only after changing location or calculation settings.\n\n"
             "To return to this launcher from the main display, press the 'ESC' key.\n"
         )
         

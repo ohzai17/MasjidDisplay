@@ -56,7 +56,7 @@ Complete the following steps in order:
 | 1 | Enter **Latitude** and **Longitude** for your masjid |
 | 2 | Select your **Timezone**, **Calculation Method**, and **Asr Method** |
 | 3 | Click **Generate CSV** — creates `data/data.csv` covering ~10 years |
-| 4 | Enter the **Masjid Name** and **Address** |
+| 4 | Enter the **Masjid Name** and optional **Address** |
 | 5 | Set the **Jummah** time (hour, minute, AM/PM) |
 | 6 | Click **Launch** |
 
@@ -273,7 +273,7 @@ Per-prayer keys apply to: `FAJR` `DHUHR` `ASR` `MAGHRIB` `ISHA` `JUMMAH`
 |-------|------|
 | Latitude | Between `-90` and `90` |
 | Longitude | Between `-180` and `180` |
-| Timezone / Calculation / Asr Method | Cannot be empty |
+| Timezone / Calculation / Asr Method | Required |
 | Masjid Name | Required, max 20 characters |
 | Address | Max 35 characters |
 | Announcements | Max 45 characters each |
@@ -325,8 +325,9 @@ See [requirements.txt](requirements.txt) for pinned versions.
 
 | Asset | Source | License |
 |-------|--------|---------|
+| `assets/app_icon.png` | Generated via [Google Gemini](https://gemini.google.com/) | — |
+| `assets/beep.wav` | Generated via [src/audio.py](src/audio.py) | — |
 | `assets/texture.png` | [Freepik](https://www.freepik.com/free-vector/abstract-islamic-golden-pattern-backdrop-ethnic-style_297349472.htm) | Freepik License |
-| `assets/beep.wav` | Generated locally via [src/audio.py](src/audio.py) | — |
 | `assets/fonts/Bebas_Neue/BebasNeue-Regular.ttf` | [Google Fonts](https://fonts.google.com/specimen/Bebas+Neue) | SIL OFL 1.1 |
 | `assets/fonts/UKIJTuzKB.ttf` | [Font Library](https://fontlibrary.org/en/font/ukij-tuz) | SIL OFL 1.1 |
 
