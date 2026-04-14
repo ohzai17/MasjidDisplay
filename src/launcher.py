@@ -26,12 +26,27 @@ class Launcher(tk.Tk):
         style = ttk.Style()
         sv_ttk.set_theme("dark")
         
-        # Font options
-        if sys.platform == "win32":
-            self.font = ("Arial", 12)
-        else:
-            self.font = ("Arial", 16)
+        # Screen dimensions
+        self.screen_width = self.winfo_screenwidth()
+        self.screen_height = self.winfo_screenheight()
         
+        # Font options
+        if self.screen_width >= 2560:
+            font_size = 18
+        elif self.screen_width >= 1920:
+            font_size = 16
+        elif self.screen_width >= 1440:
+            font_size = 14
+        elif self.screen_width >= 1280:
+            font_size = 12
+        else:
+            font_size = 10
+        
+        if sys.platform == "win32":
+            font_size -= 2
+        
+        # Font family and styles
+        self.font = ("Arial", font_size)
         family, size = self.font
         self.bold_font = (family, size, "bold")
         self.italic_font = (family, size, "italic")
@@ -41,7 +56,7 @@ class Launcher(tk.Tk):
         
         # Main container for frames
         self.main_frame = ttk.Frame(self)
-        self.main_frame.pack(fill="both", expand=True, padx=10, pady=10)
+        self.main_frame.pack(fill="both", side="top", expand=True)
         
         # Load settings
         self.settings = load_settings()
@@ -50,6 +65,25 @@ class Launcher(tk.Tk):
         self.setup_left_frame()
         self.setup_middle_frame()
         self.setup_right_frame()
+        
+        self.setup_window()
+    
+    def setup_window(self):
+        """Set up the main window."""
+        
+        self.update_idletasks()
+        
+        req_width = self.main_frame.winfo_reqwidth()
+        req_height = self.main_frame.winfo_reqheight()
+        window_width = min(req_width, self.screen_width)
+        window_height = min(req_height, self.screen_height)
+        
+        # Center the window on the screen
+        x = (self.screen_width - window_width) // 2
+        y = (self.screen_height - window_height) // 2
+        
+        self.geometry(f"{window_width}x{window_height}+{x}+{y}")
+        self.minsize(window_width, window_height)
     
     def setup_left_frame(self):
         """Set up the left frame with location and calculation settings."""
@@ -157,42 +191,42 @@ class Launcher(tk.Tk):
             
             # Latitude
             if row == 0:
-                self.latitude_entry = ttk.Entry(settings_frame, width=25, font=self.font)
+                self.latitude_entry = ttk.Entry(settings_frame, width=26, font=self.font)
                 self.latitude_entry.insert(0, latitude)
                 self.latitude_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
                 ToolTip(settings_label, latlon_help)
             
             # Longitude
             elif row == 1:
-                self.longitude_entry = ttk.Entry(settings_frame, width=25, font=self.font)
+                self.longitude_entry = ttk.Entry(settings_frame, width=26, font=self.font)
                 self.longitude_entry.insert(0, longitude)
                 self.longitude_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
                 ToolTip(settings_label, latlon_help)
             
             # Timezone
             elif row == 2:
-                self.timezone_entry = ttk.Combobox(settings_frame, values=timezone_options, state="readonly", width=25, font=self.font)
+                self.timezone_entry = ttk.Combobox(settings_frame, values=timezone_options, state="readonly", width=26, font=self.font)
                 self.timezone_entry.set(timezone)
                 self.timezone_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
                 ToolTip(settings_label, timezone_help)
                 
             # Hijri Date Adjustment
             elif row == 3:
-                self.hijri_date_adjustment_entry = ttk.Combobox(settings_frame, values=hijri_date_adjustment_options, state="readonly", width=25, font=self.font)
+                self.hijri_date_adjustment_entry = ttk.Combobox(settings_frame, values=hijri_date_adjustment_options, state="readonly", width=26, font=self.font)
                 self.hijri_date_adjustment_entry.set(str(hijri_date_adjustment))
                 self.hijri_date_adjustment_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
                 ToolTip(settings_label, hijri_adj_help)
             
             # Calculation Method
             elif row == 4:
-                self.calculation_method_entry = ttk.Combobox(settings_frame, values=calculation_method_options, state="readonly", width=25, font=self.font)
+                self.calculation_method_entry = ttk.Combobox(settings_frame, values=calculation_method_options, state="readonly", width=26, font=self.font)
                 self.calculation_method_entry.set(calculation_method)
                 self.calculation_method_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
                 ToolTip(settings_label, calc_method_help)
             
             # Asr Method
             elif row == 5:
-                self.asr_method_entry = ttk.Combobox(settings_frame, values=asr_method_options, state="readonly", width=25, font=self.font)
+                self.asr_method_entry = ttk.Combobox(settings_frame, values=asr_method_options, state="readonly", width=26, font=self.font)
                 self.asr_method_entry.set(asr_method)
                 self.asr_method_entry.grid(row=row, column=1, padx=(30, 0), pady=2, sticky="nsew")
                 ToolTip(settings_label, asr_method_help)
@@ -266,15 +300,15 @@ class Launcher(tk.Tk):
             )
             
             # Adhan Time
-            hour_entry = ttk.Combobox(table_frame, values=hours_options, state="readonly", width=5, font=self.font)
+            hour_entry = ttk.Combobox(table_frame, values=hours_options, state="readonly", width=3, font=self.font)
             hour_entry.set(hours)
             hour_entry.grid(row=row, column=1, padx=4, pady=2, sticky="nsew")
             self.adhan_time_hour_entries.append(hour_entry)
-            minute_entry = ttk.Combobox(table_frame, values=minutes_options, state="readonly", width=5, font=self.font)
+            minute_entry = ttk.Combobox(table_frame, values=minutes_options, state="readonly", width=3, font=self.font)
             minute_entry.set(minutes)
             minute_entry.grid(row=row, column=2, padx=4, pady=2, sticky="nsew")
             self.adhan_time_minute_entries.append(minute_entry)
-            ampm_entry = ttk.Combobox(table_frame, values=ampm_options, state="readonly", width=5, font=self.font)
+            ampm_entry = ttk.Combobox(table_frame, values=ampm_options, state="readonly", width=3, font=self.font)
             ampm_entry.set(ampm)
             ampm_entry.grid(row=row, column=3, padx=4, pady=2, sticky="nsew")
             self.adhan_time_ampm_entries.append(ampm_entry)
@@ -283,7 +317,7 @@ class Launcher(tk.Tk):
                 ).grid(row=row, column=4, padx=4, pady=2, sticky="nsew")
             
             # Iqamah Offset
-            iqamah_offset_entry = ttk.Combobox(table_frame, values=offset_options, state="readonly", width=5, font=self.font)
+            iqamah_offset_entry = ttk.Combobox(table_frame, values=offset_options, state="readonly", width=3, font=self.font)
             iqamah_offset_entry.set(iqamah_offset)
             iqamah_offset_entry.grid(row=row, column=5, padx=4, pady=2, sticky="nsew")
             self.iqamah_offset_entries.append(iqamah_offset_entry)
@@ -352,7 +386,7 @@ class Launcher(tk.Tk):
         name_label.grid(row=0, column=0, padx=4, pady=2, sticky="ew")
         ToolTip(name_label, name_help)
         
-        self.name_entry = ttk.Entry(display_frame, width=42, justify="center", font=self.font)
+        self.name_entry = ttk.Entry(display_frame, width=45, justify="center", font=self.font)
         self.name_entry.insert(0, name)
         self.name_entry.grid(row=1, column=0, padx=4, pady=2, sticky="ew")
         
@@ -361,7 +395,7 @@ class Launcher(tk.Tk):
         address_label.grid(row=2, column=0, padx=4, pady=(8, 2), sticky="ew")
         ToolTip(address_label, address_help)
         
-        self.address_entry = ttk.Entry(display_frame, width=42, justify="center", font=self.font)
+        self.address_entry = ttk.Entry(display_frame, width=45, justify="center", font=self.font)
         self.address_entry.insert(0, address)
         self.address_entry.grid(row=3, column=0, padx=4, pady=2, sticky="ew")
         
@@ -372,7 +406,7 @@ class Launcher(tk.Tk):
         
         self.announcement_entries = []
         for i in range(3):
-            announcement_entry = ttk.Combobox(display_frame, values=announcement_options, width=42, justify="center", font=self.font)
+            announcement_entry = ttk.Combobox(display_frame, values=announcement_options, width=45, justify="center", font=self.font)
             if i < len(announcements):
                 announcement_entry.set(announcements[i])
             announcement_entry.grid(row=5 + i, column=0, padx=4, pady=2, sticky="ew")
