@@ -219,6 +219,7 @@ MasjidDisplay/
 │   │       └── BebasNeue-Regular.ttf
 │   ├── demo.gif
 │   ├── beep.wav
+│   ├── app_icon.png
 │   └── texture.png
 ├── data/
 │   └── settings.template.json

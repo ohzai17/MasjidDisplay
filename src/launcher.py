@@ -33,17 +33,14 @@ class Launcher(tk.Tk):
         self.screen_height = self.winfo_screenheight()
         
         # Font options
-        if self.screen_width >= 2560:
-            font_size = 18
+        if self.screen_width >= 3840:
+            font_size = 20
         elif self.screen_width >= 1920:
             font_size = 16
-        elif self.screen_width >= 1440:
-            font_size = 14
-        elif self.screen_width >= 1280:
-            font_size = 12
         else:
-            font_size = 10
+            font_size = 12
         
+        # Windows fonts adjusted for consistency
         if sys.platform == "win32":
             font_size -= 2
         
@@ -181,12 +178,12 @@ class Launcher(tk.Tk):
             )
             
             calc_method_help = (
-                "Choose the calculation method used by your local mosque.\n\n"
+                "Choose the calculation method used by your local masjid.\n\n"
                 "For example, in North America, the most common methods are ISNA and MWL.\n"
             )
             
             asr_method_help = (
-                "Select the Asr juristic method used by your mosque.\n\n"
+                "Select the Asr juristic method used by your masjid.\n\n"
                 "Standard (Shafi, Maliki, Hanbali): Asr begins when the shadow of an object equals its height.\n"
                 "Hanafi: Asr begins when the shadow of an object is twice its height.\n"
             )
