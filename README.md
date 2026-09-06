@@ -287,7 +287,7 @@ Per-prayer keys apply to: `FAJR` `DHUHR` `ASR` `MAGHRIB` `ISHA` `JUMMAH`
 ## Troubleshooting
 
 **Display fails to start**
-- Confirm required assets exist: `assets/texture.png`, `assets/fonts/Bebas_Neue/BebasNeue-Regular.ttf`, `assets/fonts/UKIJTuzKB.ttf`
+- Confirm required assets exist: `assets/texture.png`, `assets/app_icon.png`, `assets/fonts/Bebas_Neue/BebasNeue-Regular.ttf`, `assets/fonts/UKIJTuzKB.ttf`
 - Relaunch `python -m src.launcher` and verify settings
 
 **CSV is missing, outdated, or placeholders appear**
